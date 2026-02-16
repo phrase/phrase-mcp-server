@@ -12,7 +12,7 @@ export function registerCreateJobCommentTool(server: McpServer, runtime: Product
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),
-        message: z.string().optional(),
+        message: z.string().min(1),
         branch: z.string().optional(),
       },
     },
