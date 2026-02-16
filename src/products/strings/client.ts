@@ -1,5 +1,14 @@
 import {
   Configuration,
+  FormatsApi,
+  GlossariesApi,
+  GlossaryTermTranslationsApi,
+  GlossaryTermsApi,
+  JobCommentsApi,
+  JobTemplateLocalesApi,
+  JobTemplatesApi,
+  JobLocalesApi,
+  JobsApi,
   KeysApi,
   LocalesApi,
   ProjectsApi,
@@ -12,6 +21,15 @@ export class StringsClient {
   readonly localesApi: LocalesApi;
   readonly keysApi: KeysApi;
   readonly translationsApi: TranslationsApi;
+  readonly formatsApi: FormatsApi;
+  readonly glossariesApi: GlossariesApi;
+  readonly glossaryTermsApi: GlossaryTermsApi;
+  readonly glossaryTermTranslationsApi: GlossaryTermTranslationsApi;
+  readonly jobsApi: JobsApi;
+  readonly jobTemplatesApi: JobTemplatesApi;
+  readonly jobTemplateLocalesApi: JobTemplateLocalesApi;
+  readonly jobLocalesApi: JobLocalesApi;
+  readonly jobCommentsApi: JobCommentsApi;
 
   constructor(options: ProductClientFactoryOptions) {
     const authPrefix = options.authPrefix.trim();
@@ -27,5 +45,14 @@ export class StringsClient {
     this.localesApi = new LocalesApi(configuration);
     this.keysApi = new KeysApi(configuration);
     this.translationsApi = new TranslationsApi(configuration);
+    this.formatsApi = new FormatsApi(configuration);
+    this.glossariesApi = new GlossariesApi(configuration);
+    this.glossaryTermsApi = new GlossaryTermsApi(configuration);
+    this.glossaryTermTranslationsApi = new GlossaryTermTranslationsApi(configuration);
+    this.jobsApi = new JobsApi(configuration);
+    this.jobTemplatesApi = new JobTemplatesApi(configuration);
+    this.jobTemplateLocalesApi = new JobTemplateLocalesApi(configuration);
+    this.jobLocalesApi = new JobLocalesApi(configuration);
+    this.jobCommentsApi = new JobCommentsApi(configuration);
   }
 }
