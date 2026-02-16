@@ -12,7 +12,7 @@ export function registerAddJobKeysTool(server: McpServer, runtime: ProductRuntim
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),
-        translation_key_ids: z.array(z.string()).optional(),
+        translation_key_ids: z.array(z.string()).min(1),
         branch: z.string().optional(),
       },
     },
