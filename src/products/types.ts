@@ -1,13 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { QueryValue } from "../lib/http.js";
 
 export const ALL_PRODUCTS = ["strings", "tms", "orchestrator", "analytics"] as const;
 
 export type ProductKey = (typeof ALL_PRODUCTS)[number];
-
-export interface ProductClient {
-  get: (path: string, query?: Record<string, QueryValue>) => Promise<unknown>;
-}
 
 export interface ProductClientFactoryOptions {
   key: ProductKey;
