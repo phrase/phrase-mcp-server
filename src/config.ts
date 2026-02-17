@@ -1,7 +1,9 @@
 import {
+  ALL_REGIONS,
   ALL_PRODUCTS,
   type AnyProductModule,
   type AnyProductRuntime,
+  type Region,
   type ProductClientMap,
   type ProductClientFactoryOptions,
   type ProductKey,
@@ -46,14 +48,44 @@ function envName(product: ProductKey, suffix: string): string {
 }
 
 function getEnvValue(primary: string, aliases: string[] = []): string | undefined {
+  const entry = getEnvValueWithSource(primary, aliases);
+  return entry?.value;
+}
+
+function getEnvValueWithSource(
+  primary: string,
+  aliases: string[] = [],
+): { name: string; value: string } | null {
   const names = [primary, ...aliases];
   for (const name of names) {
     const value = process.env[name];
     if (value) {
-      return value;
+      return { name, value };
     }
   }
-  return undefined;
+  return null;
+}
+
+const DEFAULT_REGION: Region = "eu";
+
+function parseRegion(value: string, envVar: string): Region {
+  const normalized = value.trim().toLowerCase();
+  if ((ALL_REGIONS as readonly string[]).includes(normalized)) {
+    return normalized as Region;
+  }
+
+  throw new Error(
+    `Unsupported ${envVar} '${value}'. Expected one of: ${ALL_REGIONS.join(", ")}.`,
+  );
+}
+
+function resolveRegion(product: ProductKey): Region {
+  const regionEntry = getEnvValueWithSource(envName(product, "REGION"), ["PHRASE_REGION"]);
+  if (regionEntry) {
+    return parseRegion(regionEntry.value, regionEntry.name);
+  }
+
+  return DEFAULT_REGION;
 }
 
 async function getProductClient<K extends ProductKey>(
@@ -61,8 +93,18 @@ async function getProductClient<K extends ProductKey>(
 ): Promise<ProductClientMap[K] | null> {
   const product = module.key;
   const clientConfig = module.client;
+  let region: Region;
+  try {
+    region = resolveRegion(product);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[phrase-mcp] Skipping product '${product}': ${message}`);
+    return null;
+  }
+
   const baseUrl =
     getEnvValue(envName(product, "BASE_URL"), clientConfig?.baseUrlEnvAliases ?? []) ??
+    clientConfig?.defaultBaseUrlsByRegion?.[region] ??
     clientConfig?.defaultBaseUrl;
   const authToken = getEnvValue(envName(product, "TOKEN"), clientConfig?.tokenEnvAliases ?? []);
   const authHeader = process.env[envName(product, "AUTH_HEADER")] ?? "Authorization";
@@ -80,6 +122,7 @@ async function getProductClient<K extends ProductKey>(
 
   const options: ProductClientFactoryOptions<K> = {
     key: product,
+    region,
     baseUrl,
     authHeader,
     authToken,

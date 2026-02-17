@@ -8,7 +8,6 @@ import {
 import type { ProductClientFactoryOptions } from "#products/types.js";
 import { TmsUnifiedTokenProvider } from "#products/tms/auth.js";
 
-const DEFAULT_REGION = "eu";
 const DEFAULT_USER_AGENT = "phrase-mcp-server/0.1.0";
 const DEFAULT_PAGE_SIZE = 50;
 const DEFAULT_MAX_PAGES = 25;
@@ -134,8 +133,7 @@ export class TmsClient {
     this.authPrefix = options.authPrefix;
     this.userAgent = process.env.PHRASE_TMS_USER_AGENT?.trim() || DEFAULT_USER_AGENT;
 
-    const region = process.env.PHRASE_REGION ?? DEFAULT_REGION;
-    this.tokenProvider = new TmsUnifiedTokenProvider(options.authToken, region);
+    this.tokenProvider = new TmsUnifiedTokenProvider(options.authToken, options.region);
   }
 
   private async request(

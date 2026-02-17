@@ -3,8 +3,10 @@ import type { StringsClient } from "#products/strings/client.js";
 import type { TmsClient } from "#products/tms/client.js";
 
 export const ALL_PRODUCTS = ["strings", "tms", "orchestrator", "analytics"] as const;
+export const ALL_REGIONS = ["eu", "us"] as const;
 
 export type ProductKey = (typeof ALL_PRODUCTS)[number];
+export type Region = (typeof ALL_REGIONS)[number];
 
 export interface ProductClientMap {
   strings: StringsClient;
@@ -20,6 +22,7 @@ export type ProductRuntime<K extends ProductKey = ProductKey> = {
 
 export type ProductClientFactoryOptions<K extends ProductKey = ProductKey> = {
   key: K;
+  region: Region;
   baseUrl: string;
   authHeader: string;
   authToken: string;
@@ -28,6 +31,7 @@ export type ProductClientFactoryOptions<K extends ProductKey = ProductKey> = {
 
 export interface ProductClientConfig<K extends ProductKey = ProductKey> {
   defaultBaseUrl?: string;
+  defaultBaseUrlsByRegion?: Partial<Record<Region, string>>;
   defaultAuthPrefix?: string;
   baseUrlEnvAliases?: string[];
   tokenEnvAliases?: string[];

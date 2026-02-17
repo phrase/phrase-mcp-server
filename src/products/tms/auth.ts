@@ -12,7 +12,7 @@ function normalizeRegion(region: string): string {
   if (value === "eu" || value === "us") {
     return value;
   }
-  throw new Error(`Unsupported PHRASE_REGION '${region}'. Expected 'eu' or 'us'.`);
+  throw new Error(`Unsupported region '${region}'. Expected 'eu' or 'us'.`);
 }
 
 export class TmsUnifiedTokenProvider {
