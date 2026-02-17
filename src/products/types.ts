@@ -1,32 +1,51 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { StringsClient } from "#products/strings/client.js";
+import type { TmsClient } from "#products/tms/client.js";
 
 export const ALL_PRODUCTS = ["strings", "tms", "orchestrator", "analytics"] as const;
 
 export type ProductKey = (typeof ALL_PRODUCTS)[number];
 
-export interface ProductClientFactoryOptions {
-  key: ProductKey;
+export interface ProductClientMap {
+  strings: StringsClient;
+  tms: TmsClient;
+  orchestrator: never;
+  analytics: never;
+}
+
+export type ProductRuntime<K extends ProductKey = ProductKey> = {
+  key: K;
+  client: ProductClientMap[K];
+};
+
+export type ProductClientFactoryOptions<K extends ProductKey = ProductKey> = {
+  key: K;
   baseUrl: string;
   authHeader: string;
   authToken: string;
   authPrefix: string;
-}
+};
 
-export interface ProductClientConfig {
+export interface ProductClientConfig<K extends ProductKey = ProductKey> {
   defaultBaseUrl?: string;
   defaultAuthPrefix?: string;
   baseUrlEnvAliases?: string[];
   tokenEnvAliases?: string[];
-  createClient?: (options: ProductClientFactoryOptions) => unknown | Promise<unknown>;
+  createClient?: (
+    options: ProductClientFactoryOptions,
+  ) => ProductClientMap[K] | Promise<ProductClientMap[K]>;
 }
 
-export interface ProductRuntime {
-  key: ProductKey;
-  client: unknown;
+export interface ProductModule<K extends ProductKey = ProductKey> {
+  key: K;
+  client?: ProductClientConfig<K>;
+  register: (server: McpServer, runtime: ProductRuntime<K>) => void;
 }
 
-export interface ProductModule {
-  key: ProductKey;
-  client?: ProductClientConfig;
-  register: (server: McpServer, runtime: ProductRuntime) => void;
-}
+export type AnyProductModule = {
+  [K in ProductKey]: ProductModule<K>;
+}[ProductKey];
+
+export type AnyProductRuntime = {
+  [K in ProductKey]: ProductRuntime<K>;
+}[ProductKey];

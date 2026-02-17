@@ -1,10 +1,12 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListTranslationsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListTranslationsTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_list_translations",
     {
@@ -21,7 +23,7 @@ export function registerListTranslationsTool(server: McpServer, runtime: Product
       },
     },
     async ({ project_id, locale_id, page, per_page, branch, sort, order, q }) => {
-      const translations = await (runtime.client as StringsClient).translationsApi.translationsByLocale({
+      const translations = await runtime.client.translationsApi.translationsByLocale({
         projectId: project_id,
         localeId: locale_id,
         page,

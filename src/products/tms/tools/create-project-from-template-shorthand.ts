@@ -1,14 +1,13 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
-import { querySchema } from "./query.js";
-import { resolveTemplateUidByShorthand } from "./template-shorthand.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
+import { querySchema } from "#products/tms/tools/query.js";
+import { resolveTemplateUidByShorthand } from "#products/tms/tools/template-shorthand.js";
 
 export function registerCreateProjectFromTemplateShorthandTool(
   server: McpServer,
-  runtime: ProductRuntime,
+  runtime: ProductRuntime<"tms">,
 ) {
   server.registerTool(
     "tms_create_project_from_template_shorthand",
@@ -28,7 +27,7 @@ export function registerCreateProjectFromTemplateShorthandTool(
       },
     },
     async ({ template, payload, query }) => {
-      const client = runtime.client as TmsClient;
+      const client = runtime.client;
       const templateUid = await resolveTemplateUidByShorthand(client, template, query);
       const created = await client.postJson(
         `/v2/projects/applyTemplate/${encodeURIComponent(templateUid)}`,

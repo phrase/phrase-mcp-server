@@ -1,10 +1,10 @@
-import { ProductModule } from "./types.js";
-import { analyticsModule } from "./analytics/index.js";
-import { orchestratorModule } from "./orchestrator/index.js";
-import { stringsModule } from "./strings/index.js";
-import { tmsModule } from "./tms/index.js";
+import type { AnyProductModule } from "#products/types.js";
+import { analyticsModule } from "#products/analytics/index.js";
+import { orchestratorModule } from "#products/orchestrator/index.js";
+import { stringsModule } from "#products/strings/index.js";
+import { tmsModule } from "#products/tms/index.js";
 
-export const productModules: ProductModule[] = [
+export const productModules: AnyProductModule[] = [
   stringsModule,
   tmsModule,
   orchestratorModule,

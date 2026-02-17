@@ -4,10 +4,20 @@
   "description": "MCP server for Phrase localization API",
   "type": "module",
   "main": "dist/index.js",
+  "imports": {
+    "#*": {
+      "types": "./src/*",
+      "default": "./dist/*"
+    }
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "format": "biome format . --write",
+    "format:check": "biome format ."
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.4",
@@ -17,6 +27,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@types/node": "^25.2.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

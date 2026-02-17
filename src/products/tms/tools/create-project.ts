@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerCreateProjectTool(server: McpServer, runtime: ProductRuntime) {
+export function registerCreateProjectTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_create_project",
     {
@@ -17,7 +16,7 @@ export function registerCreateProjectTool(server: McpServer, runtime: ProductRun
       },
     },
     async ({ project }) => {
-      const created = await (runtime.client as TmsClient).postJson("/v3/projects", project);
+      const created = await runtime.client.postJson("/v3/projects", project);
       return asTextContent(created);
     },
   );

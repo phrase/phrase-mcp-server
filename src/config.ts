@@ -1,10 +1,13 @@
 import {
   ALL_PRODUCTS,
-  ProductClientFactoryOptions,
-  ProductKey,
-  ProductModule,
-  ProductRuntime,
-} from "./products/types.js";
+  type AnyProductModule,
+  type AnyProductRuntime,
+  type ProductClientMap,
+  type ProductClientFactoryOptions,
+  type ProductKey,
+  type ProductModule,
+  type ProductRuntime,
+} from "#products/types.js";
 
 function parseList(value: string | undefined): string[] {
   if (!value) {
@@ -23,9 +26,11 @@ function parseEnabledProducts(): Set<ProductKey> {
   const enabledSet =
     enabled.length === 0
       ? new Set<ProductKey>(ALL_PRODUCTS)
-      : new Set(enabled.filter((product): product is ProductKey =>
-          (ALL_PRODUCTS as readonly string[]).includes(product),
-        ));
+      : new Set(
+          enabled.filter((product): product is ProductKey =>
+            (ALL_PRODUCTS as readonly string[]).includes(product),
+          ),
+        );
 
   for (const product of disabled) {
     if ((ALL_PRODUCTS as readonly string[]).includes(product)) {
@@ -51,22 +56,18 @@ function getEnvValue(primary: string, aliases: string[] = []): string | undefine
   return undefined;
 }
 
-async function getProductClient(module: ProductModule): Promise<unknown | null> {
+async function getProductClient<K extends ProductKey>(
+  module: ProductModule<K>,
+): Promise<ProductClientMap[K] | null> {
   const product = module.key;
   const clientConfig = module.client;
-  const baseUrl = getEnvValue(
-    envName(product, "BASE_URL"),
-    clientConfig?.baseUrlEnvAliases ?? [],
-  ) ?? clientConfig?.defaultBaseUrl;
-  const authToken = getEnvValue(
-    envName(product, "TOKEN"),
-    clientConfig?.tokenEnvAliases ?? [],
-  );
+  const baseUrl =
+    getEnvValue(envName(product, "BASE_URL"), clientConfig?.baseUrlEnvAliases ?? []) ??
+    clientConfig?.defaultBaseUrl;
+  const authToken = getEnvValue(envName(product, "TOKEN"), clientConfig?.tokenEnvAliases ?? []);
   const authHeader = process.env[envName(product, "AUTH_HEADER")] ?? "Authorization";
   const authPrefix =
-    process.env[envName(product, "AUTH_PREFIX")] ??
-    clientConfig?.defaultAuthPrefix ??
-    "Bearer";
+    process.env[envName(product, "AUTH_PREFIX")] ?? clientConfig?.defaultAuthPrefix ?? "Bearer";
 
   if (!baseUrl || !authToken) {
     const baseVars = [envName(product, "BASE_URL"), ...(clientConfig?.baseUrlEnvAliases ?? [])];
@@ -77,7 +78,7 @@ async function getProductClient(module: ProductModule): Promise<unknown | null> 
     return null;
   }
 
-  const options: ProductClientFactoryOptions = {
+  const options: ProductClientFactoryOptions<K> = {
     key: product,
     baseUrl,
     authHeader,
@@ -101,27 +102,52 @@ async function getProductClient(module: ProductModule): Promise<unknown | null> 
   return null;
 }
 
-export async function loadProductRuntimes(productModules: ProductModule[]): Promise<ProductRuntime[]> {
+async function loadTypedProductRuntime<K extends ProductKey>(
+  productModule: ProductModule<K>,
+): Promise<ProductRuntime<K> | null> {
+  const client = await getProductClient(productModule);
+  if (!client) {
+    return null;
+  }
+
+  return {
+    key: productModule.key,
+    client,
+  };
+}
+
+async function loadProductRuntime(
+  productModule: AnyProductModule,
+): Promise<AnyProductRuntime | null> {
+  switch (productModule.key) {
+    case "strings":
+      return loadTypedProductRuntime(productModule);
+    case "tms":
+      return loadTypedProductRuntime(productModule);
+    case "orchestrator":
+      return loadTypedProductRuntime(productModule);
+    case "analytics":
+      return loadTypedProductRuntime(productModule);
+  }
+}
+
+export async function loadProductRuntimes(
+  productModules: AnyProductModule[],
+): Promise<AnyProductRuntime[]> {
   const enabledProducts = parseEnabledProducts();
-  const runtimes: ProductRuntime[] = [];
-  const moduleByKey = new Map(productModules.map((module) => [module.key, module]));
+  const runtimes: AnyProductRuntime[] = [];
 
-  for (const key of ALL_PRODUCTS) {
-    if (!enabledProducts.has(key)) {
+  for (const productModule of productModules) {
+    if (!enabledProducts.has(productModule.key)) {
       continue;
     }
 
-    const productModule = moduleByKey.get(key);
-    if (!productModule) {
+    const runtime = await loadProductRuntime(productModule);
+    if (!runtime) {
       continue;
     }
 
-    const client = await getProductClient(productModule);
-    if (!client) {
-      continue;
-    }
-
-    runtimes.push({ key, client });
+    runtimes.push(runtime);
   }
 
   return runtimes;

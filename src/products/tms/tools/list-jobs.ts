@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { HttpError } from "../../../lib/http.js";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
-import { paginationControlsSchema, querySchema } from "./query.js";
+import { HttpError } from "#lib/http.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
+import { paginationControlsSchema, querySchema } from "#products/tms/tools/query.js";
 
 function shouldFallbackToV1(error: unknown): boolean {
   return error instanceof HttpError && (error.status === 400 || error.status === 404);
@@ -14,17 +13,14 @@ function isRetryableQueryError(error: unknown): boolean {
   return error instanceof HttpError && error.status === 400;
 }
 
-export function registerListJobsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListJobsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_list_jobs",
     {
       description:
         "List jobs for a Phrase TMS project. Tries GET /api2/v2/projects/{projectUid}/jobs and falls back to /api2/v1/projects/{projectUid}/jobs for compatibility. Read-only operation with optional auto-pagination.",
       inputSchema: {
-        project_uid: z
-          .string()
-          .min(1)
-          .describe("TMS project UID (not numeric internal ID)."),
+        project_uid: z.string().min(1).describe("TMS project UID (not numeric internal ID)."),
         query: querySchema,
         ...paginationControlsSchema,
       },
@@ -32,7 +28,7 @@ export function registerListJobsTool(server: McpServer, runtime: ProductRuntime)
     async ({ project_uid, query, paginate, page_size, max_pages, max_items }) => {
       const v2Path = `/v2/projects/${encodeURIComponent(project_uid)}/jobs`;
       const v1Path = `/v1/projects/${encodeURIComponent(project_uid)}/jobs`;
-      const client = runtime.client as TmsClient;
+      const client = runtime.client;
       const errors: string[] = [];
 
       if (!paginate) {

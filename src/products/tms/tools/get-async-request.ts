@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerGetAsyncRequestTool(server: McpServer, runtime: ProductRuntime) {
+export function registerGetAsyncRequestTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_get_async_request",
     {
@@ -18,9 +17,7 @@ export function registerGetAsyncRequestTool(server: McpServer, runtime: ProductR
       },
     },
     async ({ async_request_id }) => {
-      const request = await (runtime.client as TmsClient).get(
-        `/v1/async/${encodeURIComponent(async_request_id)}`,
-      );
+      const request = await runtime.client.get(`/v1/async/${encodeURIComponent(async_request_id)}`);
       return asTextContent(request);
     },
   );

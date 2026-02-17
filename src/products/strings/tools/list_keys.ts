@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListKeysTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListKeysTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_list_keys",
     {
@@ -21,7 +20,7 @@ export function registerListKeysTool(server: McpServer, runtime: ProductRuntime)
       },
     },
     async ({ project_id, page, per_page, branch, sort, order, q, locale_id }) => {
-      const keys = await (runtime.client as StringsClient).keysApi.keysList({
+      const keys = await runtime.client.keysApi.keysList({
         projectId: project_id,
         page,
         perPage: per_page,

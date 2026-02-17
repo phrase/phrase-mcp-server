@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
-import { paginationControlsSchema, querySchema } from "./query.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
+import { paginationControlsSchema, querySchema } from "#products/tms/tools/query.js";
 
-export function registerListProjectsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListProjectsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_list_projects",
     {
@@ -16,7 +15,7 @@ export function registerListProjectsTool(server: McpServer, runtime: ProductRunt
       },
     },
     async ({ query, paginate, page_size, max_pages, max_items }) => {
-      const client = runtime.client as TmsClient;
+      const client = runtime.client;
       if (!paginate) {
         const projects = await client.get("/v1/projects", query);
         return asTextContent(projects);
