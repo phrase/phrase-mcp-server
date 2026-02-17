@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { loadProductRuntimes } from "./config.js";
+import { loadProductRuntimes } from "#config.js";
 import { StringsClient } from "#products/strings/client.js";
 import type {
   ProductClientFactoryOptions,
@@ -40,7 +40,8 @@ describe("loadProductRuntimes", () => {
       authPrefix: "Bearer",
     });
     const createClient = vi.fn(
-      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> =>
+        client,
     );
 
     const modules: ProductModule<"strings">[] = [
