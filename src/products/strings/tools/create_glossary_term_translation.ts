@@ -1,12 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
 export function registerGlossaryTermTranslationCreateTool(
   server: McpServer,
-  runtime: ProductRuntime,
+  runtime: ProductRuntime<"strings">,
 ) {
   server.registerTool(
     "strings_create_glossary_term_translation",
@@ -21,17 +20,16 @@ export function registerGlossaryTermTranslationCreateTool(
       },
     },
     async ({ account_id, glossary_id, term_id, locale_code, content }) => {
-      const glossaryTermTranslation = await (
-        runtime.client as StringsClient
-      ).glossaryTermTranslationsApi.glossaryTermTranslationCreate({
-        accountId: account_id,
-        glossaryId: glossary_id,
-        termId: term_id,
-        glossaryTermTranslationCreateParameters: {
-          localeCode: locale_code,
-          content,
-        },
-      });
+      const glossaryTermTranslation =
+        await runtime.client.glossaryTermTranslationsApi.glossaryTermTranslationCreate({
+          accountId: account_id,
+          glossaryId: glossary_id,
+          termId: term_id,
+          glossaryTermTranslationCreateParameters: {
+            localeCode: locale_code,
+            content,
+          },
+        });
       return asTextContent(glossaryTermTranslation);
     },
   );

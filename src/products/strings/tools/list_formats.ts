@@ -1,9 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListFormatsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListFormatsTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_list_formats",
     {
@@ -11,7 +10,7 @@ export function registerListFormatsTool(server: McpServer, runtime: ProductRunti
       inputSchema: {},
     },
     async () => {
-      const formats = await (runtime.client as StringsClient).formatsApi.formatsList();
+      const formats = await runtime.client.formatsApi.formatsList();
       return asTextContent(formats);
     },
   );

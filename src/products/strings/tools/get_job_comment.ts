@@ -1,10 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerGetJobCommentTool(server: McpServer, runtime: ProductRuntime) {
+export function registerGetJobCommentTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_get_job_comment",
     {
@@ -17,7 +16,7 @@ export function registerGetJobCommentTool(server: McpServer, runtime: ProductRun
       },
     },
     async ({ project_id, job_id, id, branch }) => {
-      const comment = await (runtime.client as StringsClient).jobCommentsApi.jobCommentShow({
+      const comment = await runtime.client.jobCommentsApi.jobCommentShow({
         projectId: project_id,
         jobId: job_id,
         id,

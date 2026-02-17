@@ -1,10 +1,12 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerCreateJobTemplateLocaleTool(server: McpServer, runtime: ProductRuntime) {
+export function registerCreateJobTemplateLocaleTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_create_job_template_locale",
     {
@@ -30,20 +32,20 @@ export function registerCreateJobTemplateLocaleTool(server: McpServer, runtime: 
       translator_team_ids,
       reviewer_team_ids,
     }) => {
-      const jobTemplateLocale = await (
-        runtime.client as StringsClient
-      ).jobTemplateLocalesApi.jobTemplateLocalesCreate({
-        projectId: project_id,
-        jobTemplateId: job_template_id,
-        jobTemplateLocalesCreateParameters: {
-          localeId: locale_id,
-          branch,
-          userIds: user_ids,
-          reviewerIds: reviewer_ids,
-          translatorTeamIds: translator_team_ids,
-          reviewerTeamIds: reviewer_team_ids,
+      const jobTemplateLocale = await runtime.client.jobTemplateLocalesApi.jobTemplateLocalesCreate(
+        {
+          projectId: project_id,
+          jobTemplateId: job_template_id,
+          jobTemplateLocalesCreateParameters: {
+            localeId: locale_id,
+            branch,
+            userIds: user_ids,
+            reviewerIds: reviewer_ids,
+            translatorTeamIds: translator_team_ids,
+            reviewerTeamIds: reviewer_team_ids,
+          },
         },
-      });
+      );
       return asTextContent(jobTemplateLocale);
     },
   );

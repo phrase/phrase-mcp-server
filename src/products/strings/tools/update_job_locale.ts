@@ -1,10 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerUpdateJobLocaleTool(server: McpServer, runtime: ProductRuntime) {
+export function registerUpdateJobLocaleTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_update_job_locale",
     {
@@ -32,7 +31,7 @@ export function registerUpdateJobLocaleTool(server: McpServer, runtime: ProductR
       translator_team_ids,
       reviewer_team_ids,
     }) => {
-      const locale = await (runtime.client as StringsClient).jobLocalesApi.jobLocaleUpdate({
+      const locale = await runtime.client.jobLocalesApi.jobLocaleUpdate({
         projectId: project_id,
         jobId: job_id,
         id,

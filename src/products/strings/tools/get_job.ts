@@ -1,10 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerGetJobTool(server: McpServer, runtime: ProductRuntime) {
+export function registerGetJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_get_job",
     {
@@ -18,7 +17,7 @@ export function registerGetJobTool(server: McpServer, runtime: ProductRuntime) {
       },
     },
     async ({ project_id, id, branch, include_annotations, omit_translation_keys }) => {
-      const job = await (runtime.client as StringsClient).jobsApi.jobShow({
+      const job = await runtime.client.jobsApi.jobShow({
         projectId: project_id,
         id,
         branch,

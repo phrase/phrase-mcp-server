@@ -1,10 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerLockJobTool(server: McpServer, runtime: ProductRuntime) {
+export function registerLockJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_lock_job",
     {
@@ -16,7 +15,7 @@ export function registerLockJobTool(server: McpServer, runtime: ProductRuntime) 
       },
     },
     async ({ project_id, id, branch }) => {
-      const result = await (runtime.client as StringsClient).jobsApi.jobLock({
+      const result = await runtime.client.jobsApi.jobLock({
         projectId: project_id,
         id,
         branch,

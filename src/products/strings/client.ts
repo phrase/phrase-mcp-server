@@ -5,16 +5,16 @@ import {
   GlossaryTermTranslationsApi,
   GlossaryTermsApi,
   JobCommentsApi,
+  JobLocalesApi,
   JobTemplateLocalesApi,
   JobTemplatesApi,
-  JobLocalesApi,
   JobsApi,
   KeysApi,
   LocalesApi,
   ProjectsApi,
   TranslationsApi,
 } from "phrase-js";
-import type { ProductClientFactoryOptions } from "../types.js";
+import type { ProductClientFactoryOptions } from "#products/types.js";
 
 export class StringsClient {
   readonly projectsApi: ProjectsApi;

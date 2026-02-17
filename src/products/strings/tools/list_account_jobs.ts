@@ -1,10 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListAccountJobsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListAccountJobsTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_list_account_jobs",
     {
@@ -20,7 +19,7 @@ export function registerListAccountJobsTool(server: McpServer, runtime: ProductR
       },
     },
     async ({ account_id, page, per_page, owned_by, assigned_to, state, updated_since }) => {
-      const jobs = await (runtime.client as StringsClient).jobsApi.jobsByAccount({
+      const jobs = await runtime.client.jobsApi.jobsByAccount({
         accountId: account_id,
         page,
         perPage: per_page,

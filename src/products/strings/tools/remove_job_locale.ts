@@ -1,10 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import type { ProductRuntime } from "../../types.js";
-import type { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerRemoveJobLocaleTool(server: McpServer, runtime: ProductRuntime) {
+export function registerRemoveJobLocaleTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_remove_job_locale",
     {
@@ -17,7 +16,7 @@ export function registerRemoveJobLocaleTool(server: McpServer, runtime: ProductR
       },
     },
     async ({ project_id, job_id, id, branch }) => {
-      const result = await (runtime.client as StringsClient).jobLocalesApi.jobLocaleDelete({
+      const result = await runtime.client.jobLocalesApi.jobLocaleDelete({
         projectId: project_id,
         jobId: job_id,
         id,
