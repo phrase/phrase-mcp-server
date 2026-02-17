@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerCreateJobTool(server: McpServer, runtime: ProductRuntime) {
+export function registerCreateJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_create_job",
     {
@@ -34,7 +33,7 @@ export function registerCreateJobTool(server: McpServer, runtime: ProductRuntime
       translation_key_ids,
       job_template_id,
     }) => {
-      const job = await (runtime.client as StringsClient).jobsApi.jobCreate({
+      const job = await runtime.client.jobsApi.jobCreate({
         projectId: project_id,
         jobCreateParameters: {
           name,

@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListLocalesTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListLocalesTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_list_locales",
     {
@@ -18,7 +17,7 @@ export function registerListLocalesTool(server: McpServer, runtime: ProductRunti
       },
     },
     async ({ project_id, page, per_page, branch, sort_by }) => {
-      const locales = await (runtime.client as StringsClient).localesApi.localesList({
+      const locales = await runtime.client.localesApi.localesList({
         projectId: project_id,
         page,
         perPage: per_page,

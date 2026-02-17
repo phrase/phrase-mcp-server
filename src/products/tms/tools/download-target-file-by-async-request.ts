@@ -1,11 +1,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { HttpError } from "../../../lib/http.js";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
+import { HttpError } from "#lib/http.js";
+import type { BinaryResponse } from "#lib/http.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
 function shouldFallback(error: unknown): boolean {
   return error instanceof HttpError && (error.status === 400 || error.status === 404);
@@ -31,7 +31,7 @@ function tryDecodeFilename(contentDisposition: string | null): string | null {
 
 export function registerDownloadTargetFileByAsyncRequestTool(
   server: McpServer,
-  runtime: ProductRuntime,
+  runtime: ProductRuntime<"tms">,
 ) {
   server.registerTool(
     "tms_download_target_file_by_async_request",
@@ -39,14 +39,8 @@ export function registerDownloadTargetFileByAsyncRequestTool(
       description:
         "Download generated target file by async request ID (GET /api2/v2 or /api2/v3 projects/{projectUid}/jobs/{jobUid}/downloadTargetFile/{asyncRequestId}). Returns base64 content and metadata.",
       inputSchema: {
-        project_uid: z
-          .string()
-          .min(1)
-          .describe("TMS project UID."),
-        job_uid: z
-          .string()
-          .min(1)
-          .describe("TMS job UID."),
+        project_uid: z.string().min(1).describe("TMS project UID."),
+        job_uid: z.string().min(1).describe("TMS job UID."),
         async_request_id: z
           .string()
           .min(1)
@@ -61,11 +55,11 @@ export function registerDownloadTargetFileByAsyncRequestTool(
       },
     },
     async ({ project_uid, job_uid, async_request_id, output_path }) => {
-      const client = runtime.client as TmsClient;
+      const client = runtime.client;
       const pathV3 = `/v3/projects/${encodeURIComponent(project_uid)}/jobs/${encodeURIComponent(job_uid)}/downloadTargetFile/${encodeURIComponent(async_request_id)}`;
       const pathV2 = `/v2/projects/${encodeURIComponent(project_uid)}/jobs/${encodeURIComponent(job_uid)}/downloadTargetFile/${encodeURIComponent(async_request_id)}`;
 
-      let file;
+      let file: BinaryResponse;
       try {
         file = await client.getBinary(pathV3);
       } catch (error) {

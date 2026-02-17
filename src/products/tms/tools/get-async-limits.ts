@@ -1,9 +1,8 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerGetAsyncLimitsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerGetAsyncLimitsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_get_async_limits",
     {
@@ -12,7 +11,7 @@ export function registerGetAsyncLimitsTool(server: McpServer, runtime: ProductRu
       inputSchema: {},
     },
     async () => {
-      const limits = await (runtime.client as TmsClient).get("/v1/async/status");
+      const limits = await runtime.client.get("/v1/async/status");
       return asTextContent(limits);
     },
   );

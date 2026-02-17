@@ -1,7 +1,6 @@
-import { ProductModule } from "../types.js";
+import type { ProductModule } from "#products/types.js";
 
-export const analyticsModule: ProductModule = {
+export const analyticsModule: ProductModule<"analytics"> = {
   key: "analytics",
-  register(server, runtime) {
-  },
+  register(server, runtime) {},
 };

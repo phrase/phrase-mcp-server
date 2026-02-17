@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerUpdateJobTool(server: McpServer, runtime: ProductRuntime) {
+export function registerUpdateJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_update_job",
     {
@@ -20,7 +19,7 @@ export function registerUpdateJobTool(server: McpServer, runtime: ProductRuntime
       },
     },
     async ({ project_id, id, branch, name, briefing, due_date, ticket_url }) => {
-      const job = await (runtime.client as StringsClient).jobsApi.jobUpdate({
+      const job = await runtime.client.jobsApi.jobUpdate({
         projectId: project_id,
         id,
         jobUpdateParameters: {

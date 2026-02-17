@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerRemoveJobKeysTool(server: McpServer, runtime: ProductRuntime) {
+export function registerRemoveJobKeysTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_remove_job_keys",
     {
@@ -17,7 +16,7 @@ export function registerRemoveJobKeysTool(server: McpServer, runtime: ProductRun
       },
     },
     async ({ project_id, id, translation_key_ids, branch }) => {
-      const result = await (runtime.client as StringsClient).jobsApi.jobKeysDelete({
+      const result = await runtime.client.jobsApi.jobKeysDelete({
         projectId: project_id,
         id,
         jobKeysDeleteParameters: {

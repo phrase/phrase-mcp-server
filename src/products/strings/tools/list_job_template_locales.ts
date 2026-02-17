@@ -1,10 +1,12 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListJobTemplateLocalesTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListJobTemplateLocalesTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_list_job_template_locales",
     {
@@ -18,14 +20,13 @@ export function registerListJobTemplateLocalesTool(server: McpServer, runtime: P
       },
     },
     async ({ project_id, job_template_id, branch, page, per_page }) => {
-      const jobTemplateLocales =
-        await (runtime.client as StringsClient).jobTemplateLocalesApi.jobTemplateLocalesList({
-          projectId: project_id,
-          jobTemplateId: job_template_id,
-          branch,
-          page,
-          perPage: per_page,
-        });
+      const jobTemplateLocales = await runtime.client.jobTemplateLocalesApi.jobTemplateLocalesList({
+        projectId: project_id,
+        jobTemplateId: job_template_id,
+        branch,
+        page,
+        perPage: per_page,
+      });
       return asTextContent(jobTemplateLocales);
     },
   );

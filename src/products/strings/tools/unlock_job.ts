@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerUnlockJobTool(server: McpServer, runtime: ProductRuntime) {
+export function registerUnlockJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_unlock_job",
     {
@@ -16,7 +15,7 @@ export function registerUnlockJobTool(server: McpServer, runtime: ProductRuntime
       },
     },
     async ({ project_id, id, branch }) => {
-      const result = await (runtime.client as StringsClient).jobsApi.jobUnlock({
+      const result = await runtime.client.jobsApi.jobUnlock({
         projectId: project_id,
         id,
         branch,

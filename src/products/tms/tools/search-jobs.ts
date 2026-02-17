@@ -1,20 +1,16 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerSearchJobsTool(server: McpServer, runtime: ProductRuntime) {
+export function registerSearchJobsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_search_jobs",
     {
       description:
         "Search Phrase TMS jobs in a project (POST /api2/v1/projects/{projectUid}/jobs/search). Read-only query operation.",
       inputSchema: {
-        project_uid: z
-          .string()
-          .min(1)
-          .describe("TMS project UID."),
+        project_uid: z.string().min(1).describe("TMS project UID."),
         query: z
           .record(z.unknown())
           .optional()
@@ -22,7 +18,7 @@ export function registerSearchJobsTool(server: McpServer, runtime: ProductRuntim
       },
     },
     async ({ project_uid, query }) => {
-      const jobs = await (runtime.client as TmsClient).postJson(
+      const jobs = await runtime.client.postJson(
         `/v1/projects/${encodeURIComponent(project_uid)}/jobs/search`,
         query ?? {},
       );

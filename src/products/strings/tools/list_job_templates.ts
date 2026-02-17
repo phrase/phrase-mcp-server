@@ -1,10 +1,12 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerListJobTemplatesTool(server: McpServer, runtime: ProductRuntime) {
+export function registerListJobTemplatesTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_list_job_templates",
     {
@@ -17,7 +19,7 @@ export function registerListJobTemplatesTool(server: McpServer, runtime: Product
       },
     },
     async ({ project_id, branch, page, per_page }) => {
-      const jobTemplates = await (runtime.client as StringsClient).jobTemplatesApi.jobTemplatesList({
+      const jobTemplates = await runtime.client.jobTemplatesApi.jobTemplatesList({
         projectId: project_id,
         branch,
         page,

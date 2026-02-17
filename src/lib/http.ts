@@ -57,7 +57,11 @@ function appendQueryValue(searchParams: URLSearchParams, key: string, value: Que
   }
 }
 
-export function buildUrl(baseUrl: string, path: string, query?: Record<string, QueryValue>): string {
+export function buildUrl(
+  baseUrl: string,
+  path: string,
+  query?: Record<string, QueryValue>,
+): string {
   const normalizedPath = path.replace(/^\/+/, "");
   const url = new URL(normalizedPath, baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`);
 

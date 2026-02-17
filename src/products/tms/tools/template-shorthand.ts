@@ -1,5 +1,5 @@
-import { QueryValue } from "../../../lib/http.js";
-import { TmsClient } from "../client.js";
+import type { QueryValue } from "#lib/http.js";
+import type { TmsClient } from "#products/tms/client.js";
 
 interface TemplateItem {
   uid?: string;
@@ -41,7 +41,9 @@ function pickBestTemplate(matches: TemplateItem[], shorthand: string): TemplateI
     return exactIdMatches;
   }
 
-  const exactNameMatches = matches.filter((template) => normalize(getTemplateName(template)) === normalized);
+  const exactNameMatches = matches.filter(
+    (template) => normalize(getTemplateName(template)) === normalized,
+  );
   if (exactNameMatches.length > 0) {
     return exactNameMatches;
   }
@@ -103,9 +105,12 @@ export async function resolveTemplateUidByShorthand(
     });
     const allTemplates = listed.items as TemplateItem[];
     candidates = pickBestTemplate(
-      allTemplates.filter((template) =>
-        normalize(getTemplateName(template)).includes(normalize(normalized)) ||
-        getTemplateIdStrings(template).some((value) => normalize(value).includes(normalize(normalized))),
+      allTemplates.filter(
+        (template) =>
+          normalize(getTemplateName(template)).includes(normalize(normalized)) ||
+          getTemplateIdStrings(template).some((value) =>
+            normalize(value).includes(normalize(normalized)),
+          ),
       ),
       normalized,
     );

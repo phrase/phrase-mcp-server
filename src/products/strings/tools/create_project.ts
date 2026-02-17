@@ -1,10 +1,9 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
-export function registerCreateProjectTool(server: McpServer, runtime: ProductRuntime) {
+export function registerCreateProjectTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_create_project",
     {
@@ -56,7 +55,7 @@ export function registerCreateProjectTool(server: McpServer, runtime: ProductRun
       autotranslate_use_machine_translation,
       autotranslate_use_translation_memory,
     }) => {
-      const project = await (runtime.client as StringsClient).projectsApi.projectCreate({
+      const project = await runtime.client.projectsApi.projectCreate({
         projectCreateParameters: {
           name,
           mainFormat: main_format,

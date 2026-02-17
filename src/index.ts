@@ -1,7 +1,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { loadProductRuntimes } from "./config.js";
-import { productModules } from "./products/index.js";
+import { loadProductRuntimes } from "#config.js";
+import { productModules } from "#products/index.js";
+import type { AnyProductRuntime } from "#products/types.js";
+import { analyticsModule } from "#products/analytics/index.js";
+import { orchestratorModule } from "#products/orchestrator/index.js";
+import { stringsModule } from "#products/strings/index.js";
+import { tmsModule } from "#products/tms/index.js";
 
 const server = new McpServer({
   name: "phrase-mcp-server",
@@ -15,12 +20,25 @@ if (runtimes.length === 0) {
   );
 }
 
-for (const runtime of runtimes) {
-  const module = productModules.find((candidate) => candidate.key === runtime.key);
-  if (!module) {
-    continue;
+function registerRuntime(runtime: AnyProductRuntime): void {
+  switch (runtime.key) {
+    case "strings":
+      stringsModule.register(server, runtime);
+      return;
+    case "tms":
+      tmsModule.register(server, runtime);
+      return;
+    case "orchestrator":
+      orchestratorModule.register(server, runtime);
+      return;
+    case "analytics":
+      analyticsModule.register(server, runtime);
+      return;
   }
-  module.register(server, runtime);
+}
+
+for (const runtime of runtimes) {
+  registerRuntime(runtime);
 }
 
 const transport = new StdioServerTransport();

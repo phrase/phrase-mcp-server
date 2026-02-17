@@ -1,7 +1,6 @@
-import { ProductModule } from "../types.js";
+import type { ProductModule } from "#products/types.js";
 
-export const orchestratorModule: ProductModule = {
+export const orchestratorModule: ProductModule<"orchestrator"> = {
   key: "orchestrator",
-  register(server, runtime) {
-  },
+  register(server, runtime) {},
 };

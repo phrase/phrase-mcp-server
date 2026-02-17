@@ -1,6 +1,12 @@
-import { BinaryResponse, HttpError, QueryValue, requestBinary, requestJson } from "../../lib/http.js";
-import { ProductClientFactoryOptions } from "../types.js";
-import { TmsUnifiedTokenProvider } from "./auth.js";
+import {
+  type BinaryResponse,
+  HttpError,
+  type QueryValue,
+  requestBinary,
+  requestJson,
+} from "#lib/http.js";
+import type { ProductClientFactoryOptions } from "#products/types.js";
+import { TmsUnifiedTokenProvider } from "#products/tms/auth.js";
 
 const DEFAULT_REGION = "eu";
 const DEFAULT_USER_AGENT = "phrase-mcp-server/0.1.0";
@@ -162,7 +168,11 @@ export class TmsClient {
     return this.request("GET", path, { query });
   }
 
-  async postJson(path: string, json: unknown, query?: Record<string, QueryValue>): Promise<unknown> {
+  async postJson(
+    path: string,
+    json: unknown,
+    query?: Record<string, QueryValue>,
+  ): Promise<unknown> {
     return this.request("POST", path, { query, json });
   }
 

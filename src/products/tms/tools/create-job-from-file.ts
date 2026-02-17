@@ -1,10 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { TmsClient } from "../client.js";
+import { asTextContent } from "#lib/mcp.js";
+import type { ProductRuntime } from "#products/types.js";
 
 const SAFE_FILENAME_PATTERN = /^[A-Za-z0-9._ -]+$/;
 const targetLangsSchema = z.array(z.string().min(1)).min(1);
@@ -33,21 +32,20 @@ function sanitizeFilename(value: string): string {
   return trimmed;
 }
 
-export function registerCreateJobFromFileTool(server: McpServer, runtime: ProductRuntime) {
+export function registerCreateJobFromFileTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_create_job_from_file",
     {
       description:
         "Create a Phrase TMS job by uploading a local file (POST /api2/v1/projects/{projectUid}/jobs). This operation mutates data and reads a file from the MCP server filesystem.",
       inputSchema: {
-        project_uid: z
-          .string()
-          .min(1)
-          .describe("TMS project UID."),
+        project_uid: z.string().min(1).describe("TMS project UID."),
         file_path: z
           .string()
           .min(1)
-          .describe("Absolute or relative filesystem path to the source file on the MCP server host."),
+          .describe(
+            "Absolute or relative filesystem path to the source file on the MCP server host.",
+          ),
         file_name: z
           .string()
           .min(1)
@@ -56,7 +54,7 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
         target_langs: targetLangsSchema
           .optional()
           .describe(
-            "Target locale codes for the created job (recommended explicit input, for example [\"es_es\"]).",
+            'Target locale codes for the created job (recommended explicit input, for example ["es_es"]).',
           ),
         memsource: z
           .union([memsourceSchema, z.record(z.unknown())])
@@ -74,10 +72,12 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
         targetLangs: target_langs ?? memsource?.targetLangs,
       };
       if (!Array.isArray(mergedMemsource.targetLangs) || mergedMemsource.targetLangs.length === 0) {
-        throw new Error("Missing required target languages. Set target_langs or memsource.targetLangs.");
+        throw new Error(
+          "Missing required target languages. Set target_langs or memsource.targetLangs.",
+        );
       }
 
-      const created = await (runtime.client as TmsClient).postBinary(
+      const created = await runtime.client.postBinary(
         `/v1/projects/${encodeURIComponent(project_uid)}/jobs`,
         data,
         {
