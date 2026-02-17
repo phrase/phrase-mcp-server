@@ -1,8 +1,8 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "../../../lib/mcp.js";
-import { ProductRuntime } from "../../types.js";
-import { StringsClient } from "../client.js";
+import type { ProductRuntime } from "../../types.js";
+import type { StringsClient } from "../client.js";
 
 export function registerGlossaryTermCreateTool(server: McpServer, runtime: ProductRuntime) {
   server.registerTool(
@@ -19,7 +19,9 @@ export function registerGlossaryTermCreateTool(server: McpServer, runtime: Produ
       },
     },
     async ({ account_id, glossary_id, term, description, translatable, case_sensitive }) => {
-      const glossaryTerm = await (runtime.client as StringsClient).glossaryTermsApi.glossaryTermCreate({
+      const glossaryTerm = await (
+        runtime.client as StringsClient
+      ).glossaryTermsApi.glossaryTermCreate({
         accountId: account_id,
         glossaryId: glossary_id,
         glossaryTermCreateParameters: {

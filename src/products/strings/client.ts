@@ -14,7 +14,7 @@ import {
   ProjectsApi,
   TranslationsApi,
 } from "phrase-js";
-import { ProductClientFactoryOptions } from "../types.js";
+import type { ProductClientFactoryOptions } from "../types.js";
 
 export class StringsClient {
   readonly projectsApi: ProjectsApi;
