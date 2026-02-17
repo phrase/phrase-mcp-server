@@ -172,6 +172,20 @@ npm run build
 npm start
 ```
 
+## Test
+
+Run tests once:
+
+```bash
+npm test
+```
+
+Run tests in watch mode:
+
+```bash
+npm run test:watch
+```
+
 ## MCP Client Configuration Example
 
 Example for a local MCP client config:
