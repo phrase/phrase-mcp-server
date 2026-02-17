@@ -42,7 +42,6 @@ import { registerReopenJobLocaleTool } from "./tools/reopen_job_locale.js";
 import { registerReopenJobTool } from "./tools/reopen_job.js";
 import { registerReviewJobLocaleTool } from "./tools/review_job_locale.js";
 import { registerStartJobTool } from "./tools/start_job.js";
-import { registerUpdateJobCommentTool } from "./tools/update_job_comment.js";
 import { registerUpdateJobLocaleTool } from "./tools/update_job_locale.js";
 import { registerUnlockJobTool } from "./tools/unlock_job.js";
 import { registerUpdateJobTool } from "./tools/update_job.js";
@@ -101,6 +100,5 @@ export const stringsModule: ProductModule = {
     registerListJobCommentsTool(server, runtime);
     registerCreateJobCommentTool(server, runtime);
     registerGetJobCommentTool(server, runtime);
-    registerUpdateJobCommentTool(server, runtime);
   },
 };
