@@ -1,0 +1,29 @@
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import { asTextContent } from "../../../lib/mcp.js";
+import { ProductRuntime } from "../../types.js";
+import { StringsClient } from "../client.js";
+
+export function registerListJobTemplatesTool(server: McpServer, runtime: ProductRuntime) {
+  server.registerTool(
+    "strings_list_job_templates",
+    {
+      description: "List job templates for a Phrase Strings project.",
+      inputSchema: {
+        project_id: z.string().min(1),
+        branch: z.string().optional(),
+        page: z.number().int().min(1).optional(),
+        per_page: z.number().int().min(1).max(100).optional(),
+      },
+    },
+    async ({ project_id, branch, page, per_page }) => {
+      const jobTemplates = await (runtime.client as StringsClient).jobTemplatesApi.jobTemplatesList({
+        projectId: project_id,
+        branch,
+        page,
+        perPage: per_page,
+      });
+      return asTextContent(jobTemplates);
+    },
+  );
+}
