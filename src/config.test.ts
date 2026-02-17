@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadProductRuntimes } from "./config.js";
+import { StringsClient } from "#products/strings/client.js";
 import type {
-  AnyProductModule,
   ProductClientFactoryOptions,
-  ProductClientMap,
+  ProductModule,
 } from "#products/types.js";
 
 function clearPhraseEnv(): void {
@@ -32,13 +32,18 @@ describe("loadProductRuntimes", () => {
     process.env.PHRASE_STRINGS_BASE_URL = "https://example.com";
     process.env.PHRASE_ENABLED_PRODUCTS = "strings";
 
-    const client = { id: "strings-client" } as unknown as ProductClientMap["strings"];
+    const client = new StringsClient({
+      key: "strings",
+      baseUrl: "https://example.com",
+      authHeader: "Authorization",
+      authToken: "token",
+      authPrefix: "Bearer",
+    });
     const createClient = vi.fn(
-      async (_options: ProductClientFactoryOptions): Promise<ProductClientMap["strings"]> =>
-        client,
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
     );
 
-    const modules: AnyProductModule[] = [
+    const modules: ProductModule<"strings">[] = [
       {
         key: "strings",
         client: { createClient },
@@ -58,11 +63,17 @@ describe("loadProductRuntimes", () => {
     process.env.PHRASE_DISABLED_PRODUCTS = "strings";
 
     const createClient = vi.fn(
-      async (): Promise<ProductClientMap["strings"]> =>
-        ({ id: "strings-client" }) as unknown as ProductClientMap["strings"],
+      async (): Promise<StringsClient> =>
+        new StringsClient({
+          key: "strings",
+          baseUrl: "https://example.com",
+          authHeader: "Authorization",
+          authToken: "token",
+          authPrefix: "Bearer",
+        }),
     );
 
-    const modules: AnyProductModule[] = [
+    const modules: ProductModule<"strings">[] = [
       {
         key: "strings",
         client: { createClient },
