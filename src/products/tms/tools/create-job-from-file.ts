@@ -4,7 +4,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp.js";
 import type { ProductRuntime } from "#products/types.js";
-import packageJson from "../../../../package.json" with { type: "json" };
+import packageJson from "package.json" with { type: "json" };
 const SAFE_FILENAME_PATTERN = /^[A-Za-z0-9._ -]+$/;
 const targetLangsSchema = z.array(z.string().min(1)).min(1);
 const memsourceSchema = z
