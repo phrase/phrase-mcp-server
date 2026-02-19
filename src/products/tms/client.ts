@@ -157,7 +157,7 @@ export class TmsClient {
       headers: {
         [this.authHeader]: authValue,
         "User-Agent": this.userAgent,
-        ...(options.headers ?? {}),
+        ...options.headers,
       },
     });
   }

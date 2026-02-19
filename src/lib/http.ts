@@ -41,8 +41,11 @@ export class HttpError extends Error {
 function isPresent(value: QueryPrimitive): value is string | number | boolean {
   return value !== null && value !== undefined;
 }
-
-function appendQueryValue(searchParams: URLSearchParams, key: string, value: QueryValue): void {
+function appendQueryValue(
+  searchParams: URLSearchParams,
+  key: string,
+  value: QueryValue,
+): void {
   if (Array.isArray(value)) {
     for (const item of value) {
       if (isPresent(item)) {
@@ -63,7 +66,10 @@ export function buildUrl(
   query?: Record<string, QueryValue>,
 ): string {
   const normalizedPath = path.replace(/^\/+/, "");
-  const url = new URL(normalizedPath, baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`);
+  const url = new URL(
+    normalizedPath,
+    baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`,
+  );
 
   if (query) {
     for (const [key, value] of Object.entries(query)) {
@@ -83,7 +89,7 @@ export async function requestJson(
   const url = buildUrl(baseUrl, path, options.query);
   const headers: Record<string, string> = {
     Accept: "application/json",
-    ...(options.headers ?? {}),
+    ...options.headers,
   };
 
   let body: BodyInit | undefined;
