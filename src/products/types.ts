@@ -8,6 +8,10 @@ export const ALL_REGIONS = ["eu", "us"] as const;
 export type ProductKey = (typeof ALL_PRODUCTS)[number];
 export type Region = (typeof ALL_REGIONS)[number];
 
+export function isRegion(value: string): value is Region {
+  return ALL_REGIONS.some((region) => region === value);
+}
+
 export interface ProductClientMap {
   strings: StringsClient;
   tms: TmsClient;

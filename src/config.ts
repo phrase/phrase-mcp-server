@@ -9,6 +9,7 @@ import {
   type ProductKey,
   type ProductModule,
   type ProductRuntime,
+  isRegion,
 } from "#products/types.js";
 
 function parseList(value: string | undefined): string[] {
@@ -29,10 +30,10 @@ function parseEnabledProducts(): Set<ProductKey> {
     enabled.length === 0
       ? new Set<ProductKey>(ALL_PRODUCTS)
       : new Set(
-          enabled.filter((product): product is ProductKey =>
-            (ALL_PRODUCTS as readonly string[]).includes(product),
-          ),
-        );
+        enabled.filter((product): product is ProductKey =>
+          (ALL_PRODUCTS as readonly string[]).includes(product),
+        ),
+      );
 
   for (const product of disabled) {
     if ((ALL_PRODUCTS as readonly string[]).includes(product)) {
@@ -70,8 +71,8 @@ const DEFAULT_REGION: Region = "eu";
 
 function parseRegion(value: string, envVar: string): Region {
   const normalized = value.trim().toLowerCase();
-  if ((ALL_REGIONS as readonly string[]).includes(normalized)) {
-    return normalized as Region;
+  if (isRegion(normalized)) {
+    return normalized; // properly narrowed to Region
   }
 
   throw new Error(

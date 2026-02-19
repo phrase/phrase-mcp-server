@@ -199,7 +199,7 @@ describe("loadProductRuntimes", () => {
     process.env.PHRASE_STRINGS_REGION = "moon";
     process.env.PHRASE_ENABLED_PRODUCTS = "strings";
 
-    const logError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const logError = vi.spyOn(console, "error").mockImplementation(() => { });
     const createClient = vi.fn(
       async (_options: ProductClientFactoryOptions): Promise<StringsClient> => ({} as StringsClient),
     );
@@ -223,7 +223,7 @@ describe("loadProductRuntimes", () => {
     expect(runtimes).toEqual([]);
     expect(createClient).not.toHaveBeenCalled();
     expect(logError).toHaveBeenCalledWith(
-      expect.stringContaining("Unsupported PHRASE_STRINGS_REGION"),
+      expect.stringContaining("Unsupported PHRASE_STRINGS_REGION 'moon'. Expected one of: eu, us"),
     );
   });
 });
