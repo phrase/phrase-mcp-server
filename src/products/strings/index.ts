@@ -50,6 +50,10 @@ export const stringsModule: ProductModule<"strings"> = {
   key: "strings",
   client: {
     defaultBaseUrl: "https://api.phrase.com/v2",
+    defaultBaseUrlsByRegion: {
+      eu: "https://api.phrase.com/v2",
+      us: "https://api.us.app.phrase.com/v2",
+    },
     defaultAuthPrefix: "token",
     baseUrlEnvAliases: ["PHRASE_BASE_URL"],
     createClient: (options) => new StringsClient(options),

@@ -23,6 +23,10 @@ export const tmsModule: ProductModule<"tms"> = {
   key: "tms",
   client: {
     defaultBaseUrl: "https://cloud.memsource.com/web/api2",
+    defaultBaseUrlsByRegion: {
+      eu: "https://cloud.memsource.com/web/api2",
+      us: "https://us.cloud.memsource.com/web/api2",
+    },
     tokenEnvAliases: ["PHRASE_API_TOKEN"],
     createClient: (options) => new TmsClient(options),
   },

@@ -125,6 +125,7 @@ For each product, set:
 
 - `PHRASE_<PRODUCT>_BASE_URL`
 - `PHRASE_<PRODUCT>_TOKEN`
+- Optional: `PHRASE_<PRODUCT>_REGION` (`eu` or `us`)
 - Optional: `PHRASE_<PRODUCT>_AUTH_HEADER` (default `Authorization`)
 - Optional: `PHRASE_<PRODUCT>_AUTH_PREFIX` (default `Bearer`, Strings default `token`)
 
@@ -133,10 +134,18 @@ Strings compatibility shortcuts are supported:
 - `PHRASE_STRINGS_TOKEN` (required for Strings)
 - `PHRASE_BASE_URL` (same as `PHRASE_STRINGS_BASE_URL`, default `https://api.phrase.com/v2`)
 
-TMS unified auth shortcuts are supported:
+Region selection:
+
+- `PHRASE_REGION` (`eu` or `us`, default `eu`) applies to all products unless overridden by `PHRASE_<PRODUCT>_REGION`.
+- Region affects product default base URLs:
+  - Strings: `https://api.phrase.com/v2` (EU), `https://api.us.app.phrase.com/v2` (US)
+  - TMS: `https://cloud.memsource.com/web/api2` (EU), `https://us.cloud.memsource.com/web/api2` (US)
+- Explicit `PHRASE_<PRODUCT>_BASE_URL` always takes precedence over region defaults.
+
+TMS unified auth shortcuts are also supported:
 
 - `PHRASE_API_TOKEN` (used as alias for `PHRASE_TMS_TOKEN`)
-- `PHRASE_REGION` (`eu` or `us`, default `eu`) for token exchange at `https://{region}.phrase.com/idm/oauth/token`
+- Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`
 
 ### TMS Notes
 
@@ -210,4 +219,3 @@ If your client supports dotenv automatically, you can also launch through:
 ```bash
 npm run dev
 ```
-

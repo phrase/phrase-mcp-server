@@ -34,6 +34,7 @@ describe("loadProductRuntimes", () => {
 
     const client = new StringsClient({
       key: "strings",
+      region: "eu",
       baseUrl: "https://example.com",
       authHeader: "Authorization",
       authToken: "token",
@@ -67,6 +68,7 @@ describe("loadProductRuntimes", () => {
       async (): Promise<StringsClient> =>
         new StringsClient({
           key: "strings",
+          region: "eu",
           baseUrl: "https://example.com",
           authHeader: "Authorization",
           authToken: "token",
@@ -86,5 +88,143 @@ describe("loadProductRuntimes", () => {
 
     expect(runtimes).toEqual([]);
     expect(createClient).not.toHaveBeenCalled();
+  });
+
+  it("uses product region to select the default base URL", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "token";
+    process.env.PHRASE_STRINGS_REGION = "us";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrlsByRegion: {
+            eu: "https://eu.example.com",
+            us: "https://us.example.com",
+          },
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "strings", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        key: "strings",
+        region: "us",
+        baseUrl: "https://us.example.com",
+      }),
+    );
+  });
+
+  it("uses global PHRASE_REGION when product region is not set", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "token";
+    process.env.PHRASE_REGION = "us";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrlsByRegion: {
+            eu: "https://eu.example.com",
+            us: "https://us.example.com",
+          },
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    await loadProductRuntimes(modules);
+
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        region: "us",
+        baseUrl: "https://us.example.com",
+      }),
+    );
+  });
+
+  it("prefers explicit BASE_URL over region defaults", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "token";
+    process.env.PHRASE_REGION = "us";
+    process.env.PHRASE_STRINGS_BASE_URL = "https://override.example.com";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrlsByRegion: {
+            eu: "https://eu.example.com",
+            us: "https://us.example.com",
+          },
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    await loadProductRuntimes(modules);
+
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        region: "us",
+        baseUrl: "https://override.example.com",
+      }),
+    );
+  });
+
+  it("skips product when region is invalid", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "token";
+    process.env.PHRASE_STRINGS_REGION = "moon";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const logError = vi.spyOn(console, "error").mockImplementation(() => { });
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => ({} as StringsClient),
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrlsByRegion: {
+            eu: "https://eu.example.com",
+            us: "https://us.example.com",
+          },
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([]);
+    expect(createClient).not.toHaveBeenCalled();
+    expect(logError).toHaveBeenCalledWith(
+      expect.stringContaining("Unsupported PHRASE_STRINGS_REGION 'moon'. Expected one of: eu, us"),
+    );
   });
 });
