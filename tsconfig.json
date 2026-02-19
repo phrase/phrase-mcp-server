@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "baseUrl": ".",
     "paths": {
+      "#package.json": ["package.json"],
       "#*": ["src/*"]
     },
     "strict": true,
