@@ -39,8 +39,17 @@ describe("StringsClient auth", () => {
     vi.unstubAllGlobals();
   });
 
-  it("uses direct token authentication for product tokens", async () => {
-    const fetchMock = vi.fn(async (_input: unknown, _init?: RequestInit) => jsonResponse([]));
+  it("uses unified token exchange for product tokens", async () => {
+    const fetchMock = vi.fn(async (input: unknown, _init?: RequestInit) => {
+      const url = asUrl(input);
+      if (url === "https://eu.phrase.com/idm/oauth/token") {
+        return jsonResponse({ access_token: "exchanged-access-token", expires_in: 600 });
+      }
+      if (url.startsWith("https://api.example.com/projects")) {
+        return jsonResponse([]);
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    });
     vi.stubGlobal("fetch", fetchMock);
 
     const client = new StringsClient({
@@ -50,15 +59,17 @@ describe("StringsClient auth", () => {
       authHeader: "Authorization",
       authToken: "direct-token",
       authPrefix: "token",
-      authTokenSource: "PHRASE_STRINGS_TOKEN",
     });
 
     await client.projectsApi.projectsList({});
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const request = fetchMock.mock.calls[0];
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(asUrl(fetchMock.mock.calls[0][0])).toBe("https://eu.phrase.com/idm/oauth/token");
+    const tokenExchangeBody = asBodyString(fetchMock.mock.calls[0][1]?.body);
+    expect(tokenExchangeBody).toContain("subject_token=direct-token");
+    const request = fetchMock.mock.calls[1];
     const headers = new Headers((request[1]?.headers as HeadersInit | undefined) ?? {});
-    expect(headers.get("Authorization")).toBe("token direct-token");
+    expect(headers.get("Authorization")).toBe("Bearer exchanged-access-token");
   });
 
   it("uses unified token exchange when configured via PHRASE_API_TOKEN", async () => {
@@ -81,7 +92,6 @@ describe("StringsClient auth", () => {
       authHeader: "Authorization",
       authToken: "platform-token",
       authPrefix: "Bearer",
-      authTokenSource: "PHRASE_API_TOKEN",
     });
 
     await client.projectsApi.projectsList({});

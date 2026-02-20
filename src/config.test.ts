@@ -195,7 +195,7 @@ describe("loadProductRuntimes", () => {
     );
   });
 
-  it("uses alias token source and bearer prefix defaults", async () => {
+  it("uses alias token and bearer prefix defaults", async () => {
     process.env.PHRASE_API_TOKEN = "platform-token";
     process.env.PHRASE_ENABLED_PRODUCTS = "strings";
 
@@ -223,7 +223,6 @@ describe("loadProductRuntimes", () => {
     expect(createClient).toHaveBeenCalledWith(
       expect.objectContaining({
         authToken: "platform-token",
-        authTokenSource: "PHRASE_API_TOKEN",
         authPrefix: "Bearer",
       }),
     );

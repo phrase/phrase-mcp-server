@@ -134,7 +134,6 @@ async function getProductClient<K extends ProductKey>(
     baseUrl,
     authHeader,
     authToken,
-    authTokenSource: authTokenEntry?.name,
     authPrefix,
   };
 
