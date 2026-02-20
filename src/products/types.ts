@@ -30,6 +30,7 @@ export type ProductClientFactoryOptions<K extends ProductKey = ProductKey> = {
   baseUrl: string;
   authHeader: string;
   authToken: string;
+  authTokenSource?: string;
   authPrefix: string;
 };
 

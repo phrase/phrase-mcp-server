@@ -195,6 +195,40 @@ describe("loadProductRuntimes", () => {
     );
   });
 
+  it("uses alias token source and bearer prefix defaults", async () => {
+    process.env.PHRASE_API_TOKEN = "platform-token";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrl: "https://example.com",
+          defaultAuthPrefix: "token",
+          tokenEnvAliases: ["PHRASE_API_TOKEN"],
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "strings", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        authToken: "platform-token",
+        authTokenSource: "PHRASE_API_TOKEN",
+        authPrefix: "Bearer",
+      }),
+    );
+  });
+
   it("skips product when region is invalid", async () => {
     process.env.PHRASE_STRINGS_TOKEN = "token";
     process.env.PHRASE_STRINGS_REGION = "moon";

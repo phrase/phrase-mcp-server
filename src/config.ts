@@ -107,10 +107,17 @@ async function getProductClient<K extends ProductKey>(
     getEnvValue(envName(product, "BASE_URL"), clientConfig?.baseUrlEnvAliases ?? []) ??
     clientConfig?.defaultBaseUrlsByRegion?.[region] ??
     clientConfig?.defaultBaseUrl;
-  const authToken = getEnvValue(envName(product, "TOKEN"), clientConfig?.tokenEnvAliases ?? []);
+  const authTokenEntry = getEnvValueWithSource(
+    envName(product, "TOKEN"),
+    clientConfig?.tokenEnvAliases ?? [],
+  );
+  const authToken = authTokenEntry?.value;
   const authHeader = process.env[envName(product, "AUTH_HEADER")] ?? "Authorization";
+  const authPrefixFromEnv = process.env[envName(product, "AUTH_PREFIX")];
+  const usedTokenAlias = authTokenEntry ? authTokenEntry.name !== envName(product, "TOKEN") : false;
   const authPrefix =
-    process.env[envName(product, "AUTH_PREFIX")] ?? clientConfig?.defaultAuthPrefix ?? "Bearer";
+    authPrefixFromEnv ??
+    (usedTokenAlias ? "Bearer" : clientConfig?.defaultAuthPrefix ?? "Bearer");
 
   if (!baseUrl || !authToken) {
     const baseVars = [envName(product, "BASE_URL"), ...(clientConfig?.baseUrlEnvAliases ?? [])];
@@ -127,6 +134,7 @@ async function getProductClient<K extends ProductKey>(
     baseUrl,
     authHeader,
     authToken,
+    authTokenSource: authTokenEntry?.name,
     authPrefix,
   };
 
