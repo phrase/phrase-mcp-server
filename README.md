@@ -57,7 +57,7 @@ MCP server exposing tools for Phrase products over stdio.
 | Keys (`KeysApi`) | Partial | `strings_list_keys` |
 | Keys figma attachments (`KeysFigmaAttachmentsApi`) | None | - |
 | Linked keys (`LinkedKeysApi`) | None | - |
-| Locale downloads (`LocaleDownloadsApi`) | None | - |
+| Locale downloads (`LocaleDownloadsApi`) | Full | `strings_create_locale_download`, `strings_get_locale_download` |
 | Locales (`LocalesApi`) | Partial | `strings_list_locales` |
 | Members (`MembersApi`) | None | - |
 | Notification groups (`NotificationGroupsApi`) | None | - |
