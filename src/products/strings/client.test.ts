@@ -39,12 +39,9 @@ describe("StringsClient auth", () => {
     vi.unstubAllGlobals();
   });
 
-  it("uses unified token exchange for product tokens", async () => {
+  it("uses static token auth when auth prefix is token", async () => {
     const fetchMock = vi.fn(async (input: unknown, _init?: RequestInit) => {
       const url = asUrl(input);
-      if (url === "https://eu.phrase.com/idm/oauth/token") {
-        return jsonResponse({ access_token: "exchanged-access-token", expires_in: 600 });
-      }
       if (url.startsWith("https://api.example.com/projects")) {
         return jsonResponse([]);
       }
@@ -63,13 +60,10 @@ describe("StringsClient auth", () => {
 
     await client.projectsApi.projectsList({});
 
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(asUrl(fetchMock.mock.calls[0][0])).toBe("https://eu.phrase.com/idm/oauth/token");
-    const tokenExchangeBody = asBodyString(fetchMock.mock.calls[0][1]?.body);
-    expect(tokenExchangeBody).toContain("subject_token=direct-token");
-    const request = fetchMock.mock.calls[1];
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const request = fetchMock.mock.calls[0];
     const headers = new Headers((request[1]?.headers as HeadersInit | undefined) ?? {});
-    expect(headers.get("Authorization")).toBe("Bearer exchanged-access-token");
+    expect(headers.get("Authorization")).toBe("token direct-token");
   });
 
   it("uses unified token exchange when configured via PHRASE_API_TOKEN", async () => {

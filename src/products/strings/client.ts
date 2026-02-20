@@ -37,11 +37,17 @@ export class StringsClient {
 
   constructor(options: ProductClientFactoryOptions) {
     const authHeader = options.authHeader.trim() || "Authorization";
-    const authPrefix = "Bearer";
-    const tokenProvider = new UnifiedAccessTokenProvider(options.authToken, options.region);
+    const configuredAuthPrefix = options.authPrefix.trim();
+    const useStaticTokenAuth = configuredAuthPrefix.toLowerCase() === "token";
+    const tokenProvider = useStaticTokenAuth
+      ? null
+      : new UnifiedAccessTokenProvider(options.authToken, options.region);
     const authMiddleware: Middleware = {
       pre: async (context) => {
-        const token = await tokenProvider.getAccessToken();
+        const token = useStaticTokenAuth
+          ? options.authToken
+          : await tokenProvider!.getAccessToken();
+        const authPrefix = useStaticTokenAuth ? configuredAuthPrefix : "Bearer";
         const authValue = authPrefix ? `${authPrefix} ${token}` : token;
         const headers = new Headers((context.init.headers as HeadersInit | undefined) ?? {});
         headers.set(authHeader, authValue);

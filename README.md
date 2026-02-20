@@ -128,6 +128,7 @@ For each product, set:
 - Optional: `PHRASE_<PRODUCT>_REGION` (`eu` or `us`)
 - Optional: `PHRASE_<PRODUCT>_AUTH_HEADER` (default `Authorization`)
 - Optional: `PHRASE_<PRODUCT>_AUTH_PREFIX` (default `Bearer`, Strings default `token`)
+  - For Strings, `PHRASE_STRINGS_AUTH_PREFIX=token` uses static token auth (`token <PHRASE_STRINGS_TOKEN>`) and skips unified token exchange.
 
 Strings compatibility shortcuts are supported:
 
@@ -147,6 +148,7 @@ Platform token auth shortcuts are also supported:
 - `PHRASE_API_TOKEN` (used as alias for both `PHRASE_TMS_TOKEN` and `PHRASE_STRINGS_TOKEN`)
 - Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`
 - When an alias token source is used and `PHRASE_<PRODUCT>_AUTH_PREFIX` is not set, default prefix is `Bearer`.
+- For Strings, set `PHRASE_STRINGS_AUTH_PREFIX=token` to force static token auth even when using `PHRASE_API_TOKEN`.
 
 ### TMS Notes
 
