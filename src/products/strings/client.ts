@@ -10,6 +10,7 @@ import {
   JobTemplatesApi,
   JobsApi,
   KeysApi,
+  LocaleDownloadsApi,
   LocalesApi,
   type Middleware,
   ProjectsApi,
@@ -34,6 +35,7 @@ export class StringsClient {
   readonly jobTemplateLocalesApi: JobTemplateLocalesApi;
   readonly jobLocalesApi: JobLocalesApi;
   readonly jobCommentsApi: JobCommentsApi;
+  readonly localeDownloadsApi: LocaleDownloadsApi;
 
   constructor(options: ProductClientFactoryOptions) {
     const authHeader = options.authHeader.trim() || "Authorization";
@@ -81,5 +83,6 @@ export class StringsClient {
     this.jobTemplateLocalesApi = new JobTemplateLocalesApi(configuration);
     this.jobLocalesApi = new JobLocalesApi(configuration);
     this.jobCommentsApi = new JobCommentsApi(configuration);
+    this.localeDownloadsApi = new LocaleDownloadsApi(configuration);
   }
 }

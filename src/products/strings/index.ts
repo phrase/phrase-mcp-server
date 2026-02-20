@@ -33,6 +33,8 @@ import { registerListJobTemplatesTool } from "#products/strings/tools/list_job_t
 import { registerListKeysTool } from "#products/strings/tools/list_keys.js";
 import { registerListJobsTool } from "#products/strings/tools/list_jobs.js";
 import { registerListLocalesTool } from "#products/strings/tools/list_locales.js";
+import { registerCreateLocaleDownloadTool } from "#products/strings/tools/create_locale_download.js";
+import { registerGetLocaleDownloadTool } from "#products/strings/tools/get_locale_download.js";
 import { registerListProjectsTool } from "#products/strings/tools/list_projects.js";
 import { registerListTranslationsTool } from "#products/strings/tools/list_translations.js";
 import { registerLockJobTool } from "#products/strings/tools/lock_job.js";
@@ -73,6 +75,8 @@ export const stringsModule: ProductModule<"strings"> = {
     registerGlossaryTermTranslationUpdateTool(server, runtime);
     registerListFormatsTool(server, runtime);
     registerListLocalesTool(server, runtime);
+    registerCreateLocaleDownloadTool(server, runtime);
+    registerGetLocaleDownloadTool(server, runtime);
     registerListKeysTool(server, runtime);
     registerListTranslationsTool(server, runtime);
     registerListJobsTool(server, runtime);
