@@ -1,11 +1,13 @@
 const TOKEN_EXCHANGE_GRANT = "urn:ietf:params:oauth:grant-type:token-exchange";
-const TOKEN_EXCHANGE_SUBJECT_TOKEN_TYPE = "urn:phrase:params:oauth:token-type:api_token";
-const TOKEN_EXCHANGE_REQUESTED_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token";
+const TOKEN_EXCHANGE_SUBJECT_TOKEN_TYPE =
+  "urn:phrase:params:oauth:token-type:api_token";
+const TOKEN_EXCHANGE_REQUESTED_TOKEN_TYPE =
+  "urn:ietf:params:oauth:token-type:access_token";
 const REFRESH_SAFETY_WINDOW_MS = 30_000;
 const DEFAULT_EXPIRES_IN_SECONDS = 10 * 60;
 const MAX_ERROR_BODY_LENGTH = 500;
 
-interface UnifiedAccessTokenResponse {
+export interface UnifiedAccessTokenResponse {
   access_token?: string;
   expires_in?: number;
 }
@@ -46,7 +48,10 @@ export class UnifiedAccessTokenProvider implements AccessTokenProvider {
 
   async getAccessToken(): Promise<string> {
     const now = Date.now();
-    if (this.accessToken && now + REFRESH_SAFETY_WINDOW_MS < this.accessTokenExpiresAt) {
+    if (
+      this.accessToken &&
+      now + REFRESH_SAFETY_WINDOW_MS < this.accessTokenExpiresAt
+    ) {
       return this.accessToken;
     }
 
@@ -83,15 +88,22 @@ export class UnifiedAccessTokenProvider implements AccessTokenProvider {
     }
 
     if (!response.ok) {
-      const message = payload ? JSON.stringify(payload) : summarizeErrorBody(rawBody);
-      throw new Error(`Unified token exchange failed (${response.status}): ${message}`);
+      const message = payload
+        ? JSON.stringify(payload)
+        : summarizeErrorBody(rawBody);
+      throw new Error(
+        `Unified token exchange failed (${response.status}): ${message}`,
+      );
     }
 
     if (!payload?.access_token) {
-      throw new Error("Unified token exchange response did not include access_token.");
+      throw new Error(
+        "Unified token exchange response did not include access_token.",
+      );
     }
 
-    const expiresInMs = (payload.expires_in ?? DEFAULT_EXPIRES_IN_SECONDS) * 1000;
+    const expiresInMs =
+      (payload.expires_in ?? DEFAULT_EXPIRES_IN_SECONDS) * 1000;
     this.accessToken = payload.access_token;
     this.accessTokenExpiresAt = now + expiresInMs;
     return this.accessToken;
