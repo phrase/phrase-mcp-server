@@ -5,8 +5,8 @@ import {
   requestBinary,
   requestJson,
 } from "#lib/http.js";
+import { UnifiedAccessTokenProvider } from "#lib/auth.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
-import { TmsUnifiedTokenProvider } from "#products/tms/auth.js";
 
 const DEFAULT_USER_AGENT = "phrase-mcp-server/0.1.0";
 const DEFAULT_PAGE_SIZE = 50;
@@ -125,7 +125,7 @@ export class TmsClient {
   private readonly authHeader: string;
   private readonly authPrefix: string;
   private readonly userAgent: string;
-  private readonly tokenProvider: TmsUnifiedTokenProvider;
+  private readonly tokenProvider: UnifiedAccessTokenProvider;
 
   constructor(options: ProductClientFactoryOptions) {
     this.baseUrl = options.baseUrl;
@@ -133,7 +133,7 @@ export class TmsClient {
     this.authPrefix = options.authPrefix;
     this.userAgent = process.env.PHRASE_TMS_USER_AGENT?.trim() || DEFAULT_USER_AGENT;
 
-    this.tokenProvider = new TmsUnifiedTokenProvider(options.authToken, options.region);
+    this.tokenProvider = new UnifiedAccessTokenProvider(options.authToken, options.region);
   }
 
   private async request(
