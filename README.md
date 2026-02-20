@@ -195,7 +195,27 @@ npm run test:watch
 
 ## MCP Client Configuration Example
 
-Example for a local MCP client config:
+Simple config (no path to entry file required, requires published npm package):
+
+```json
+{
+  "mcpServers": {
+    "phrase": {
+      "command": "npx",
+      "args": ["-y", "phrase-mcp-server"],
+      "env": {
+        "PHRASE_STRINGS_TOKEN": "your_platforms_token_for_strings",
+        "PHRASE_TMS_TOKEN": "your_platforms_token_for_tms",
+        "PHRASE_REGION": "eu"
+      }
+    }
+  }
+}
+```
+
+If `phrase-mcp-server` is not published to npm yet, this `npx` setup will not resolve the package name.
+
+Local repository config (if you want to run directly from this clone):
 
 ```json
 {
@@ -204,16 +224,41 @@ Example for a local MCP client config:
       "command": "node",
       "args": ["/absolute/path/to/phrase-mcp-server/dist/index.js"],
       "env": {
-        "PHRASE_STRINGS_TOKEN": "your_phrase_strings_token",
-        "PHRASE_ENABLED_PRODUCTS": "strings"
+        "PHRASE_STRINGS_TOKEN": "your_platforms_token_for_strings",
+        "PHRASE_TMS_TOKEN": "your_platforms_token_for_tms",
+        "PHRASE_REGION": "eu"
       }
     }
   }
 }
 ```
 
-If your client supports dotenv automatically, you can also launch through:
+For local development without publishing, you can also use `npm link` and then configure:
 
 ```bash
-npm run dev
+npm install
+npm run build
+npm link
+```
+
+
+```json
+{
+  "mcpServers": {
+    "phrase": {
+      "command": "phrase-mcp-server",
+      "env": {
+        "PHRASE_STRINGS_TOKEN": "your_platforms_token_for_strings",
+        "PHRASE_TMS_TOKEN": "your_platforms_token_for_tms",
+        "PHRASE_REGION": "eu"
+      }
+    }
+  }
+}
+```
+
+To remove the global link later:
+
+```bash
+npm unlink -g phrase-mcp-server
 ```
