@@ -11,9 +11,13 @@ import {
   JobsApi,
   KeysApi,
   LocalesApi,
+  type Middleware,
   ProjectsApi,
   TranslationsApi,
 } from "phrase-js";
+import {
+  UnifiedAccessTokenProvider,
+} from "#lib/auth.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
 
 export class StringsClient {
@@ -32,12 +36,35 @@ export class StringsClient {
   readonly jobCommentsApi: JobCommentsApi;
 
   constructor(options: ProductClientFactoryOptions) {
-    const authPrefix = options.authPrefix.trim();
-    const apiKeyValue = authPrefix ? `${authPrefix} ${options.authToken}` : options.authToken;
+    const authHeader = options.authHeader.trim() || "Authorization";
+    const configuredAuthPrefix = options.authPrefix.trim();
+    const useStaticTokenAuth = configuredAuthPrefix.toLowerCase() === "token";
+    const tokenProvider = useStaticTokenAuth
+      ? null
+      : new UnifiedAccessTokenProvider(options.authToken, options.region);
+    const authMiddleware: Middleware = {
+      pre: async (context) => {
+        const token = useStaticTokenAuth
+          ? options.authToken
+          : await tokenProvider!.getAccessToken();
+        const authPrefix = useStaticTokenAuth ? configuredAuthPrefix : "Bearer";
+        const authValue = authPrefix ? `${authPrefix} ${token}` : token;
+        const headers = new Headers((context.init.headers as HeadersInit | undefined) ?? {});
+        headers.set(authHeader, authValue);
+
+        return {
+          url: context.url,
+          init: {
+            ...context.init,
+            headers: Object.fromEntries(headers.entries()),
+          },
+        };
+      },
+    };
 
     const configuration = new Configuration({
       basePath: options.baseUrl,
-      apiKey: apiKeyValue,
+      middleware: [authMiddleware],
       fetchApi: globalThis.fetch,
     });
 

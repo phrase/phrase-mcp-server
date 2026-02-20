@@ -195,6 +195,71 @@ describe("loadProductRuntimes", () => {
     );
   });
 
+  it("uses configured default auth prefix when env override is not set", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "platform-token";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrl: "https://example.com",
+          defaultAuthPrefix: "token",
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "strings", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        authToken: "platform-token",
+        authPrefix: "token",
+      }),
+    );
+  });
+
+  it("allows overriding auth prefix from env var", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "platform-token";
+    process.env.PHRASE_STRINGS_AUTH_PREFIX = "Bearer";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrl: "https://example.com",
+          defaultAuthPrefix: "token",
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "strings", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        authToken: "platform-token",
+        authPrefix: "Bearer",
+      }),
+    );
+  });
+
   it("skips product when region is invalid", async () => {
     process.env.PHRASE_STRINGS_TOKEN = "token";
     process.env.PHRASE_STRINGS_REGION = "moon";

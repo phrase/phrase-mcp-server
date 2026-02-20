@@ -127,7 +127,8 @@ For each product, set:
 - `PHRASE_<PRODUCT>_TOKEN`
 - Optional: `PHRASE_<PRODUCT>_REGION` (`eu` or `us`)
 - Optional: `PHRASE_<PRODUCT>_AUTH_HEADER` (default `Authorization`)
-- Optional: `PHRASE_<PRODUCT>_AUTH_PREFIX` (default `Bearer`, Strings default `token`)
+- Optional: `PHRASE_<PRODUCT>_AUTH_PREFIX` (default `Bearer`)
+  - For Strings, `PHRASE_STRINGS_AUTH_PREFIX=token` uses static token auth (`token <PHRASE_STRINGS_TOKEN>`) and skips unified token exchange.
 
 Strings compatibility shortcuts are supported:
 
@@ -142,10 +143,7 @@ Region selection:
   - TMS: `https://cloud.memsource.com/web/api2` (EU), `https://us.cloud.memsource.com/web/api2` (US)
 - Explicit `PHRASE_<PRODUCT>_BASE_URL` always takes precedence over region defaults.
 
-TMS unified auth shortcuts are also supported:
-
-- `PHRASE_API_TOKEN` (used as alias for `PHRASE_TMS_TOKEN`)
-- Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`
+Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`.
 
 ### TMS Notes
 
