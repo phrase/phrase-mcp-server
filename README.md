@@ -127,12 +127,12 @@ For each product, set:
 - `PHRASE_<PRODUCT>_TOKEN`
 - Optional: `PHRASE_<PRODUCT>_REGION` (`eu` or `us`)
 - Optional: `PHRASE_<PRODUCT>_AUTH_HEADER` (default `Authorization`)
-- Optional: `PHRASE_<PRODUCT>_AUTH_PREFIX` (default `Bearer`, Strings default `token`)
+- Optional: `PHRASE_<PRODUCT>_AUTH_PREFIX` (default `Bearer`)
   - For Strings, `PHRASE_STRINGS_AUTH_PREFIX=token` uses static token auth (`token <PHRASE_STRINGS_TOKEN>`) and skips unified token exchange.
 
 Strings compatibility shortcuts are supported:
 
-- `PHRASE_STRINGS_TOKEN` (required for Strings unless `PHRASE_API_TOKEN` is provided)
+- `PHRASE_STRINGS_TOKEN` (required for Strings)
 - `PHRASE_BASE_URL` (same as `PHRASE_STRINGS_BASE_URL`, default `https://api.phrase.com/v2`)
 
 Region selection:
@@ -143,12 +143,7 @@ Region selection:
   - TMS: `https://cloud.memsource.com/web/api2` (EU), `https://us.cloud.memsource.com/web/api2` (US)
 - Explicit `PHRASE_<PRODUCT>_BASE_URL` always takes precedence over region defaults.
 
-Platform token auth shortcuts are also supported:
-
-- `PHRASE_API_TOKEN` (used as alias for both `PHRASE_TMS_TOKEN` and `PHRASE_STRINGS_TOKEN`)
-- Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`
-- When an alias token source is used and `PHRASE_<PRODUCT>_AUTH_PREFIX` is not set, default prefix is `Bearer`.
-- For Strings, set `PHRASE_STRINGS_AUTH_PREFIX=token` to force static token auth even when using `PHRASE_API_TOKEN`.
+Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`.
 
 ### TMS Notes
 

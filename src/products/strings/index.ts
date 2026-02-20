@@ -55,7 +55,6 @@ export const stringsModule: ProductModule<"strings"> = {
       us: "https://api.us.app.phrase.com/v2",
     },
     defaultAuthPrefix: "Bearer",
-    tokenEnvAliases: ["PHRASE_API_TOKEN"],
     baseUrlEnvAliases: ["PHRASE_BASE_URL"],
     createClient: (options) => new StringsClient(options),
   },

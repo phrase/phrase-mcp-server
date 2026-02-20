@@ -27,7 +27,6 @@ export const tmsModule: ProductModule<"tms"> = {
       eu: "https://cloud.memsource.com/web/api2",
       us: "https://us.cloud.memsource.com/web/api2",
     },
-    tokenEnvAliases: ["PHRASE_API_TOKEN"],
     createClient: (options) => new TmsClient(options),
   },
   register(server, runtime) {

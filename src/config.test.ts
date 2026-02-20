@@ -195,8 +195,8 @@ describe("loadProductRuntimes", () => {
     );
   });
 
-  it("uses alias token and bearer prefix defaults", async () => {
-    process.env.PHRASE_API_TOKEN = "platform-token";
+  it("uses configured default auth prefix when env override is not set", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "platform-token";
     process.env.PHRASE_ENABLED_PRODUCTS = "strings";
 
     const client = {} as StringsClient;
@@ -210,41 +210,6 @@ describe("loadProductRuntimes", () => {
         client: {
           defaultBaseUrl: "https://example.com",
           defaultAuthPrefix: "token",
-          tokenEnvAliases: ["PHRASE_API_TOKEN"],
-          createClient,
-        },
-        register: vi.fn(),
-      },
-    ];
-
-    const runtimes = await loadProductRuntimes(modules);
-
-    expect(runtimes).toEqual([{ key: "strings", client }]);
-    expect(createClient).toHaveBeenCalledWith(
-      expect.objectContaining({
-        authToken: "platform-token",
-        authPrefix: "Bearer",
-      }),
-    );
-  });
-
-  it("allows overriding alias token auth prefix to token", async () => {
-    process.env.PHRASE_API_TOKEN = "platform-token";
-    process.env.PHRASE_STRINGS_AUTH_PREFIX = "token";
-    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
-
-    const client = {} as StringsClient;
-    const createClient = vi.fn(
-      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
-    );
-
-    const modules: ProductModule<"strings">[] = [
-      {
-        key: "strings",
-        client: {
-          defaultBaseUrl: "https://example.com",
-          defaultAuthPrefix: "token",
-          tokenEnvAliases: ["PHRASE_API_TOKEN"],
           createClient,
         },
         register: vi.fn(),
@@ -258,6 +223,39 @@ describe("loadProductRuntimes", () => {
       expect.objectContaining({
         authToken: "platform-token",
         authPrefix: "token",
+      }),
+    );
+  });
+
+  it("allows overriding auth prefix from env var", async () => {
+    process.env.PHRASE_STRINGS_TOKEN = "platform-token";
+    process.env.PHRASE_STRINGS_AUTH_PREFIX = "Bearer";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrl: "https://example.com",
+          defaultAuthPrefix: "token",
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "strings", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        authToken: "platform-token",
+        authPrefix: "Bearer",
       }),
     );
   });
