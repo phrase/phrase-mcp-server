@@ -66,7 +66,7 @@ describe("StringsClient auth", () => {
     expect(headers.get("Authorization")).toBe("token direct-token");
   });
 
-  it("uses unified token exchange when configured via PHRASE_API_TOKEN", async () => {
+  it("uses unified token exchange when auth prefix is Bearer", async () => {
     const fetchMock = vi.fn(async (input: unknown, _init?: RequestInit) => {
       const url = asUrl(input);
       if (url === "https://eu.phrase.com/idm/oauth/token") {
