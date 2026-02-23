@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadProductRuntimes } from "#config.js";
 import { StringsClient } from "#products/strings/client.js";
-import type {
-  ProductClientFactoryOptions,
-  ProductModule,
-} from "#products/types.js";
+import type { ProductClientFactoryOptions, ProductModule } from "#products/types.js";
 
 function clearPhraseEnv(): void {
   for (const key of Object.keys(process.env)) {
@@ -41,8 +38,7 @@ describe("loadProductRuntimes", () => {
       authPrefix: "Bearer",
     });
     const createClient = vi.fn(
-      async (_options: ProductClientFactoryOptions): Promise<StringsClient> =>
-        client,
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
     );
 
     const modules: ProductModule<"strings">[] = [
@@ -265,9 +261,10 @@ describe("loadProductRuntimes", () => {
     process.env.PHRASE_STRINGS_REGION = "moon";
     process.env.PHRASE_ENABLED_PRODUCTS = "strings";
 
-    const logError = vi.spyOn(console, "error").mockImplementation(() => { });
+    const logError = vi.spyOn(console, "error").mockImplementation(() => {});
     const createClient = vi.fn(
-      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => ({} as StringsClient),
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> =>
+        ({}) as StringsClient,
     );
 
     const modules: ProductModule<"strings">[] = [

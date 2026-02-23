@@ -32,10 +32,7 @@ function sanitizeFilename(value: string): string {
   return trimmed;
 }
 
-export function registerCreateJobFromFileTool(
-  server: McpServer,
-  runtime: ProductRuntime<"tms">,
-) {
+export function registerCreateJobFromFileTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_create_job_from_file",
     {
@@ -53,9 +50,7 @@ export function registerCreateJobFromFileTool(
           .string()
           .min(1)
           .optional()
-          .describe(
-            "Optional uploaded filename override (Content-Disposition filename).",
-          ),
+          .describe("Optional uploaded filename override (Content-Disposition filename)."),
         target_langs: targetLangsSchema
           .optional()
           .describe(
@@ -71,9 +66,7 @@ export function registerCreateJobFromFileTool(
     },
     async ({ project_uid, file_path, file_name, target_langs, memsource }) => {
       const data = await readFile(file_path);
-      const resolvedFilename = sanitizeFilename(
-        file_name ?? basename(file_path),
-      );
+      const resolvedFilename = sanitizeFilename(file_name ?? basename(file_path));
       const mergedMemsource = {
         ...memsource,
         targetLangs: target_langs ?? memsource?.targetLangs,
@@ -83,10 +76,7 @@ export function registerCreateJobFromFileTool(
         },
       };
 
-      if (
-        !Array.isArray(mergedMemsource.targetLangs) ||
-        mergedMemsource.targetLangs.length === 0
-      ) {
+      if (!Array.isArray(mergedMemsource.targetLangs) || mergedMemsource.targetLangs.length === 0) {
         throw new Error(
           "Missing required target languages. Set target_langs or memsource.targetLangs.",
         );

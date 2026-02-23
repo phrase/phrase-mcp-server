@@ -44,9 +44,7 @@ describe("TmsClient", () => {
         ok: true,
         text: () =>
           Promise.resolve(
-            typeof apiResponse === "string"
-              ? apiResponse
-              : JSON.stringify(apiResponse),
+            typeof apiResponse === "string" ? apiResponse : JSON.stringify(apiResponse),
           ),
       });
     });
@@ -63,18 +61,11 @@ describe("TmsClient", () => {
         ok: true,
         arrayBuffer: () =>
           Promise.resolve(
-            bodyCopy.buffer.slice(
-              bodyCopy.byteOffset,
-              bodyCopy.byteOffset + bodyCopy.byteLength,
-            ),
+            bodyCopy.buffer.slice(bodyCopy.byteOffset, bodyCopy.byteOffset + bodyCopy.byteLength),
           ),
         headers: {
           get: (name: string) =>
-            name === "content-type"
-              ? contentType
-              : name === "content-disposition"
-                ? null
-                : null,
+            name === "content-type" ? contentType : name === "content-disposition" ? null : null,
         },
       });
     });
@@ -121,9 +112,7 @@ describe("TmsClient", () => {
       await client.get("/me");
 
       const apiCallOptions = fetchMock.mock.lastCall![1];
-      expect(apiCallOptions?.headers?.Authorization).toBe(
-        "Bearer exchange-token-123",
-      );
+      expect(apiCallOptions?.headers?.Authorization).toBe("Bearer exchange-token-123");
     });
   });
 
@@ -139,9 +128,7 @@ describe("TmsClient", () => {
       expect(result).toEqual(response);
       const apiCall = fetchMock.mock.lastCall!;
       expect(apiCall[1]?.method).toBe("POST");
-      expect(apiCall[1]?.headers?.["Content-Type"]).toContain(
-        "application/json",
-      );
+      expect(apiCall[1]?.headers?.["Content-Type"]).toContain("application/json");
       expect(JSON.parse(apiCall[1]?.body as string)).toEqual(sent);
     });
   });

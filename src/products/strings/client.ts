@@ -16,9 +16,7 @@ import {
   ProjectsApi,
   TranslationsApi,
 } from "phrase-js";
-import {
-  UnifiedAccessTokenProvider,
-} from "#lib/auth.js";
+import { UnifiedAccessTokenProvider } from "#lib/auth.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
 
 export class StringsClient {

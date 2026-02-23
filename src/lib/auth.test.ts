@@ -4,10 +4,7 @@ import { UnifiedAccessTokenProvider } from "#lib/auth.js";
 describe("UnifiedAccessTokenProvider", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
-  function mockTokenResponse<T extends object>(
-    body: T,
-    options: { ok: boolean; status: number },
-  ) {
+  function mockTokenResponse<T extends object>(body: T, options: { ok: boolean; status: number }) {
     const { ok, status } = options;
     const text = JSON.stringify(body);
     fetchMock.mockResolvedValue({
@@ -64,10 +61,7 @@ describe("UnifiedAccessTokenProvider", () => {
 
   describe("getAccessToken", () => {
     it("returns access_token from valid response (200, access_token, expires_in)", async () => {
-      mockTokenResponse(
-        { access_token: "secret-123", expires_in: 600 },
-        { ok: true, status: 200 },
-      );
+      mockTokenResponse({ access_token: "secret-123", expires_in: 600 }, { ok: true, status: 200 });
 
       const provider = new UnifiedAccessTokenProvider("my-token", "eu");
       const token = await provider.getAccessToken();
@@ -85,12 +79,8 @@ describe("UnifiedAccessTokenProvider", () => {
         }),
       );
       const body = fetchMock.mock.lastCall![1]!.body as URLSearchParams;
-      expect(body.get("grant_type")).toBe(
-        "urn:ietf:params:oauth:grant-type:token-exchange",
-      );
-      expect(body.get("subject_token_type")).toBe(
-        "urn:phrase:params:oauth:token-type:api_token",
-      );
+      expect(body.get("grant_type")).toBe("urn:ietf:params:oauth:grant-type:token-exchange");
+      expect(body.get("subject_token_type")).toBe("urn:phrase:params:oauth:token-type:api_token");
       expect(body.get("requested_token_type")).toBe(
         "urn:ietf:params:oauth:token-type:access_token",
       );
@@ -98,10 +88,7 @@ describe("UnifiedAccessTokenProvider", () => {
     });
 
     it("uses correct endpoint for region 'us'", async () => {
-      mockTokenResponse(
-        { access_token: "t", expires_in: 60 },
-        { ok: true, status: 200 },
-      );
+      mockTokenResponse({ access_token: "t", expires_in: 60 }, { ok: true, status: 200 });
 
       const provider = new UnifiedAccessTokenProvider("x", "us");
       await provider.getAccessToken();
