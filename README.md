@@ -164,21 +164,6 @@ Token exchange endpoint is `https://{region}.phrase.com/idm/oauth/token`.
 - Explicitly disable destructive permissions (for example delete/archive project capabilities) unless strictly required.
 - Do not use personal user tokens for automation.
 
-## Run
-
-For local development:
-
-```bash
-npm run dev
-```
-
-For production:
-
-```bash
-npm run build
-npm start
-```
-
 ## Test
 
 Run tests once:
