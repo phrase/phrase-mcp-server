@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
 import { TmsClient } from "#products/tms/client.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
 
@@ -27,7 +28,6 @@ describe("TmsClient", () => {
   beforeEach(() => {
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
-    delete process.env.PHRASE_TMS_USER_AGENT;
   });
 
   afterEach(() => {
@@ -44,9 +44,7 @@ describe("TmsClient", () => {
         ok: true,
         text: () =>
           Promise.resolve(
-            typeof apiResponse === "string"
-              ? apiResponse
-              : JSON.stringify(apiResponse),
+            typeof apiResponse === "string" ? apiResponse : JSON.stringify(apiResponse),
           ),
       });
     });
@@ -63,18 +61,11 @@ describe("TmsClient", () => {
         ok: true,
         arrayBuffer: () =>
           Promise.resolve(
-            bodyCopy.buffer.slice(
-              bodyCopy.byteOffset,
-              bodyCopy.byteOffset + bodyCopy.byteLength,
-            ),
+            bodyCopy.buffer.slice(bodyCopy.byteOffset, bodyCopy.byteOffset + bodyCopy.byteLength),
           ),
         headers: {
           get: (name: string) =>
-            name === "content-type"
-              ? contentType
-              : name === "content-disposition"
-                ? null
-                : null,
+            name === "content-type" ? contentType : name === "content-disposition" ? null : null,
         },
       });
     });
@@ -121,9 +112,17 @@ describe("TmsClient", () => {
       await client.get("/me");
 
       const apiCallOptions = fetchMock.mock.lastCall![1];
-      expect(apiCallOptions?.headers?.Authorization).toBe(
-        "Bearer exchange-token-123",
-      );
+      expect(apiCallOptions?.headers?.Authorization).toBe("Bearer exchange-token-123");
+    });
+
+    it("uses global user agent for API requests", async () => {
+      mockTokenThenApi({});
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      await client.get("/me");
+
+      const apiCallOptions = fetchMock.mock.lastCall![1];
+      expect(apiCallOptions?.headers?.["User-Agent"]).toBe(GLOBAL_USER_AGENT);
     });
   });
 
@@ -139,9 +138,7 @@ describe("TmsClient", () => {
       expect(result).toEqual(response);
       const apiCall = fetchMock.mock.lastCall!;
       expect(apiCall[1]?.method).toBe("POST");
-      expect(apiCall[1]?.headers?.["Content-Type"]).toContain(
-        "application/json",
-      );
+      expect(apiCall[1]?.headers?.["Content-Type"]).toContain("application/json");
       expect(JSON.parse(apiCall[1]?.body as string)).toEqual(sent);
     });
   });

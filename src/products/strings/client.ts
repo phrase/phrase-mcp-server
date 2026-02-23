@@ -16,9 +16,8 @@ import {
   ProjectsApi,
   TranslationsApi,
 } from "phrase-js";
-import {
-  UnifiedAccessTokenProvider,
-} from "#lib/auth.js";
+import { UnifiedAccessTokenProvider } from "#lib/auth.js";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
 
 export class StringsClient {
@@ -40,6 +39,7 @@ export class StringsClient {
   constructor(options: ProductClientFactoryOptions) {
     const authHeader = options.authHeader.trim() || "Authorization";
     const configuredAuthPrefix = options.authPrefix.trim();
+    const userAgent = GLOBAL_USER_AGENT;
     const useStaticTokenAuth = configuredAuthPrefix.toLowerCase() === "token";
     const tokenProvider = useStaticTokenAuth
       ? null
@@ -53,6 +53,7 @@ export class StringsClient {
         const authValue = authPrefix ? `${authPrefix} ${token}` : token;
         const headers = new Headers((context.init.headers as HeadersInit | undefined) ?? {});
         headers.set(authHeader, authValue);
+        headers.set("User-Agent", userAgent);
 
         return {
           url: context.url,

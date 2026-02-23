@@ -30,10 +30,10 @@ function parseEnabledProducts(): Set<ProductKey> {
     enabled.length === 0
       ? new Set<ProductKey>(ALL_PRODUCTS)
       : new Set(
-        enabled.filter((product): product is ProductKey =>
-          (ALL_PRODUCTS as readonly string[]).includes(product),
-        ),
-      );
+          enabled.filter((product): product is ProductKey =>
+            (ALL_PRODUCTS as readonly string[]).includes(product),
+          ),
+        );
 
   for (const product of disabled) {
     if ((ALL_PRODUCTS as readonly string[]).includes(product)) {
@@ -75,9 +75,7 @@ function parseRegion(value: string, envVar: string): Region {
     return normalized; // properly narrowed to Region
   }
 
-  throw new Error(
-    `Unsupported ${envVar} '${value}'. Expected one of: ${ALL_REGIONS.join(", ")}.`,
-  );
+  throw new Error(`Unsupported ${envVar} '${value}'. Expected one of: ${ALL_REGIONS.join(", ")}.`);
 }
 
 function resolveRegion(product: ProductKey): Region {

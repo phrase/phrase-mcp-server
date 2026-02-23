@@ -3,8 +3,8 @@ import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp.js";
+import { APP_NAME, APP_VERSION } from "#lib/runtime-info.js";
 import type { ProductRuntime } from "#products/types.js";
-import packageJson from "#package.json" with { type: "json" };
 const SAFE_FILENAME_PATTERN = /^[A-Za-z0-9._ -]+$/;
 const targetLangsSchema = z.array(z.string().min(1)).min(1);
 const memsourceSchema = z
@@ -32,10 +32,7 @@ function sanitizeFilename(value: string): string {
   return trimmed;
 }
 
-export function registerCreateJobFromFileTool(
-  server: McpServer,
-  runtime: ProductRuntime<"tms">,
-) {
+export function registerCreateJobFromFileTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_create_job_from_file",
     {
@@ -53,9 +50,7 @@ export function registerCreateJobFromFileTool(
           .string()
           .min(1)
           .optional()
-          .describe(
-            "Optional uploaded filename override (Content-Disposition filename).",
-          ),
+          .describe("Optional uploaded filename override (Content-Disposition filename)."),
         target_langs: targetLangsSchema
           .optional()
           .describe(
@@ -71,22 +66,17 @@ export function registerCreateJobFromFileTool(
     },
     async ({ project_uid, file_path, file_name, target_langs, memsource }) => {
       const data = await readFile(file_path);
-      const resolvedFilename = sanitizeFilename(
-        file_name ?? basename(file_path),
-      );
+      const resolvedFilename = sanitizeFilename(file_name ?? basename(file_path));
       const mergedMemsource = {
         ...memsource,
         targetLangs: target_langs ?? memsource?.targetLangs,
         sourceData: {
-          clientType: "phrase-mcp-server",
-          clientVersion: packageJson.version,
+          clientType: APP_NAME,
+          clientVersion: APP_VERSION,
         },
       };
 
-      if (
-        !Array.isArray(mergedMemsource.targetLangs) ||
-        mergedMemsource.targetLangs.length === 0
-      ) {
+      if (!Array.isArray(mergedMemsource.targetLangs) || mergedMemsource.targetLangs.length === 0) {
         throw new Error(
           "Missing required target languages. Set target_langs or memsource.targetLangs.",
         );

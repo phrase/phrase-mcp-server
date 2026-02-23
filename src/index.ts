@@ -3,6 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadProductRuntimes } from "#config.js";
+import { APP_NAME, APP_VERSION } from "#lib/runtime-info.js";
 import { productModules } from "#products/index.js";
 import type { AnyProductRuntime } from "#products/types.js";
 import { analyticsModule } from "#products/analytics/index.js";
@@ -11,8 +12,8 @@ import { stringsModule } from "#products/strings/index.js";
 import { tmsModule } from "#products/tms/index.js";
 
 const server = new McpServer({
-  name: "phrase-mcp-server",
-  version: "0.1.0",
+  name: APP_NAME,
+  version: APP_VERSION,
 });
 
 const runtimes = await loadProductRuntimes(productModules);

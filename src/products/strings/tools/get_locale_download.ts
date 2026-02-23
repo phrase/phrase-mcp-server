@@ -3,7 +3,10 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp.js";
 import type { ProductRuntime } from "#products/types.js";
 
-export function registerGetLocaleDownloadTool(server: McpServer, runtime: ProductRuntime<"strings">) {
+export function registerGetLocaleDownloadTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_get_locale_download",
     {

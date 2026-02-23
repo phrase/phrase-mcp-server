@@ -6,9 +6,9 @@ import {
   requestJson,
 } from "#lib/http.js";
 import { UnifiedAccessTokenProvider } from "#lib/auth.js";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
 
-const DEFAULT_USER_AGENT = "phrase-mcp-server/0.1.0";
 const DEFAULT_PAGE_SIZE = 50;
 const DEFAULT_MAX_PAGES = 25;
 const DEFAULT_MAX_ITEMS = 3000;
@@ -131,7 +131,7 @@ export class TmsClient {
     this.baseUrl = options.baseUrl;
     this.authHeader = options.authHeader;
     this.authPrefix = options.authPrefix;
-    this.userAgent = process.env.PHRASE_TMS_USER_AGENT?.trim() || DEFAULT_USER_AGENT;
+    this.userAgent = GLOBAL_USER_AGENT;
 
     this.tokenProvider = new UnifiedAccessTokenProvider(options.authToken, options.region);
   }
