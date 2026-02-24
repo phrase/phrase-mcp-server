@@ -4,14 +4,10 @@ updates:
     directory: /
     schedule:
       interval: daily
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 0
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 0
