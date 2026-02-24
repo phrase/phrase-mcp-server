@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
 import { TmsClient } from "#products/tms/client.js";
 import type { ProductClientFactoryOptions } from "#products/types.js";
 
@@ -27,7 +28,6 @@ describe("TmsClient", () => {
   beforeEach(() => {
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
-    delete process.env.PHRASE_TMS_USER_AGENT;
   });
 
   afterEach(() => {
@@ -113,6 +113,16 @@ describe("TmsClient", () => {
 
       const apiCallOptions = fetchMock.mock.lastCall![1];
       expect(apiCallOptions?.headers?.Authorization).toBe("Bearer exchange-token-123");
+    });
+
+    it("uses global user agent for API requests", async () => {
+      mockTokenThenApi({});
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      await client.get("/me");
+
+      const apiCallOptions = fetchMock.mock.lastCall![1];
+      expect(apiCallOptions?.headers?.["User-Agent"]).toBe(GLOBAL_USER_AGENT);
     });
   });
 

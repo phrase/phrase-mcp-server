@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
 import { StringsClient } from "#products/strings/client.js";
 
 function asUrl(input: unknown): string {
@@ -64,6 +65,34 @@ describe("StringsClient auth", () => {
     const request = fetchMock.mock.calls[0];
     const headers = new Headers((request[1]?.headers as HeadersInit | undefined) ?? {});
     expect(headers.get("Authorization")).toBe("token direct-token");
+    expect(headers.get("User-Agent")).toBe(GLOBAL_USER_AGENT);
+  });
+
+  it("uses global user agent for API requests", async () => {
+    const fetchMock = vi.fn(async (input: unknown, _init?: RequestInit) => {
+      const url = asUrl(input);
+      if (url.startsWith("https://api.example.com/projects")) {
+        return jsonResponse([]);
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const client = new StringsClient({
+      key: "strings",
+      region: "eu",
+      baseUrl: "https://api.example.com",
+      authHeader: "Authorization",
+      authToken: "direct-token",
+      authPrefix: "token",
+    });
+
+    await client.projectsApi.projectsList({});
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const request = fetchMock.mock.calls[0];
+    const headers = new Headers((request[1]?.headers as HeadersInit | undefined) ?? {});
+    expect(headers.get("User-Agent")).toBe(GLOBAL_USER_AGENT);
   });
 
   it("uses unified token exchange when auth prefix is Bearer", async () => {
