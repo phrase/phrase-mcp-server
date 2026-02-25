@@ -25,8 +25,10 @@ strings_create_job
 strings_create_job_comment
 strings_create_job_template
 strings_create_job_template_locale
+strings_create_locale
 strings_create_locale_download
 strings_create_project
+strings_create_upload
 strings_get_glossary
 strings_get_glossary_term
 strings_get_job
@@ -36,6 +38,7 @@ strings_get_job_template
 strings_get_job_template_locale
 strings_get_locale_download
 strings_get_project
+strings_get_upload
 strings_list_account_jobs
 strings_list_formats
 strings_list_glossaries
@@ -49,6 +52,7 @@ strings_list_keys
 strings_list_locales
 strings_list_projects
 strings_list_translations
+strings_list_uploads
 strings_lock_job
 strings_remove_job_keys
 strings_remove_job_locale
