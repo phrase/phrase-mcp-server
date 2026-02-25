@@ -38,5 +38,5 @@ jobs:
       - name: Run Formatter
         run: npm run format:check
 
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage threshold
+        run: npm run test:coverage

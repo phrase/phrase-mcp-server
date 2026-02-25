@@ -11,5 +11,12 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
+    coverage: {
+      include: ["src/**/*.ts"],
+      exclude: ["src/**/*.test.ts", "src/products/tms/tools/**/*.ts"],
+      thresholds: {
+        lines: 80
+      },
+    },
   },
 });
