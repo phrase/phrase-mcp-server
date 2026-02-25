@@ -30,10 +30,10 @@ function parseEnabledProducts(): Set<ProductKey> {
     enabled.length === 0
       ? new Set<ProductKey>(ALL_PRODUCTS)
       : new Set(
-          enabled.filter((product): product is ProductKey =>
-            (ALL_PRODUCTS as readonly string[]).includes(product),
-          ),
-        );
+        enabled.filter((product): product is ProductKey =>
+          (ALL_PRODUCTS as readonly string[]).includes(product),
+        ),
+      );
 
   for (const product of disabled) {
     if ((ALL_PRODUCTS as readonly string[]).includes(product)) {
@@ -169,10 +169,6 @@ async function loadProductRuntime(
     case "strings":
       return loadTypedProductRuntime(productModule);
     case "tms":
-      return loadTypedProductRuntime(productModule);
-    case "orchestrator":
-      return loadTypedProductRuntime(productModule);
-    case "analytics":
       return loadTypedProductRuntime(productModule);
   }
 }
