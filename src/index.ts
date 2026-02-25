@@ -6,8 +6,6 @@ import { loadProductRuntimes } from "#config.js";
 import { APP_NAME, APP_VERSION } from "#lib/runtime-info.js";
 import { productModules } from "#products/index.js";
 import type { AnyProductRuntime } from "#products/types.js";
-import { analyticsModule } from "#products/analytics/index.js";
-import { orchestratorModule } from "#products/orchestrator/index.js";
 import { stringsModule } from "#products/strings/index.js";
 import { tmsModule } from "#products/tms/index.js";
 
@@ -30,12 +28,6 @@ function registerRuntime(runtime: AnyProductRuntime): void {
       return;
     case "tms":
       tmsModule.register(server, runtime);
-      return;
-    case "orchestrator":
-      orchestratorModule.register(server, runtime);
-      return;
-    case "analytics":
-      analyticsModule.register(server, runtime);
       return;
   }
 }
