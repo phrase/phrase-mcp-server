@@ -90,9 +90,23 @@ tms_update_project
 
 ### Add to your MCP client
 
-Use the built server from this repository:
+Use the published package with `npx` in your MCP client config.
 
-If you have the package available via npm, you can also run it with:
+#### Codex (`~/.codex/config.toml`)
+
+```toml
+[mcp_servers.phrase]
+command = "npx"
+args = ["-y", "phrase-mcp-server"]
+
+[mcp_servers.phrase.env]
+PHRASE_STRINGS_TOKEN = "your_token" # Required for Strings tools, optional for TMS-only usage
+PHRASE_TMS_TOKEN = "your_token" # Required for TMS tools, optional for Strings-only usage
+ENABLED_PRODUCTS = "strings,tms" # Optional, defaults to all products
+PHRASE_REGION = "eu"
+```
+
+#### Claude Desktop (`claude_desktop_config.json`)
 
 ```json
 {
@@ -101,8 +115,9 @@ If you have the package available via npm, you can also run it with:
       "command": "npx",
       "args": ["-y", "phrase-mcp-server"],
       "env": {
-        "PHRASE_STRINGS_TOKEN": "your_token",
-        "PHRASE_TMS_TOKEN": "your_token",
+        "PHRASE_STRINGS_TOKEN": "your_token", # Required for Strings tools, optional for TMS-only usage
+        "PHRASE_TMS_TOKEN": "your_token", # Required for TMS tools, optional for Strings-only usage
+        "ENABLED_PRODUCTS": "strings,tms", # Optional, defaults to all products
         "PHRASE_REGION": "eu"
       }
     }
