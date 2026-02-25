@@ -15,6 +15,7 @@ import {
   type Middleware,
   ProjectsApi,
   TranslationsApi,
+  UploadsApi,
 } from "phrase-js";
 import { UnifiedAccessTokenProvider } from "#lib/auth.js";
 import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
@@ -35,6 +36,7 @@ export class StringsClient {
   readonly jobLocalesApi: JobLocalesApi;
   readonly jobCommentsApi: JobCommentsApi;
   readonly localeDownloadsApi: LocaleDownloadsApi;
+  readonly uploadsApi: UploadsApi;
 
   constructor(options: ProductClientFactoryOptions) {
     const authHeader = options.authHeader.trim() || "Authorization";
@@ -85,5 +87,6 @@ export class StringsClient {
     this.jobLocalesApi = new JobLocalesApi(configuration);
     this.jobCommentsApi = new JobCommentsApi(configuration);
     this.localeDownloadsApi = new LocaleDownloadsApi(configuration);
+    this.uploadsApi = new UploadsApi(configuration);
   }
 }
