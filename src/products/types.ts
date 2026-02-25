@@ -2,7 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { StringsClient } from "#products/strings/client.js";
 import type { TmsClient } from "#products/tms/client.js";
 
-export const ALL_PRODUCTS = ["strings", "tms", "orchestrator", "analytics"] as const;
+export const ALL_PRODUCTS = ["strings", "tms"] as const;
 export const ALL_REGIONS = ["eu", "us"] as const;
 
 export type ProductKey = (typeof ALL_PRODUCTS)[number];
@@ -15,8 +15,6 @@ export function isRegion(value: string): value is Region {
 export interface ProductClientMap {
   strings: StringsClient;
   tms: TmsClient;
-  orchestrator: never;
-  analytics: never;
 }
 
 export type ProductRuntime<K extends ProductKey = ProductKey> = {

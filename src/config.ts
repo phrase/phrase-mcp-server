@@ -170,10 +170,6 @@ async function loadProductRuntime(
       return loadTypedProductRuntime(productModule);
     case "tms":
       return loadTypedProductRuntime(productModule);
-    case "orchestrator":
-      return loadTypedProductRuntime(productModule);
-    case "analytics":
-      return loadTypedProductRuntime(productModule);
   }
 }
 
