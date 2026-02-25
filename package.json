@@ -22,7 +22,8 @@
     "format": "biome format . --write",
     "format:check": "biome format .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.4",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
     "@types/node": "^25.2.3",
+    "@vitest/coverage-v8": "^4.0.18",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vitest": "^4.0.18"
