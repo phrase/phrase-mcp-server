@@ -14,29 +14,6 @@ function createUploadFile(data: Buffer, filePath: string): Blob {
   return Object.assign(new Blob([bytes]), { name: filename }) as Blob;
 }
 
-async function toUploadError(response: Response): Promise<Error> {
-  const prefix = `Phrase Strings upload failed (${response.status} ${response.statusText})`;
-  const rawBody = await response.text().catch(() => "");
-  if (!rawBody) {
-    return new Error(prefix);
-  }
-
-  try {
-    const parsed = JSON.parse(rawBody) as Record<string, unknown>;
-    if (Array.isArray(parsed.message)) {
-      return new Error(`${prefix}: ${parsed.message.join("; ")}`);
-    }
-    if (typeof parsed.message === "string") {
-      return new Error(`${prefix}: ${parsed.message}`);
-    }
-  } catch {
-    // Fall back to a compact text response snippet.
-  }
-
-  const compact = rawBody.replace(/\s+/g, " ").trim();
-  return new Error(`${prefix}: ${compact.slice(0, 600)}`);
-}
-
 export function registerCreateUploadTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_create_upload",
@@ -101,39 +78,32 @@ export function registerCreateUploadTool(server: McpServer, runtime: ProductRunt
     }) => {
       const data = await readFile(file_path);
       const file = createUploadFile(data, file_path);
-      try {
-        const upload = await runtime.client.uploadsApi.uploadCreate({
-          projectId: project_id,
-          file,
-          fileFormat: file_format,
-          localeId: locale_id,
-          branch,
-          tags,
-          updateTranslations: update_translations,
-          updateCustomMetadata: update_custom_metadata,
-          updateTranslationKeys: update_translation_keys,
-          updateTranslationsOnSourceMatch: update_translations_on_source_match,
-          sourceLocaleId: source_locale_id,
-          updateDescriptions: update_descriptions,
-          convertEmoji: convert_emoji,
-          skipUploadTags: skip_upload_tags,
-          skipUnverification: skip_unverification,
-          fileEncoding: file_encoding,
-          localeMapping: locale_mapping,
-          formatOptions: format_options,
-          autotranslate,
-          verifyMentionedTranslations: verify_mentioned_translations,
-          markReviewed: mark_reviewed,
-          tagOnlyAffectedKeys: tag_only_affected_keys,
-          translationKeyPrefix: translation_key_prefix,
-        });
-        return asTextContent(upload);
-      } catch (error) {
-        if (error instanceof Response) {
-          throw await toUploadError(error);
-        }
-        throw error;
-      }
+      const upload = await runtime.client.uploadsApi.uploadCreate({
+        projectId: project_id,
+        file,
+        fileFormat: file_format,
+        localeId: locale_id,
+        branch,
+        tags,
+        updateTranslations: update_translations,
+        updateCustomMetadata: update_custom_metadata,
+        updateTranslationKeys: update_translation_keys,
+        updateTranslationsOnSourceMatch: update_translations_on_source_match,
+        sourceLocaleId: source_locale_id,
+        updateDescriptions: update_descriptions,
+        convertEmoji: convert_emoji,
+        skipUploadTags: skip_upload_tags,
+        skipUnverification: skip_unverification,
+        fileEncoding: file_encoding,
+        localeMapping: locale_mapping,
+        formatOptions: format_options,
+        autotranslate,
+        verifyMentionedTranslations: verify_mentioned_translations,
+        markReviewed: mark_reviewed,
+        tagOnlyAffectedKeys: tag_only_affected_keys,
+        translationKeyPrefix: translation_key_prefix,
+      });
+      return asTextContent(upload);
     },
   );
 }

@@ -1,3 +1,4 @@
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { ProductModule } from "#products/types.js";
 import { StringsClient } from "#products/strings/client.js";
 import { registerAddJobLocaleTool } from "#products/strings/tools/add_job_locale.js";
@@ -51,6 +52,30 @@ import { registerStartJobTool } from "#products/strings/tools/start_job.js";
 import { registerUpdateJobLocaleTool } from "#products/strings/tools/update_job_locale.js";
 import { registerUnlockJobTool } from "#products/strings/tools/unlock_job.js";
 import { registerUpdateJobTool } from "#products/strings/tools/update_job.js";
+import { toStringsApiError } from "#products/strings/tools/error.js";
+
+function withStringsErrorHandling(server: McpServer): McpServer {
+  const registerTool = ((...args: unknown[]) => {
+    const [name, options, handler] = args as [
+      string,
+      unknown,
+      (...handlerArgs: unknown[]) => Promise<unknown> | unknown,
+    ];
+    (server.registerTool as (...toolArgs: unknown[]) => unknown)(
+      name,
+      options,
+      async (...handlerArgs: unknown[]) => {
+        try {
+          return await handler(...handlerArgs);
+        } catch (error) {
+          throw await toStringsApiError(error, "request");
+        }
+      },
+    );
+  }) as McpServer["registerTool"];
+
+  return { registerTool } as unknown as McpServer;
+}
 
 export const stringsModule: ProductModule<"strings"> = {
   key: "strings",
@@ -65,56 +90,57 @@ export const stringsModule: ProductModule<"strings"> = {
     createClient: (options) => new StringsClient(options),
   },
   register(server, runtime) {
-    registerListProjectsTool(server, runtime);
-    registerGetProjectTool(server, runtime);
-    registerCreateProjectTool(server, runtime);
-    registerGlossariesListTool(server, runtime);
-    registerGlossaryShowTool(server, runtime);
-    registerGlossaryCreateTool(server, runtime);
-    registerGlossaryUpdateTool(server, runtime);
-    registerGlossaryTermCreateTool(server, runtime);
-    registerGlossaryTermShowTool(server, runtime);
-    registerGlossaryTermsListTool(server, runtime);
-    registerGlossaryTermTranslationCreateTool(server, runtime);
-    registerGlossaryTermTranslationUpdateTool(server, runtime);
-    registerListFormatsTool(server, runtime);
-    registerCreateLocaleTool(server, runtime);
-    registerListLocalesTool(server, runtime);
-    registerCreateLocaleDownloadTool(server, runtime);
-    registerGetLocaleDownloadTool(server, runtime);
-    registerCreateUploadTool(server, runtime);
-    registerGetUploadTool(server, runtime);
-    registerListUploadsTool(server, runtime);
-    registerListKeysTool(server, runtime);
-    registerListTranslationsTool(server, runtime);
-    registerListJobsTool(server, runtime);
-    registerListAccountJobsTool(server, runtime);
-    registerListJobTemplatesTool(server, runtime);
-    registerGetJobTemplateTool(server, runtime);
-    registerCreateJobTemplateTool(server, runtime);
-    registerListJobTemplateLocalesTool(server, runtime);
-    registerGetJobTemplateLocaleTool(server, runtime);
-    registerCreateJobTemplateLocaleTool(server, runtime);
-    registerGetJobTool(server, runtime);
-    registerCreateJobTool(server, runtime);
-    registerUpdateJobTool(server, runtime);
-    registerStartJobTool(server, runtime);
-    registerCompleteJobTool(server, runtime);
-    registerReopenJobTool(server, runtime);
-    registerLockJobTool(server, runtime);
-    registerUnlockJobTool(server, runtime);
-    registerAddJobKeysTool(server, runtime);
-    registerRemoveJobKeysTool(server, runtime);
-    registerListJobLocalesTool(server, runtime);
-    registerAddJobLocaleTool(server, runtime);
-    registerGetJobLocaleTool(server, runtime);
-    registerUpdateJobLocaleTool(server, runtime);
-    registerRemoveJobLocaleTool(server, runtime);
-    registerCompleteJobLocaleTool(server, runtime);
-    registerReviewJobLocaleTool(server, runtime);
-    registerReopenJobLocaleTool(server, runtime);
-    registerListJobCommentsTool(server, runtime);
-    registerCreateJobCommentTool(server, runtime);
-    registerGetJobCommentTool(server, runtime);
+    const wrappedServer = withStringsErrorHandling(server);
+    registerListProjectsTool(wrappedServer, runtime);
+    registerGetProjectTool(wrappedServer, runtime);
+    registerCreateProjectTool(wrappedServer, runtime);
+    registerGlossariesListTool(wrappedServer, runtime);
+    registerGlossaryShowTool(wrappedServer, runtime);
+    registerGlossaryCreateTool(wrappedServer, runtime);
+    registerGlossaryUpdateTool(wrappedServer, runtime);
+    registerGlossaryTermCreateTool(wrappedServer, runtime);
+    registerGlossaryTermShowTool(wrappedServer, runtime);
+    registerGlossaryTermsListTool(wrappedServer, runtime);
+    registerGlossaryTermTranslationCreateTool(wrappedServer, runtime);
+    registerGlossaryTermTranslationUpdateTool(wrappedServer, runtime);
+    registerListFormatsTool(wrappedServer, runtime);
+    registerCreateLocaleTool(wrappedServer, runtime);
+    registerListLocalesTool(wrappedServer, runtime);
+    registerCreateLocaleDownloadTool(wrappedServer, runtime);
+    registerGetLocaleDownloadTool(wrappedServer, runtime);
+    registerCreateUploadTool(wrappedServer, runtime);
+    registerGetUploadTool(wrappedServer, runtime);
+    registerListUploadsTool(wrappedServer, runtime);
+    registerListKeysTool(wrappedServer, runtime);
+    registerListTranslationsTool(wrappedServer, runtime);
+    registerListJobsTool(wrappedServer, runtime);
+    registerListAccountJobsTool(wrappedServer, runtime);
+    registerListJobTemplatesTool(wrappedServer, runtime);
+    registerGetJobTemplateTool(wrappedServer, runtime);
+    registerCreateJobTemplateTool(wrappedServer, runtime);
+    registerListJobTemplateLocalesTool(wrappedServer, runtime);
+    registerGetJobTemplateLocaleTool(wrappedServer, runtime);
+    registerCreateJobTemplateLocaleTool(wrappedServer, runtime);
+    registerGetJobTool(wrappedServer, runtime);
+    registerCreateJobTool(wrappedServer, runtime);
+    registerUpdateJobTool(wrappedServer, runtime);
+    registerStartJobTool(wrappedServer, runtime);
+    registerCompleteJobTool(wrappedServer, runtime);
+    registerReopenJobTool(wrappedServer, runtime);
+    registerLockJobTool(wrappedServer, runtime);
+    registerUnlockJobTool(wrappedServer, runtime);
+    registerAddJobKeysTool(wrappedServer, runtime);
+    registerRemoveJobKeysTool(wrappedServer, runtime);
+    registerListJobLocalesTool(wrappedServer, runtime);
+    registerAddJobLocaleTool(wrappedServer, runtime);
+    registerGetJobLocaleTool(wrappedServer, runtime);
+    registerUpdateJobLocaleTool(wrappedServer, runtime);
+    registerRemoveJobLocaleTool(wrappedServer, runtime);
+    registerCompleteJobLocaleTool(wrappedServer, runtime);
+    registerReviewJobLocaleTool(wrappedServer, runtime);
+    registerReopenJobLocaleTool(wrappedServer, runtime);
+    registerListJobCommentsTool(wrappedServer, runtime);
+    registerCreateJobCommentTool(wrappedServer, runtime);
+    registerGetJobCommentTool(wrappedServer, runtime);
   },
 };
