@@ -178,7 +178,7 @@ export async function requestJson(
     }
   }
 
-  throw lastError;
+  throw lastError ?? new Error("Unexpected: requestJson retry loop completed without error");
 }
 
 export async function requestBinary(
@@ -226,5 +226,5 @@ export async function requestBinary(
     };
   }
 
-  throw lastError;
+  throw lastError ?? new Error("Unexpected: requestBinary retry loop completed without error");
 }
