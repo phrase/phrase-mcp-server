@@ -3,7 +3,7 @@ import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp.js";
-import { APP_NAME, APP_VERSION } from "#lib/runtime-info.js";
+import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info.js";
 import type { ProductRuntime } from "#products/types.js";
 const SAFE_FILENAME_PATTERN = /^[A-Za-z0-9._ -]+$/;
 const targetLangsSchema = z.array(z.string().min(1)).min(1);
@@ -71,7 +71,7 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
         ...memsource,
         targetLangs: target_langs ?? memsource?.targetLangs,
         sourceData: {
-          clientType: APP_NAME,
+          clientType: PHRASE_TMS_CLIENT_TYPE,
           clientVersion: APP_VERSION,
         },
       };

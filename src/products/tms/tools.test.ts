@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { HttpError, type BinaryResponse } from "#lib/http.js";
-import { APP_NAME, APP_VERSION } from "#lib/runtime-info.js";
+import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info.js";
 import { tmsModule } from "#products/tms/index.js";
 import type { ProductRuntime } from "#products/types.js";
 
@@ -491,7 +491,7 @@ describe("tmsModule tools", () => {
     };
     expect(memsource.targetLangs).toEqual(["es_es"]);
     expect(memsource.customField).toBe("x");
-    expect(memsource.sourceData.clientType).toBe(APP_NAME);
+    expect(memsource.sourceData.clientType).toBe(PHRASE_TMS_CLIENT_TYPE);
     expect(memsource.sourceData.clientVersion).toBe(APP_VERSION);
   });
 
