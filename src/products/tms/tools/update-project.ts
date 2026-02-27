@@ -8,7 +8,7 @@ export function registerUpdateProjectTool(server: McpServer, runtime: ProductRun
     "tms_update_project",
     {
       description:
-        "Update an existing Phrase TMS project settings such as name, due date, or note. To change project status (e.g. mark Completed), use set_project_status instead. (PUT /api2/v2/projects/{projectUid})",
+        "Update an existing Phrase TMS project settings such as name, due date, or note. To change project status (e.g. mark Completed), use tms_set_project_status instead. (PUT /api2/v2/projects/{projectUid})",
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         project: z

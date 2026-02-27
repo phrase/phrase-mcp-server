@@ -11,7 +11,7 @@ export function registerListProjectTemplatesTool(
     "tms_list_project_templates",
     {
       description:
-        "List all available project templates. Use to discover template UIDs before calling create_project_from_template. For interaction/conversational use, prefer create_project_from_template_shorthand which matches templates by name and skips this lookup. (GET /api2/v1/projectTemplates)",
+        "List all available project templates. Use to discover template UIDs before calling tms_create_project_from_template. For interaction/conversational use, prefer tms_create_project_from_template_shorthand which matches templates by name and skips this lookup. (GET /api2/v1/projectTemplates)",
       inputSchema: {
         query: querySchema.describe(
           "Supported filters: name (partial match). Pass additional raw query params accepted by this endpoint as needed.",
