@@ -7,7 +7,7 @@ export function registerGetAsyncLimitsTool(server: McpServer, runtime: ProductRu
     "tms_get_async_limits",
     {
       description:
-        "Get current Phrase TMS asynchronous request limits and usage status (GET /api2/v1/async/status). Read-only operation.",
+        "Get current Phrase TMS asynchronous request limits and usage status (GET /api2/v1/async/status). Returns information about concurrent async operation capacity. Use this to check available capacity before triggering expensive async operations like tms_download_target_file_async. Read-only operation.",
       inputSchema: {},
     },
     async () => {

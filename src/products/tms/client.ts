@@ -113,11 +113,7 @@ function defaultHasNext(response: unknown, context: PaginateContext): boolean {
     return false;
   }
 
-  if (context.lastBatchSize < context.pageSize) {
-    return false;
-  }
-
-  return true;
+  return context.lastBatchSize >= context.pageSize;
 }
 
 export class TmsClient {
@@ -159,6 +155,7 @@ export class TmsClient {
         "User-Agent": this.userAgent,
         ...options.headers,
       },
+      maxRetries: 3,
     });
   }
 
@@ -207,6 +204,7 @@ export class TmsClient {
         [this.authHeader]: authValue,
         "User-Agent": this.userAgent,
       },
+      maxRetries: 3,
     });
   }
 

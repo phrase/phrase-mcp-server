@@ -16,7 +16,7 @@ export function registerDownloadTargetFileAsyncTool(
     "tms_download_target_file_async",
     {
       description:
-        "Trigger asynchronous target file generation for a TMS job (PUT /api2/v2 or /api2/v3 projects/{projectUid}/jobs/{jobUid}/targetFile). Returns async request details.",
+        "Trigger asynchronous target file generation for a TMS job (PUT /api2/v2 or /api2/v3 projects/{projectUid}/jobs/{jobUid}/targetFile). Returns async request details. Note: TMS has limits on concurrent async operations. If limits are reached, the API will return 429/503 and automatic retry will occur. Check tms_get_async_limits beforehand if needed. Use tms_get_async_request to poll for completion, then tms_download_target_file_by_async_request to retrieve the file.",
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),

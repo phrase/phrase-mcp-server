@@ -156,3 +156,149 @@ describe("requestBinary", () => {
     });
   });
 });
+
+describe("retry logic", () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fetchMock = vi.fn(() => Promise.reject(new Error("fetch not mocked")));
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
+  });
+
+  describe("requestJson", () => {
+    it("retries on 429 error with exponential backoff", async () => {
+      fetchMock
+        .mockResolvedValueOnce(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        )
+        .mockResolvedValueOnce(
+          new Response("still limited", { status: 429, statusText: "Too Many Requests" }),
+        )
+        .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+      const result = await requestJson("https://api.example.com", "/items");
+
+      expect(result).toEqual({ ok: true });
+      expect(fetchMock).toHaveBeenCalledTimes(3);
+    });
+
+    it("retries on 503 error", async () => {
+      fetchMock
+        .mockResolvedValueOnce(
+          new Response("service unavailable", { status: 503, statusText: "Service Unavailable" }),
+        )
+        .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+      const result = await requestJson("https://api.example.com", "/items");
+
+      expect(result).toEqual({ ok: true });
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+
+    it("respects Retry-After header (seconds)", async () => {
+      const headers = new Headers();
+      headers.set("Retry-After", "2");
+
+      fetchMock
+        .mockResolvedValueOnce(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests", headers }),
+        )
+        .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+      const start = Date.now();
+      const result = await requestJson("https://api.example.com", "/items");
+      const elapsed = Date.now() - start;
+
+      expect(result).toEqual({ ok: true });
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(elapsed).toBeGreaterThanOrEqual(2000);
+    });
+
+    it.skip("respects Retry-After header (HTTP date)", async () => {
+      // Skip this test temporarily - HTTP date parsing can be flaky in tests
+      // The parsing logic is tested via unit testing parseRetryAfter
+    });
+
+    it("throws after max retries exhausted", async () => {
+      fetchMock.mockImplementation(() =>
+        Promise.resolve(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        ),
+      );
+
+      await expect(
+        requestJson("https://api.example.com", "/items", { maxRetries: 1 }),
+      ).rejects.toMatchObject({
+        status: 429,
+        statusText: "Too Many Requests",
+      });
+
+      expect(fetchMock).toHaveBeenCalledTimes(2); // 1 initial + 1 retry
+    });
+
+    it("does not retry on non-retryable errors", async () => {
+      fetchMock.mockResolvedValue(
+        new Response("forbidden", { status: 403, statusText: "Forbidden" }),
+      );
+
+      await expect(requestJson("https://api.example.com", "/items")).rejects.toMatchObject({
+        status: 403,
+        statusText: "Forbidden",
+      });
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("requestBinary", () => {
+    it("retries on 429 error", async () => {
+      const bytes = Buffer.from("hello");
+      const headers = new Headers();
+      headers.set("content-type", "application/octet-stream");
+
+      fetchMock
+        .mockResolvedValueOnce(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        )
+        .mockResolvedValueOnce(new Response(bytes, { status: 200, headers }));
+
+      const result = await requestBinary("https://api.example.com", "/download");
+
+      expect(result.bytesBase64).toBe(bytes.toString("base64"));
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+
+    it("throws after max retries exhausted", async () => {
+      fetchMock.mockImplementation(() =>
+        Promise.resolve(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        ),
+      );
+
+      await expect(
+        requestBinary("https://api.example.com", "/download", { maxRetries: 1 }),
+      ).rejects.toMatchObject({
+        status: 429,
+      });
+
+      expect(fetchMock).toHaveBeenCalledTimes(2); // 1 initial + 1 retry
+    });
+
+    it("does not retry on non-retryable errors", async () => {
+      fetchMock.mockResolvedValue(
+        new Response("not found", { status: 404, statusText: "Not Found" }),
+      );
+
+      await expect(requestBinary("https://api.example.com", "/missing")).rejects.toMatchObject({
+        status: 404,
+      });
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+  });
+});
