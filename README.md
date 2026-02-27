@@ -106,7 +106,7 @@ args = ["-y", "phrase-mcp-server"]
 [mcp_servers.phrase.env]
 PHRASE_STRINGS_TOKEN = "your_token" # Required for Strings tools, optional for TMS-only usage
 PHRASE_TMS_TOKEN = "your_token" # Required for TMS tools, optional for Strings-only usage
-ENABLED_PRODUCTS = "strings,tms" # Optional, defaults to all products
+PHRASE_ENABLED_PRODUCTS = "strings,tms" # Optional, defaults to all products
 PHRASE_REGION = "eu"
 ```
 
