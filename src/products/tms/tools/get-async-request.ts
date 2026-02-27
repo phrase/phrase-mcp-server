@@ -8,7 +8,7 @@ export function registerGetAsyncRequestTool(server: McpServer, runtime: ProductR
     "tms_get_async_request",
     {
       description:
-        "Get a Phrase TMS asynchronous request by ID (GET /api2/v1/async/{asyncRequestId}). Read-only operation.",
+        "Get a Phrase TMS asynchronous request by ID (GET /api2/v1/async/{asyncRequestId}). Use this to poll for async operation completion status after triggering operations like tms_download_target_file_async. Check the response status field - when it shows 'COMPLETED', the operation is ready. Read-only operation.",
       inputSchema: {
         async_request_id: z
           .string()

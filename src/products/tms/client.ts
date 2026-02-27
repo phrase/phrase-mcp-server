@@ -159,6 +159,7 @@ export class TmsClient {
         "User-Agent": this.userAgent,
         ...options.headers,
       },
+      maxRetries: 3,
     });
   }
 
@@ -207,6 +208,7 @@ export class TmsClient {
         [this.authHeader]: authValue,
         "User-Agent": this.userAgent,
       },
+      maxRetries: 3,
     });
   }
 

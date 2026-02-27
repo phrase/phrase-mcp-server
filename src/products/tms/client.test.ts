@@ -500,4 +500,147 @@ describe("TmsClient", () => {
       expect(result.truncated).toBe(true);
     });
   });
+
+  describe("rate limit handling", () => {
+    it("retries on 429 errors in get()", async () => {
+      const headers = new Headers();
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 429,
+            statusText: "Too Many Requests",
+            text: () => Promise.resolve("rate limited"),
+            headers,
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({ id: 1 })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.get("/projects/1");
+
+      expect(result).toEqual({ id: 1 });
+      expect(fetchMock).toHaveBeenCalledTimes(3); // 1 token + 1 failed + 1 success
+    });
+
+    it("retries on 503 errors in postJson()", async () => {
+      const headers = new Headers();
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 503,
+            statusText: "Service Unavailable",
+            text: () => Promise.resolve("concurrent limit"),
+            headers,
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({ id: 42 })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.postJson("/projects", { name: "Test" });
+
+      expect(result).toEqual({ id: 42 });
+      expect(fetchMock).toHaveBeenCalledTimes(3); // 1 token + 1 failed + 1 success
+    });
+
+    it("respects Retry-After header on 429 errors", async () => {
+      const headers = new Headers();
+      headers.set("Retry-After", "1");
+
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 429,
+            statusText: "Too Many Requests",
+            text: () => Promise.resolve("rate limited"),
+            headers,
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({ ok: true })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const start = Date.now();
+      const result = await client.get("/projects");
+      const elapsed = Date.now() - start;
+
+      expect(result).toEqual({ ok: true });
+      expect(elapsed).toBeGreaterThanOrEqual(900);
+    });
+
+    it("retries on 429 errors in getBinary()", async () => {
+      const bytes = Buffer.from("test");
+      const headers = new Headers();
+      const successHeaders = new Headers({ "content-type": "application/octet-stream" });
+
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 429,
+            statusText: "Too Many Requests",
+            text: () => Promise.resolve("rate limited"),
+            headers,
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+            headers: successHeaders,
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.getBinary("/download");
+
+      expect(result.bytesBase64).toBe(bytes.toString("base64"));
+      expect(fetchMock).toHaveBeenCalledTimes(3); // 1 token + 1 failed + 1 success
+    });
+
+    it(
+      "throws after max retries exhausted",
+      { timeout: 10000 },
+      async () => {
+        const headers = new Headers();
+        fetchMock
+          .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+          .mockImplementation(() =>
+            Promise.resolve({
+              ok: false,
+              status: 429,
+              statusText: "Too Many Requests",
+              text: () => Promise.resolve("rate limited"),
+              headers,
+            }),
+          );
+
+        const client = new TmsClient(DEFAULT_OPTIONS);
+        // Use maxRetries override in the low-level request to avoid long waits in tests
+        // The TMS client is configured with maxRetries: 3 in the request method
+        await expect(client.get("/projects")).rejects.toThrow("HTTP 429 Too Many Requests");
+        expect(fetchMock).toHaveBeenCalledTimes(5); // 1 token + 1 initial + 3 retries
+      }
+    );
+  });
 });
