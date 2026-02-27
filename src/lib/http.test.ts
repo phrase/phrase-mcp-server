@@ -216,7 +216,7 @@ describe("retry logic", () => {
 
       expect(result).toEqual({ ok: true });
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(elapsed).toBeGreaterThanOrEqual(1900);
+      expect(elapsed).toBeGreaterThanOrEqual(2000);
     });
 
     it.skip("respects Retry-After header (HTTP date)", async () => {
