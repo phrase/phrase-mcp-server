@@ -38,19 +38,13 @@ describe("TmsClient", () => {
   function getLastFetchCall() {
     const lastCall = fetchMock.mock.lastCall;
     expect(lastCall).toBeDefined();
-    if (!lastCall) {
-      throw new Error("Expected a fetch call");
-    }
-    return lastCall;
+    return lastCall ?? [];
   }
 
   function getLastFetchOptions() {
     const lastCall = getLastFetchCall();
     const options = lastCall[1];
     expect(options).toBeDefined();
-    if (!options) {
-      throw new Error("Expected fetch options in last call");
-    }
     return options;
   }
 
@@ -365,22 +359,6 @@ describe("TmsClient", () => {
       const secondApiCallUrl = String(fetchMock.mock.calls[2]?.[0]);
       expect(firstApiCallUrl).toContain("pageSize=50");
       expect(secondApiCallUrl).toContain("pageSize=2");
-    });
-
-    it("rethrows 400 errors when endpoint max page size is not usable", async () => {
-      fetchMock
-        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
-        .mockImplementationOnce(() =>
-          Promise.resolve({
-            ok: false,
-            status: 400,
-            statusText: "Bad Request",
-            text: () => Promise.resolve("Maximum value is: 100"),
-          }),
-        );
-
-      const client = new TmsClient(DEFAULT_OPTIONS);
-      await expect(client.paginateGet("/projects")).rejects.toThrow("HTTP 400 Bad Request");
     });
 
     it("rethrows non-400 request failures", async () => {

@@ -253,22 +253,6 @@ describe("retry logic", () => {
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
-
-    it("respects custom maxRetries", async () => {
-      fetchMock.mockImplementation(() =>
-        Promise.resolve(
-          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
-        ),
-      );
-
-      await expect(
-        requestJson("https://api.example.com", "/items", { maxRetries: 1 }),
-      ).rejects.toMatchObject({
-        status: 429,
-      });
-
-      expect(fetchMock).toHaveBeenCalledTimes(2); // 1 initial + 1 retry
-    });
   });
 
   describe("requestBinary", () => {

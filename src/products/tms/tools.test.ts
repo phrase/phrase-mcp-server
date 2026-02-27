@@ -75,11 +75,8 @@ async function invokeTool(
 ) {
   const registration = registrations.get(toolName);
   expect(registration).toBeDefined();
-  if (!registration) {
-    throw new Error(`Tool ${toolName} is not registered`);
-  }
-  const response = await registration.handler(input);
-  return JSON.parse(response.content[0]?.text ?? "null");
+  const response = await registration?.handler(input);
+  return JSON.parse(response?.content[0]?.text ?? "null");
 }
 
 const EXPECTED_TOOL_NAMES = [
@@ -132,44 +129,52 @@ describe("tmsModule tools", () => {
 
   it("handles direct get/post/put wrapper tools", async () => {
     await invokeTool(registrations, "tms_get_project", { project_uid: "proj/1" });
+    expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1");
+
     await invokeTool(registrations, "tms_create_project", { project: { name: "Demo" } });
+    expect(client.postJson).toHaveBeenCalledWith("/v3/projects", { name: "Demo" });
+
     await invokeTool(registrations, "tms_update_project", {
       project_uid: "proj/1",
       project: { note: "updated" },
     });
+    expect(client.putJson).toHaveBeenCalledWith("/v2/projects/proj%2F1", { note: "updated" });
+
     await invokeTool(registrations, "tms_set_project_status", {
       project_uid: "proj/1",
       status: "NEW",
     });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/projects/proj%2F1/setStatus", {
+      status: "NEW",
+    });
+
     await invokeTool(registrations, "tms_get_project_template", {
       template_uid: "template/1",
     });
+    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates/template%2F1");
+
     await invokeTool(registrations, "tms_create_project_from_template", {
       template_uid: "template/1",
     });
+    expect(client.postJson).toHaveBeenCalledWith("/v2/projects/applyTemplate/template%2F1", {});
+
     await invokeTool(registrations, "tms_get_job", {
       project_uid: "proj/1",
       job_uid: "job/1",
     });
+    expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1/jobs/job%2F1");
+
     await invokeTool(registrations, "tms_search_jobs", {
       project_uid: "proj/1",
     });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/projects/proj%2F1/jobs/search", {});
+
     await invokeTool(registrations, "tms_get_async_request", {
       async_request_id: "req/1",
     });
-    await invokeTool(registrations, "tms_get_async_limits", {});
-
-    expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1");
-    expect(client.postJson).toHaveBeenCalledWith("/v3/projects", { name: "Demo" });
-    expect(client.putJson).toHaveBeenCalledWith("/v2/projects/proj%2F1", { note: "updated" });
-    expect(client.postJson).toHaveBeenCalledWith("/v1/projects/proj%2F1/setStatus", {
-      status: "NEW",
-    });
-    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates/template%2F1");
-    expect(client.postJson).toHaveBeenCalledWith("/v2/projects/applyTemplate/template%2F1", {});
-    expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1/jobs/job%2F1");
-    expect(client.postJson).toHaveBeenCalledWith("/v1/projects/proj%2F1/jobs/search", {});
     expect(client.get).toHaveBeenCalledWith("/v1/async/req%2F1");
+
+    await invokeTool(registrations, "tms_get_async_limits", {});
     expect(client.get).toHaveBeenCalledWith("/v1/async/status");
   });
 
