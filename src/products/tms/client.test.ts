@@ -35,6 +35,25 @@ describe("TmsClient", () => {
     vi.clearAllMocks();
   });
 
+  function getLastFetchCall() {
+    const lastCall = fetchMock.mock.lastCall;
+    expect(lastCall).toBeDefined();
+    if (!lastCall) {
+      throw new Error("Expected a fetch call");
+    }
+    return lastCall;
+  }
+
+  function getLastFetchOptions() {
+    const lastCall = getLastFetchCall();
+    const options = lastCall[1];
+    expect(options).toBeDefined();
+    if (!options) {
+      throw new Error("Expected fetch options in last call");
+    }
+    return options;
+  }
+
   function mockTokenThenApi(apiResponse: unknown) {
     fetchMock.mockImplementation((url: string) => {
       if (url.includes("/idm/oauth/token")) {
@@ -89,7 +108,7 @@ describe("TmsClient", () => {
 
       expect(result).toEqual(payload);
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      const apiCallUrl = fetchMock.mock.lastCall![0];
+      const apiCallUrl = getLastFetchCall()[0];
       expect(apiCallUrl).toContain(BASE_URL);
       expect(apiCallUrl).toContain("projects/1");
     });
@@ -100,7 +119,7 @@ describe("TmsClient", () => {
       const client = new TmsClient(DEFAULT_OPTIONS);
       await client.get("/locales", { pageNumber: 1, pageSize: 10 });
 
-      const apiCallUrl = fetchMock.mock.lastCall![0];
+      const apiCallUrl = getLastFetchCall()[0];
       expect(apiCallUrl).toMatch(/pageNumber=1/);
       expect(apiCallUrl).toMatch(/pageSize=10/);
     });
@@ -111,7 +130,7 @@ describe("TmsClient", () => {
       const client = new TmsClient(DEFAULT_OPTIONS);
       await client.get("/me");
 
-      const apiCallOptions = fetchMock.mock.lastCall![1];
+      const apiCallOptions = getLastFetchOptions();
       expect(apiCallOptions?.headers?.Authorization).toBe("Bearer exchange-token-123");
     });
 
@@ -121,7 +140,7 @@ describe("TmsClient", () => {
       const client = new TmsClient(DEFAULT_OPTIONS);
       await client.get("/me");
 
-      const apiCallOptions = fetchMock.mock.lastCall![1];
+      const apiCallOptions = getLastFetchOptions();
       expect(apiCallOptions?.headers?.["User-Agent"]).toBe(GLOBAL_USER_AGENT);
     });
   });
@@ -136,7 +155,7 @@ describe("TmsClient", () => {
       const result = await client.postJson("/projects", sent);
 
       expect(result).toEqual(response);
-      const apiCall = fetchMock.mock.lastCall!;
+      const apiCall = getLastFetchCall();
       expect(apiCall[1]?.method).toBe("POST");
       expect(apiCall[1]?.headers?.["Content-Type"]).toContain("application/json");
       expect(JSON.parse(apiCall[1]?.body as string)).toEqual(sent);
@@ -152,7 +171,57 @@ describe("TmsClient", () => {
       const result = await client.putJson("/projects/1", payload);
 
       expect(result).toEqual(payload);
-      expect(fetchMock.mock.lastCall![1]?.method).toBe("PUT");
+      expect(getLastFetchOptions()?.method).toBe("PUT");
+    });
+  });
+
+  describe("binary write methods", () => {
+    it("postBinary sends POST with raw body and headers", async () => {
+      mockTokenThenApi({ ok: true });
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const body = Buffer.from("payload-a");
+
+      const result = await client.postBinary(
+        "/projects/1/jobs",
+        body,
+        {
+          "Content-Type": "application/octet-stream",
+          "X-Test": "alpha",
+        },
+        { page: 1 },
+      );
+
+      expect(result).toEqual({ ok: true });
+      const apiCallUrl = String(fetchMock.mock.lastCall?.[0]);
+      const apiCallOptions = fetchMock.mock.lastCall?.[1];
+      expect(apiCallUrl).toContain("page=1");
+      expect(apiCallOptions?.method).toBe("POST");
+      expect(apiCallOptions?.body).toBe(body);
+      expect(apiCallOptions?.headers?.["X-Test"]).toBe("alpha");
+    });
+
+    it("putBinary sends PUT with raw body and headers", async () => {
+      mockTokenThenApi({ ok: true });
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const body = Buffer.from("payload-b");
+
+      const result = await client.putBinary(
+        "/projects/1/jobs/2",
+        body,
+        {
+          "Content-Type": "application/octet-stream",
+          "X-Test": "beta",
+        },
+        { attempt: 2 },
+      );
+
+      expect(result).toEqual({ ok: true });
+      const apiCallUrl = String(fetchMock.mock.lastCall?.[0]);
+      const apiCallOptions = fetchMock.mock.lastCall?.[1];
+      expect(apiCallUrl).toContain("attempt=2");
+      expect(apiCallOptions?.method).toBe("PUT");
+      expect(apiCallOptions?.body).toBe(body);
+      expect(apiCallOptions?.headers?.["X-Test"]).toBe("beta");
     });
   });
 
@@ -266,6 +335,169 @@ describe("TmsClient", () => {
 
       expect(result.items).toEqual([{ x: 1 }, { x: 2 }]);
       expect(result.pages_fetched).toBe(1);
+    });
+
+    it("retries with endpoint max page size when first request returns 400", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 400,
+            statusText: "Bad Request",
+            text: () => Promise.resolve("Maximum value is: 2"),
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({ content: [{ id: 1 }, { id: 2 }], last: true })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.paginateGet("/projects");
+
+      expect(result.items).toEqual([{ id: 1 }, { id: 2 }]);
+      expect(result.pages_fetched).toBe(1);
+      const firstApiCallUrl = String(fetchMock.mock.calls[1]?.[0]);
+      const secondApiCallUrl = String(fetchMock.mock.calls[2]?.[0]);
+      expect(firstApiCallUrl).toContain("pageSize=50");
+      expect(secondApiCallUrl).toContain("pageSize=2");
+    });
+
+    it("rethrows 400 errors when endpoint max page size is not usable", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 400,
+            statusText: "Bad Request",
+            text: () => Promise.resolve("Maximum value is: 100"),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      await expect(client.paginateGet("/projects")).rejects.toThrow("HTTP 400 Bad Request");
+    });
+
+    it("rethrows non-400 request failures", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 500,
+            statusText: "Internal Server Error",
+            text: () => Promise.resolve("server error"),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      await expect(client.paginateGet("/projects")).rejects.toThrow("HTTP 500 Internal Server Error");
+    });
+
+    it("rethrows 400 errors when max value cannot be parsed", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: false,
+            status: 400,
+            statusText: "Bad Request",
+            text: () => Promise.resolve("pageSize too large"),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      await expect(client.paginateGet("/projects")).rejects.toThrow("HTTP 400 Bad Request");
+    });
+
+    it("supports array responses via default item extraction", async () => {
+      mockTokenThenApi([{ id: 1 }, { id: 2 }]);
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.paginateGet("/projects");
+
+      expect(result.items).toEqual([{ id: 1 }, { id: 2 }]);
+      expect(result.pages_fetched).toBe(1);
+      expect(result.truncated).toBe(false);
+    });
+
+    it("uses numeric page fields to continue when totalPages indicates next page", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () =>
+              Promise.resolve(JSON.stringify({ content: [{ id: 1 }], number: 0, totalPages: 2 })),
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () =>
+              Promise.resolve(JSON.stringify({ content: [{ id: 2 }], number: 1, totalPages: 2 })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.paginateGet("/projects", { pageSize: 1 });
+
+      expect(result.items).toEqual([{ id: 1 }, { id: 2 }]);
+      expect(result.pages_fetched).toBe(2);
+      expect(result.truncated).toBe(false);
+    });
+
+    it("continues once when batch size equals pageSize and stops on following empty page", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({ content: [{ id: 1 }] })),
+          }),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({ content: [] })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.paginateGet("/projects", { pageSize: 1, maxPages: 3 });
+
+      expect(result.items).toEqual([{ id: 1 }]);
+      expect(result.pages_fetched).toBe(2);
+      expect(result.truncated).toBe(false);
+    });
+
+    it("sets truncated when maxPages is reached before the stream ends", async () => {
+      fetchMock
+        .mockImplementationOnce(() => Promise.resolve(createTokenResponse()))
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(JSON.stringify({
+              content: [{ id: 1 }],
+              last: false,
+              totalPages: 10
+            })),
+          }),
+        );
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.paginateGet("/projects", {
+        pageSize: 1,
+        maxPages: 1,
+      });
+
+      expect(result.items).toEqual([{ id: 1 }]);
+      expect(result.pages_fetched).toBe(1);
+      expect(result.truncated).toBe(true);
     });
   });
 });

@@ -78,7 +78,17 @@ describe("UnifiedAccessTokenProvider", () => {
           body: expect.any(URLSearchParams),
         }),
       );
-      const body = fetchMock.mock.lastCall![1]!.body as URLSearchParams;
+      const lastCall = fetchMock.mock.lastCall;
+      expect(lastCall).toBeDefined();
+      if (!lastCall) {
+        throw new Error("Expected a final fetch call");
+      }
+      const requestInit = lastCall[1];
+      expect(requestInit).toBeDefined();
+      if (!requestInit) {
+        throw new Error("Expected RequestInit in final fetch call");
+      }
+      const body = requestInit.body as URLSearchParams;
       expect(body.get("grant_type")).toBe("urn:ietf:params:oauth:grant-type:token-exchange");
       expect(body.get("subject_token_type")).toBe("urn:phrase:params:oauth:token-type:api_token");
       expect(body.get("requested_token_type")).toBe(
