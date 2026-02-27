@@ -471,7 +471,11 @@ describe("tmsModule tools", () => {
     });
 
     expect(client.postBinary).toHaveBeenCalledTimes(1);
-    const [path, body, headers] = client.postBinary.mock.calls[0] as [string, Buffer, Record<string, string>];
+    const [path, body, headers] = client.postBinary.mock.calls[0] as [
+      string,
+      Buffer,
+      Record<string, string>,
+    ];
     expect(path).toBe("/v1/projects/proj%2F1/jobs");
     expect(body.byteLength).toBeGreaterThan(0);
     expect(headers["Content-Disposition"]).toBe('filename="demo upload.md"');

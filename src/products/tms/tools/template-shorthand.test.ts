@@ -96,9 +96,9 @@ describe("resolveTemplateUidByShorthand", () => {
       },
     ]);
 
-    await expect(resolveTemplateUidByShorthand(client as never, "UID-less template")).rejects.toThrow(
-      "No project template matched",
-    );
+    await expect(
+      resolveTemplateUidByShorthand(client as never, "UID-less template"),
+    ).rejects.toThrow("No project template matched");
   });
 
   it("rejects empty shorthand values", async () => {

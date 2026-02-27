@@ -173,8 +173,12 @@ describe("retry logic", () => {
   describe("requestJson", () => {
     it("retries on 429 error with exponential backoff", async () => {
       fetchMock
-        .mockResolvedValueOnce(new Response("rate limited", { status: 429, statusText: "Too Many Requests" }))
-        .mockResolvedValueOnce(new Response("still limited", { status: 429, statusText: "Too Many Requests" }))
+        .mockResolvedValueOnce(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        )
+        .mockResolvedValueOnce(
+          new Response("still limited", { status: 429, statusText: "Too Many Requests" }),
+        )
         .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
 
       const result = await requestJson("https://api.example.com", "/items");
@@ -185,7 +189,9 @@ describe("retry logic", () => {
 
     it("retries on 503 error", async () => {
       fetchMock
-        .mockResolvedValueOnce(new Response("service unavailable", { status: 503, statusText: "Service Unavailable" }))
+        .mockResolvedValueOnce(
+          new Response("service unavailable", { status: 503, statusText: "Service Unavailable" }),
+        )
         .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
 
       const result = await requestJson("https://api.example.com", "/items");
@@ -199,7 +205,9 @@ describe("retry logic", () => {
       headers.set("Retry-After", "2");
 
       fetchMock
-        .mockResolvedValueOnce(new Response("rate limited", { status: 429, statusText: "Too Many Requests", headers }))
+        .mockResolvedValueOnce(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests", headers }),
+        )
         .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
 
       const start = Date.now();
@@ -218,10 +226,14 @@ describe("retry logic", () => {
 
     it("throws after max retries exhausted", async () => {
       fetchMock.mockImplementation(() =>
-        Promise.resolve(new Response("rate limited", { status: 429, statusText: "Too Many Requests" }))
+        Promise.resolve(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        ),
       );
 
-      await expect(requestJson("https://api.example.com", "/items", { maxRetries: 1 })).rejects.toMatchObject({
+      await expect(
+        requestJson("https://api.example.com", "/items", { maxRetries: 1 }),
+      ).rejects.toMatchObject({
         status: 429,
         statusText: "Too Many Requests",
       });
@@ -230,7 +242,9 @@ describe("retry logic", () => {
     });
 
     it("does not retry on non-retryable errors", async () => {
-      fetchMock.mockResolvedValue(new Response("forbidden", { status: 403, statusText: "Forbidden" }));
+      fetchMock.mockResolvedValue(
+        new Response("forbidden", { status: 403, statusText: "Forbidden" }),
+      );
 
       await expect(requestJson("https://api.example.com", "/items")).rejects.toMatchObject({
         status: 403,
@@ -242,10 +256,14 @@ describe("retry logic", () => {
 
     it("respects custom maxRetries", async () => {
       fetchMock.mockImplementation(() =>
-        Promise.resolve(new Response("rate limited", { status: 429, statusText: "Too Many Requests" }))
+        Promise.resolve(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        ),
       );
 
-      await expect(requestJson("https://api.example.com", "/items", { maxRetries: 1 })).rejects.toMatchObject({
+      await expect(
+        requestJson("https://api.example.com", "/items", { maxRetries: 1 }),
+      ).rejects.toMatchObject({
         status: 429,
       });
 
@@ -260,7 +278,9 @@ describe("retry logic", () => {
       headers.set("content-type", "application/octet-stream");
 
       fetchMock
-        .mockResolvedValueOnce(new Response("rate limited", { status: 429, statusText: "Too Many Requests" }))
+        .mockResolvedValueOnce(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        )
         .mockResolvedValueOnce(new Response(bytes, { status: 200, headers }));
 
       const result = await requestBinary("https://api.example.com", "/download");
@@ -271,10 +291,14 @@ describe("retry logic", () => {
 
     it("throws after max retries exhausted", async () => {
       fetchMock.mockImplementation(() =>
-        Promise.resolve(new Response("rate limited", { status: 429, statusText: "Too Many Requests" }))
+        Promise.resolve(
+          new Response("rate limited", { status: 429, statusText: "Too Many Requests" }),
+        ),
       );
 
-      await expect(requestBinary("https://api.example.com", "/download", { maxRetries: 1 })).rejects.toMatchObject({
+      await expect(
+        requestBinary("https://api.example.com", "/download", { maxRetries: 1 }),
+      ).rejects.toMatchObject({
         status: 429,
       });
 
@@ -282,7 +306,9 @@ describe("retry logic", () => {
     });
 
     it("does not retry on non-retryable errors", async () => {
-      fetchMock.mockResolvedValue(new Response("not found", { status: 404, statusText: "Not Found" }));
+      fetchMock.mockResolvedValue(
+        new Response("not found", { status: 404, statusText: "Not Found" }),
+      );
 
       await expect(requestBinary("https://api.example.com", "/missing")).rejects.toMatchObject({
         status: 404,

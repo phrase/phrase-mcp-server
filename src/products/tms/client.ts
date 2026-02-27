@@ -113,11 +113,9 @@ function defaultHasNext(response: unknown, context: PaginateContext): boolean {
     return false;
   }
 
-  if (context.lastBatchSize < context.pageSize) {
-    return false;
-  }
+  return context.lastBatchSize >= context.pageSize;
 
-  return true;
+
 }
 
 export class TmsClient {
