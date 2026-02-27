@@ -590,7 +590,7 @@ describe("TmsClient", () => {
       const elapsed = Date.now() - start;
 
       expect(result).toEqual({ ok: true });
-      expect(elapsed).toBeGreaterThanOrEqual(900);
+      expect(elapsed).toBeGreaterThanOrEqual(1000);
     });
 
     it("retries on 429 errors in getBinary()", async () => {
