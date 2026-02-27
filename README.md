@@ -164,3 +164,18 @@ The server uses [Phrase Platform API tokens](https://developers.phrase.com/en/ap
 
 - Use a dedicated service user token for automation
 - Prefer least-privilege project manager permissions over admin-level roles
+
+## Releasing
+
+This repository uses a tag-based npm release flow in [`.github/workflows/release.yml`](.github/workflows/release.yml).
+
+Prerequisite:
+
+- Add an `NPM_TOKEN` repository secret with publish access to `phrase-mcp-server`.
+
+Release steps:
+
+1. Bump the version and create a tag (example: `npm version patch`).
+2. Push commits and tags (`git push --follow-tags`).
+
+When a tag like `v1.2.3` is pushed, the release workflow verifies the tag matches `package.json`, runs build/lint/format/tests, and publishes to npm.
