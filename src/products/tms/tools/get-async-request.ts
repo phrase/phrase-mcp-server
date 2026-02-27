@@ -8,12 +8,14 @@ export function registerGetAsyncRequestTool(server: McpServer, runtime: ProductR
     "tms_get_async_request",
     {
       description:
-        "Get a Phrase TMS asynchronous request by ID (GET /api2/v1/async/{asyncRequestId}). Use this to poll for async operation completion status after triggering operations like tms_download_target_file_async. Check the response status field - when it shows 'COMPLETED', the operation is ready. Read-only operation.",
+        'Poll the status of an async operation. Call this after tms_download_target_file_async until the returned status = "COMPLETED". Then proceed to tms_download_target_file_by_async_request. Expected status values: RUNNING, COMPLETED, FAILED. (GET /api2/v1/async/{asyncRequestId})',
       inputSchema: {
         async_request_id: z
           .string()
           .min(1)
-          .describe("Asynchronous request ID returned by TMS async operations."),
+          .describe(
+            "The id field from the asyncRequest object returned by tms_download_target_file_async or another TMS async operation.",
+          ),
       },
     },
     async ({ async_request_id }) => {

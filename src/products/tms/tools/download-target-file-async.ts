@@ -16,14 +16,17 @@ export function registerDownloadTargetFileAsyncTool(
     "tms_download_target_file_async",
     {
       description:
-        "Trigger asynchronous target file generation for a TMS job (PUT /api2/v2 or /api2/v3 projects/{projectUid}/jobs/{jobUid}/targetFile). Returns async request details. Note: TMS has limits on concurrent async operations. If limits are reached, the API will return 429/503 and automatic retry will occur. Check tms_get_async_limits beforehand if needed. Use tms_get_async_request to poll for completion, then tms_download_target_file_by_async_request to retrieve the file.",
+        "Trigger asynchronous generation of the translated (target) file for a TMS job. Returns an asyncRequest object with an id field. The file is NOT immediately available. Next: call tms_get_async_request with the returned id and poll until status = COMPLETED, then call tms_download_target_file_by_async_request to retrieve the file. (PUT /api2/v3/projects/{projectUid}/jobs/{jobUid}/targetFile)",
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),
         payload: z
-          .record(z.unknown())
+          .object({})
+          .passthrough()
           .optional()
-          .describe("Optional request body for target file export options."),
+          .describe(
+            "Optional TargetFileRequest body with export options accepted by the TMS API. Omit or pass {} to use default export behavior.",
+          ),
       },
     },
     async ({ project_uid, job_uid, payload }) => {

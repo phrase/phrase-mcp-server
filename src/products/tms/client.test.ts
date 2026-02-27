@@ -219,6 +219,19 @@ describe("TmsClient", () => {
     });
   });
 
+  describe("patchJson", () => {
+    it("sends PATCH with JSON body and returns response", async () => {
+      const payload = { name: "Patched" };
+      mockTokenThenApi(payload);
+
+      const client = new TmsClient(DEFAULT_OPTIONS);
+      const result = await client.patchJson("/projects/1", payload);
+
+      expect(result).toEqual(payload);
+      expect(fetchMock.mock.lastCall?.[1]?.method).toBe("PATCH");
+    });
+  });
+
   describe("getBinary", () => {
     it("returns BinaryResponse with contentType and bytesBase64", async () => {
       const bytes = Buffer.from("binary content");

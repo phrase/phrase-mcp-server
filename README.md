@@ -78,6 +78,7 @@ tms_download_target_file_by_async_request
 tms_get_async_limits
 tms_get_async_request
 tms_get_job
+tms_patch_job
 tms_get_project
 tms_get_project_template
 tms_list_jobs
@@ -85,7 +86,9 @@ tms_list_pending_requests
 tms_list_project_templates
 tms_list_projects
 tms_search_jobs
+tms_set_job_status
 tms_set_project_status
+tms_update_job
 tms_update_project
 ```
 
@@ -147,7 +150,7 @@ Set at least one product token in your MCP client config:
 ### Product selection
 
 - `PHRASE_ENABLED_PRODUCTS`: comma-separated subset of `strings,tms`
-- `PHRASE_DISABLED_PRODUCTS`: products removed from enabled set
+- `PHRASE_DISABLED_PRODUCTS`: products removed from the enabled set
 - Default behavior: all products enabled
 
 ### Region selection

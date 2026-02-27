@@ -175,6 +175,14 @@ export class TmsClient {
     return this.request("PUT", path, { query, json });
   }
 
+  async patchJson(
+    path: string,
+    json: unknown,
+    query?: Record<string, QueryValue>,
+  ): Promise<unknown> {
+    return this.request("PATCH", path, { query, json });
+  }
+
   async postBinary(
     path: string,
     body: BodyInit,

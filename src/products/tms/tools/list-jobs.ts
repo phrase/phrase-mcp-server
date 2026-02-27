@@ -18,10 +18,12 @@ export function registerListJobsTool(server: McpServer, runtime: ProductRuntime<
     "tms_list_jobs",
     {
       description:
-        "List jobs for a Phrase TMS project. Tries GET /api2/v2/projects/{projectUid}/jobs and falls back to /api2/v1/projects/{projectUid}/jobs for compatibility. Read-only operation with optional auto-pagination.",
+        "List all jobs in a Phrase TMS project. Returns job metadata including uid, filename, status, target language, word count, and due date. Use tms_search_jobs instead when filtering by multiple criteria simultaneously. (GET /api2/v2/projects/{projectUid}/jobs)",
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID (not numeric internal ID)."),
-        query: querySchema,
+        query: querySchema.describe(
+          'Supported filters for job listing. Common keys: status (e.g. "NEW", "ASSIGNED", "COMPLETED", "CANCELLED"), targetLang (locale code, e.g. "de"), filename (partial match).',
+        ),
         ...paginationControlsSchema,
       },
     },

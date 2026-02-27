@@ -8,9 +8,11 @@ export function registerListProjectsTool(server: McpServer, runtime: ProductRunt
     "tms_list_projects",
     {
       description:
-        "List Phrase TMS projects (GET /api2/v1/projects). Read-only operation. Supports raw TMS query filters and optional auto-pagination.",
+        "List all Phrase TMS projects you have access to. Use this to discover project UIDs before fetching job lists or project details. Returns an array of project objects, each containing uid, name, status, sourceLang, and targetLangs. (GET /api2/v1/projects)",
       inputSchema: {
-        query: querySchema,
+        query: querySchema.describe(
+          "Supported filters: name (partial match), status (NEW | ASSIGNED | COMPLETED | CANCELLED | DECLINED | REJECTED).",
+        ),
         ...paginationControlsSchema,
       },
     },

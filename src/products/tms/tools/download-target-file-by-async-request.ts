@@ -37,14 +37,14 @@ export function registerDownloadTargetFileByAsyncRequestTool(
     "tms_download_target_file_by_async_request",
     {
       description:
-        "Download generated target file by async request ID (GET /api2/v2 or /api2/v3 projects/{projectUid}/jobs/{jobUid}/downloadTargetFile/{asyncRequestId}). Returns base64 content and metadata.",
+        "Retrieve the translated file once async generation is confirmed complete (status = COMPLETED from tms_get_async_request). Returns file content as base64 (bytes_base64) plus content_type and file_name. Optionally saves the decoded file to disk via output_path. (GET /api2/v3/projects/{projectUid}/jobs/{jobUid}/downloadTargetFile/{asyncRequestId})",
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),
         async_request_id: z
           .string()
           .min(1)
-          .describe("Async request ID returned by tms_download_target_file_async."),
+          .describe("The async request ID returned by tms_download_target_file_async."),
         output_path: z
           .string()
           .min(1)
