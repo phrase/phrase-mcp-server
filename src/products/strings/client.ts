@@ -48,9 +48,15 @@ export class StringsClient {
       : new UnifiedAccessTokenProvider(options.authToken, options.region);
     const authMiddleware: Middleware = {
       pre: async (context) => {
-        const token = useStaticTokenAuth
-          ? options.authToken
-          : await tokenProvider!.getAccessToken();
+        let token: string;
+        if (useStaticTokenAuth) {
+          token = options.authToken;
+        } else {
+          if (!tokenProvider) {
+            throw new Error("Token provider is not configured.");
+          }
+          token = await tokenProvider.getAccessToken();
+        }
         const authPrefix = useStaticTokenAuth ? configuredAuthPrefix : "Bearer";
         const authValue = authPrefix ? `${authPrefix} ${token}` : token;
         const headers = new Headers((context.init.headers as HeadersInit | undefined) ?? {});

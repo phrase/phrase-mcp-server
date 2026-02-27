@@ -66,7 +66,7 @@ function calculateRetryDelay(attempt: number, retryAfterHeader: string | null): 
     return Math.min(retryAfter, MAX_RETRY_DELAY_MS);
   }
 
-  const exponentialDelay = Math.pow(2, attempt) * DEFAULT_RETRY_DELAY_MS;
+  const exponentialDelay = 2 ** attempt * DEFAULT_RETRY_DELAY_MS;
   return Math.min(exponentialDelay, MAX_RETRY_DELAY_MS);
 }
 
