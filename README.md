@@ -8,7 +8,6 @@ Use Phrase APIs from any MCP client (Claude, Cursor, etc.) with ready-to-use too
 - Engineers building AI workflows around Phrase
 - Teams that want one MCP server for both Strings and TMS
 
-
 ### Available Tools
 
 #### Strings (`strings_*`)
@@ -90,6 +89,10 @@ tms_set_project_status
 tms_update_project
 ```
 
+## Prerequisites
+
+- Node.js 20+
+
 ## Quick Start
 
 ### Add to your MCP client
@@ -147,8 +150,7 @@ Set at least one product token in your MCP client config:
 - `PHRASE_DISABLED_PRODUCTS`: products removed from enabled set
 - Default behavior: all products enabled
 
-
-### Region selection 
+### Region selection
 
 - Global:
   - `PHRASE_REGION`: `eu` or `us` (default `eu`)
