@@ -25,5 +25,5 @@ git tag -a v0.1.1 -m "Release v0.1.1"
 git push origin v0.1.1
 ```
 
-When a tag like `v1.2.3` is pushed, the release workflow verifies the tag matches `package.json`, runs build/lint/format/tests, and publishes to npm.
+When a tag like `v1.2.3` is pushed, the release workflow verifies the tag matches `package.json`, runs build, lint, format, tests, and publishes to npm.
 It also fails if the tagged commit is not contained in `main`.
