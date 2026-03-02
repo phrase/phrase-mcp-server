@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { StringsClient } from "#products/strings/client.js";
-import type { TmsClient } from "#products/tms/client.js";
+import type { StringsClient } from "#products/strings/client";
+import type { TmsClient } from "#products/tms/client";
 
 export const ALL_PRODUCTS = ["strings", "tms"] as const;
 export const ALL_REGIONS = ["eu", "us"] as const;

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { loadProductRuntimes } from "#config.js";
-import { StringsClient } from "#products/strings/client.js";
-import type { ProductClientFactoryOptions, ProductModule } from "#products/types.js";
+import { loadProductRuntimes } from "#config";
+import { StringsClient } from "#products/strings/client";
+import type { ProductClientFactoryOptions, ProductModule } from "#products/types";
 
 function clearPhraseEnv(): void {
   for (const key of Object.keys(process.env)) {

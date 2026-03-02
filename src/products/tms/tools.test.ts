@@ -2,14 +2,24 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { HttpError, type BinaryResponse } from "#lib/http.js";
-import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info.js";
-import { tmsModule } from "#products/tms/index.js";
-import type { ProductRuntime } from "#products/types.js";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import { HttpError, type BinaryResponse } from "#lib/http";
+import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info";
+import { tmsModule } from "#products/tms/index";
+import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
-  handler: (input: Record<string, unknown>) => Promise<{ content: Array<{ text: string }> }>;
+  handler: (
+    input: Record<string, unknown>,
+  ) => Promise<{ content: Array<{ text: string }> }>;
 };
 
 type MockTmsClient = {
@@ -22,15 +32,25 @@ type MockTmsClient = {
   paginateGet: ReturnType<typeof vi.fn>;
 };
 
-function createHttpError(status: number, statusText: string, body: string): HttpError {
+function createHttpError(
+  status: number,
+  statusText: string,
+  body: string,
+): HttpError {
   const headers = new Headers();
   return new HttpError(status, statusText, body, headers);
 }
 
-function createRecordingServer(registrations: Map<string, RegisteredTool>): McpServer {
+function createRecordingServer(
+  registrations: Map<string, RegisteredTool>,
+): McpServer {
   return {
     registerTool: (...args: unknown[]) => {
-      const [name, _options, handler] = args as [string, unknown, RegisteredTool["handler"]];
+      const [name, _options, handler] = args as [
+        string,
+        unknown,
+        RegisteredTool["handler"],
+      ];
       registrations.set(name, { handler });
     },
   } as unknown as McpServer;
@@ -128,46 +148,67 @@ describe("tmsModule tools", () => {
   });
 
   it("handles direct get/post/put wrapper tools", async () => {
-    await invokeTool(registrations, "tms_get_project", { project_uid: "proj/1" });
+    await invokeTool(registrations, "tms_get_project", {
+      project_uid: "proj/1",
+    });
     expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1");
 
-    await invokeTool(registrations, "tms_create_project", { project: { name: "Demo" } });
-    expect(client.postJson).toHaveBeenCalledWith("/v3/projects", { name: "Demo" });
+    await invokeTool(registrations, "tms_create_project", {
+      project: { name: "Demo" },
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v3/projects", {
+      name: "Demo",
+    });
 
     await invokeTool(registrations, "tms_update_project", {
       project_uid: "proj/1",
       project: { note: "updated" },
     });
-    expect(client.putJson).toHaveBeenCalledWith("/v2/projects/proj%2F1", { note: "updated" });
+    expect(client.putJson).toHaveBeenCalledWith("/v2/projects/proj%2F1", {
+      note: "updated",
+    });
 
     await invokeTool(registrations, "tms_set_project_status", {
       project_uid: "proj/1",
       status: "NEW",
     });
-    expect(client.postJson).toHaveBeenCalledWith("/v1/projects/proj%2F1/setStatus", {
-      status: "NEW",
-    });
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v1/projects/proj%2F1/setStatus",
+      {
+        status: "NEW",
+      },
+    );
 
     await invokeTool(registrations, "tms_get_project_template", {
       template_uid: "template/1",
     });
-    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates/template%2F1");
+    expect(client.get).toHaveBeenCalledWith(
+      "/v1/projectTemplates/template%2F1",
+    );
 
     await invokeTool(registrations, "tms_create_project_from_template", {
       template_uid: "template/1",
     });
-    expect(client.postJson).toHaveBeenCalledWith("/v2/projects/applyTemplate/template%2F1", {});
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v2/projects/applyTemplate/template%2F1",
+      {},
+    );
 
     await invokeTool(registrations, "tms_get_job", {
       project_uid: "proj/1",
       job_uid: "job/1",
     });
-    expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1/jobs/job%2F1");
+    expect(client.get).toHaveBeenCalledWith(
+      "/v1/projects/proj%2F1/jobs/job%2F1",
+    );
 
     await invokeTool(registrations, "tms_search_jobs", {
       project_uid: "proj/1",
     });
-    expect(client.postJson).toHaveBeenCalledWith("/v1/projects/proj%2F1/jobs/search", {});
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v1/projects/proj%2F1/jobs/search",
+      {},
+    );
 
     await invokeTool(registrations, "tms_get_async_request", {
       async_request_id: "req/1",
@@ -190,8 +231,12 @@ describe("tmsModule tools", () => {
     });
 
     expect(client.get).toHaveBeenCalledWith("/v1/projects", { status: "NEW" });
-    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates", { name: "Demo" });
-    expect(client.get).toHaveBeenCalledWith("/v1/async", { action: "IMPORT_JOB" });
+    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates", {
+      name: "Demo",
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/async", {
+      action: "IMPORT_JOB",
+    });
 
     await invokeTool(registrations, "tms_list_projects", {
       paginate: true,
@@ -242,14 +287,20 @@ describe("tmsModule tools", () => {
       query: { status: "NEW" },
     });
 
-    expect(client.get).toHaveBeenNthCalledWith(1, "/v2/projects/proj-1/jobs", { status: "NEW" });
-    expect(client.get).toHaveBeenNthCalledWith(2, "/v1/projects/proj-1/jobs", { status: "NEW" });
+    expect(client.get).toHaveBeenNthCalledWith(1, "/v2/projects/proj-1/jobs", {
+      status: "NEW",
+    });
+    expect(client.get).toHaveBeenNthCalledWith(2, "/v1/projects/proj-1/jobs", {
+      status: "NEW",
+    });
     expect(result).toEqual({ content: [{ uid: "job-1" }] });
   });
 
   it("list jobs retries without query on 400", async () => {
     client.get
-      .mockRejectedValueOnce(createHttpError(400, "Bad Request", "invalid query"))
+      .mockRejectedValueOnce(
+        createHttpError(400, "Bad Request", "invalid query"),
+      )
       .mockResolvedValueOnce({ content: [{ uid: "job-1" }] });
 
     const result = await invokeTool(registrations, "tms_list_jobs", {
@@ -266,22 +317,34 @@ describe("tmsModule tools", () => {
 
   it("list jobs aggregates retry errors when all non-paginated attempts fail", async () => {
     client.get
-      .mockRejectedValueOnce(createHttpError(400, "Bad Request", "v2 invalid query"))
-      .mockRejectedValueOnce(createHttpError(400, "Bad Request", "v2 no-query still invalid"))
-      .mockRejectedValueOnce(createHttpError(400, "Bad Request", "v1 invalid query"))
-      .mockRejectedValueOnce(createHttpError(400, "Bad Request", "v1 no-query still invalid"));
+      .mockRejectedValueOnce(
+        createHttpError(400, "Bad Request", "v2 invalid query"),
+      )
+      .mockRejectedValueOnce(
+        createHttpError(400, "Bad Request", "v2 no-query still invalid"),
+      )
+      .mockRejectedValueOnce(
+        createHttpError(400, "Bad Request", "v1 invalid query"),
+      )
+      .mockRejectedValueOnce(
+        createHttpError(400, "Bad Request", "v1 no-query still invalid"),
+      );
 
     await expect(
       invokeTool(registrations, "tms_list_jobs", {
         project_uid: "proj-1",
         query: { unsupportedFilter: true },
       }),
-    ).rejects.toThrow(/tms_list_jobs failed for all attempts\..+\(without query\)/);
+    ).rejects.toThrow(
+      /tms_list_jobs failed for all attempts\..+\(without query\)/,
+    );
   });
 
   it("list jobs paginated mode rotates page parameter strategies", async () => {
     client.paginateGet
-      .mockRejectedValueOnce(createHttpError(400, "Bad Request", "invalid page params"))
+      .mockRejectedValueOnce(
+        createHttpError(400, "Bad Request", "invalid page params"),
+      )
       .mockResolvedValueOnce({
         items: [{ uid: "job-1" }],
         pages_fetched: 1,
@@ -297,22 +360,30 @@ describe("tmsModule tools", () => {
       max_items: 10,
     });
 
-    expect(client.paginateGet).toHaveBeenNthCalledWith(1, "/v2/projects/proj-1/jobs", {
-      query: undefined,
-      pageParam: "pageNumber",
-      sizeParam: "pageSize",
-      pageSize: 5,
-      maxPages: 2,
-      maxItems: 10,
-    });
-    expect(client.paginateGet).toHaveBeenNthCalledWith(2, "/v2/projects/proj-1/jobs", {
-      query: undefined,
-      pageParam: "page",
-      sizeParam: "perPage",
-      pageSize: 5,
-      maxPages: 2,
-      maxItems: 10,
-    });
+    expect(client.paginateGet).toHaveBeenNthCalledWith(
+      1,
+      "/v2/projects/proj-1/jobs",
+      {
+        query: undefined,
+        pageParam: "pageNumber",
+        sizeParam: "pageSize",
+        pageSize: 5,
+        maxPages: 2,
+        maxItems: 10,
+      },
+    );
+    expect(client.paginateGet).toHaveBeenNthCalledWith(
+      2,
+      "/v2/projects/proj-1/jobs",
+      {
+        query: undefined,
+        pageParam: "page",
+        sizeParam: "perPage",
+        pageSize: 5,
+        maxPages: 2,
+        maxItems: 10,
+      },
+    );
     expect(result).toEqual({
       items: [{ uid: "job-1" }],
       pages_fetched: 1,
@@ -322,7 +393,9 @@ describe("tmsModule tools", () => {
   });
 
   it("list jobs throws after all pagination fallback attempts fail", async () => {
-    client.paginateGet.mockRejectedValue(createHttpError(404, "Not Found", "not supported"));
+    client.paginateGet.mockRejectedValue(
+      createHttpError(404, "Not Found", "not supported"),
+    );
 
     await expect(
       invokeTool(registrations, "tms_list_jobs", {
@@ -335,7 +408,9 @@ describe("tmsModule tools", () => {
   });
 
   it("list jobs paginated mode rethrows non-http errors", async () => {
-    client.paginateGet.mockRejectedValueOnce(new Error("paginated transport failure"));
+    client.paginateGet.mockRejectedValueOnce(
+      new Error("paginated transport failure"),
+    );
 
     await expect(
       invokeTool(registrations, "tms_list_jobs", {
@@ -357,17 +432,23 @@ describe("tmsModule tools", () => {
 
   it("create project from template shorthand resolves template and creates project", async () => {
     client.paginateGet.mockResolvedValueOnce({
-      items: [{ uid: "template-42", templateName: "Translate ENG text template" }],
+      items: [
+        { uid: "template-42", templateName: "Translate ENG text template" },
+      ],
       pages_fetched: 1,
       items_returned: 1,
       truncated: false,
     });
     client.postJson.mockResolvedValueOnce({ uid: "project-7" });
 
-    const result = await invokeTool(registrations, "tms_create_project_from_template_shorthand", {
-      template: "Translate ENG text template",
-      payload: { name: "From shorthand" },
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_create_project_from_template_shorthand",
+      {
+        template: "Translate ENG text template",
+        payload: { name: "From shorthand" },
+      },
+    );
 
     expect(client.paginateGet).toHaveBeenCalledWith("/v1/projectTemplates", {
       query: { name: "Translate ENG text template" },
@@ -376,9 +457,12 @@ describe("tmsModule tools", () => {
       maxItems: 2000,
       extractItems: expect.any(Function),
     });
-    expect(client.postJson).toHaveBeenCalledWith("/v2/projects/applyTemplate/template-42", {
-      name: "From shorthand",
-    });
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v2/projects/applyTemplate/template-42",
+      {
+        name: "From shorthand",
+      },
+    );
     expect(result).toEqual({
       template_uid: "template-42",
       project: { uid: "project-7" },
@@ -404,12 +488,19 @@ describe("tmsModule tools", () => {
       });
     client.postJson.mockResolvedValueOnce({ uid: "project-22" });
 
-    const result = await invokeTool(registrations, "tms_create_project_from_template_shorthand", {
-      template: "Leadership",
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_create_project_from_template_shorthand",
+      {
+        template: "Leadership",
+      },
+    );
 
     expect(client.paginateGet).toHaveBeenCalledTimes(2);
-    expect(client.postJson).toHaveBeenCalledWith("/v2/projects/applyTemplate/u2", {});
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v2/projects/applyTemplate/u2",
+      {},
+    );
     expect(result).toEqual({
       template_uid: "u2",
       project: { uid: "project-22" },
@@ -504,8 +595,13 @@ describe("tmsModule tools", () => {
       memsource: { targetLangs: ["sv_se"] },
     });
 
-    const headers = client.postBinary.mock.calls[0]?.[2] as Record<string, string>;
-    const memsource = JSON.parse(headers.Memsource) as { targetLangs: string[] };
+    const headers = client.postBinary.mock.calls[0]?.[2] as Record<
+      string,
+      string
+    >;
+    const memsource = JSON.parse(headers.Memsource) as {
+      targetLangs: string[];
+    };
     expect(memsource.targetLangs).toEqual(["sv_se"]);
   });
 
@@ -553,19 +649,28 @@ describe("tmsModule tools", () => {
       job_uid: "job/2",
       payload: { format: "JSON" },
     });
-    expect(client.putJson).toHaveBeenCalledWith("/v3/projects/proj%2F1/jobs/job%2F2/targetFile", {
-      format: "JSON",
-    });
+    expect(client.putJson).toHaveBeenCalledWith(
+      "/v3/projects/proj%2F1/jobs/job%2F2/targetFile",
+      {
+        format: "JSON",
+      },
+    );
 
     client.putJson.mockReset();
     client.putJson
-      .mockRejectedValueOnce(createHttpError(404, "Not Found", "v3 unavailable"))
+      .mockRejectedValueOnce(
+        createHttpError(404, "Not Found", "v3 unavailable"),
+      )
       .mockResolvedValueOnce({ asyncRequest: { id: "123" } });
 
-    const result = await invokeTool(registrations, "tms_download_target_file_async", {
-      project_uid: "proj/1",
-      job_uid: "job/2",
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_download_target_file_async",
+      {
+        project_uid: "proj/1",
+        job_uid: "job/2",
+      },
+    );
 
     expect(client.putJson).toHaveBeenNthCalledWith(
       1,
@@ -581,7 +686,9 @@ describe("tmsModule tools", () => {
   });
 
   it("download target file async rethrows non-fallback errors", async () => {
-    client.putJson.mockRejectedValueOnce(createHttpError(500, "Internal Server Error", "boom"));
+    client.putJson.mockRejectedValueOnce(
+      createHttpError(500, "Internal Server Error", "boom"),
+    );
 
     await expect(
       invokeTool(registrations, "tms_download_target_file_async", {
@@ -600,12 +707,16 @@ describe("tmsModule tools", () => {
     } satisfies BinaryResponse);
 
     const outputPath = join(tempDir, "outputs", "report-final.json");
-    const result = await invokeTool(registrations, "tms_download_target_file_by_async_request", {
-      project_uid: "proj/1",
-      job_uid: "job/2",
-      async_request_id: "async/3",
-      output_path: outputPath,
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_download_target_file_by_async_request",
+      {
+        project_uid: "proj/1",
+        job_uid: "job/2",
+        async_request_id: "async/3",
+        output_path: outputPath,
+      },
+    );
 
     expect(client.getBinary).toHaveBeenCalledWith(
       "/v3/projects/proj%2F1/jobs/job%2F2/downloadTargetFile/async%2F3",
@@ -626,11 +737,15 @@ describe("tmsModule tools", () => {
         sizeBytes: 3,
       } satisfies BinaryResponse);
 
-    const result = await invokeTool(registrations, "tms_download_target_file_by_async_request", {
-      project_uid: "proj-1",
-      job_uid: "job-1",
-      async_request_id: "req-1",
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_download_target_file_by_async_request",
+      {
+        project_uid: "proj-1",
+        job_uid: "job-1",
+        async_request_id: "req-1",
+      },
+    );
 
     expect(client.getBinary).toHaveBeenNthCalledWith(
       1,
@@ -651,11 +766,15 @@ describe("tmsModule tools", () => {
       sizeBytes: 3,
     } satisfies BinaryResponse);
 
-    const result = await invokeTool(registrations, "tms_download_target_file_by_async_request", {
-      project_uid: "proj-1",
-      job_uid: "job-1",
-      async_request_id: "req-1",
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_download_target_file_by_async_request",
+      {
+        project_uid: "proj-1",
+        job_uid: "job-1",
+        async_request_id: "req-1",
+      },
+    );
 
     expect(result.file_name).toBe("bad%ZZname.txt");
   });
@@ -668,17 +787,23 @@ describe("tmsModule tools", () => {
       sizeBytes: 3,
     } satisfies BinaryResponse);
 
-    const result = await invokeTool(registrations, "tms_download_target_file_by_async_request", {
-      project_uid: "proj-1",
-      job_uid: "job-1",
-      async_request_id: "req-1",
-    });
+    const result = await invokeTool(
+      registrations,
+      "tms_download_target_file_by_async_request",
+      {
+        project_uid: "proj-1",
+        job_uid: "job-1",
+        async_request_id: "req-1",
+      },
+    );
 
     expect(result.file_name).toBeNull();
   });
 
   it("download target file by async request rethrows non-fallback errors", async () => {
-    client.getBinary.mockRejectedValueOnce(createHttpError(500, "Internal Server Error", "boom"));
+    client.getBinary.mockRejectedValueOnce(
+      createHttpError(500, "Internal Server Error", "boom"),
+    );
 
     await expect(
       invokeTool(registrations, "tms_download_target_file_by_async_request", {

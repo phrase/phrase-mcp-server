@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { z } from "zod";
-import { stringsModule } from "#products/strings/index.js";
-import type { ProductRuntime } from "#products/types.js";
+import { stringsModule } from "#products/strings/index";
+import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
   inputSchema: Record<string, z.ZodTypeAny>;

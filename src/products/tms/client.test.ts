@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
-import { TmsClient } from "#products/tms/client.js";
-import type { ProductClientFactoryOptions } from "#products/types.js";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info";
+import { TmsClient } from "#products/tms/client";
+import type { ProductClientFactoryOptions } from "#products/types";
 
 const BASE_URL = "https://api.example.com";
 const DEFAULT_OPTIONS: ProductClientFactoryOptions = {

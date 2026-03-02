@@ -1,8 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { HttpError } from "#lib/http.js";
-import { asTextContent } from "#lib/mcp.js";
-import type { ProductRuntime } from "#products/types.js";
+import { HttpError } from "#lib/http";
+import { asTextContent } from "#lib/mcp";
+import type { ProductRuntime } from "#products/types";
 
 function shouldFallback(error: unknown): boolean {
   return error instanceof HttpError && (error.status === 400 || error.status === 404);

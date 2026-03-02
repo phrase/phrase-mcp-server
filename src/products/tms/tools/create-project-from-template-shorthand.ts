@@ -1,9 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "#lib/mcp.js";
-import type { ProductRuntime } from "#products/types.js";
-import { querySchema } from "#products/tms/tools/query.js";
-import { resolveTemplateUidByShorthand } from "#products/tms/tools/template-shorthand.js";
+import { asTextContent } from "#lib/mcp";
+import type { ProductRuntime } from "#products/types";
+import { querySchema } from "#products/tms/tools/query";
+import { resolveTemplateUidByShorthand } from "#products/tms/tools/template-shorthand";
 
 export function registerCreateProjectFromTemplateShorthandTool(
   server: McpServer,

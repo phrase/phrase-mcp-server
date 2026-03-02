@@ -2,9 +2,9 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "#lib/mcp.js";
-import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info.js";
-import type { ProductRuntime } from "#products/types.js";
+import { asTextContent } from "#lib/mcp";
+import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info";
+import type { ProductRuntime } from "#products/types";
 const SAFE_FILENAME_PATTERN = /^[A-Za-z0-9._ -]+$/;
 const targetLangsSchema = z.array(z.string().min(1)).min(1);
 const memsourceSchema = z

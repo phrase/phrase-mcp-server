@@ -1,5 +1,5 @@
-import type { QueryValue } from "#lib/http.js";
-import type { TmsClient } from "#products/tms/client.js";
+import type { QueryValue } from "#lib/http";
+import type { TmsClient } from "#products/tms/client";
 
 interface TemplateItem {
   uid?: string;

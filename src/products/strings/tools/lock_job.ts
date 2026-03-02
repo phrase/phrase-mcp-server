@@ -1,9 +1,12 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { asTextContent } from "#lib/mcp.js";
-import type { ProductRuntime } from "#products/types.js";
+import { asTextContent } from "#lib/mcp";
+import type { ProductRuntime } from "#products/types";
 
-export function registerLockJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
+export function registerLockJobTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_lock_job",
     {

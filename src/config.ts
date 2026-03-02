@@ -10,7 +10,7 @@ import {
   type ProductModule,
   type ProductRuntime,
   isRegion,
-} from "#products/types.js";
+} from "#products/types";
 
 function parseList(value: string | undefined): string[] {
   if (!value) {
