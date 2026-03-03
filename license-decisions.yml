@@ -1,0 +1,10 @@
+---
+- - :inherit_from
+  - url: https://raw.githubusercontent.com/phrase/lawa/master/config/license-decisions.yml
+    authorization: token $GITHUB_TOKEN
+- - :approve
+  - phrase-mcp-server
+  - :who: Stefan Bruhns
+    :why: Internal package
+    :versions: []
+    :when: 2026-03-03 10:30:00.000000000 Z

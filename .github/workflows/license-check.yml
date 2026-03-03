@@ -1,0 +1,16 @@
+name: CI
+on: [push]
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: License check
+        uses: phrase/actions/lawa-ci@main
+        with:
+          decisions-file: ./license-decisions.yml
+          package-managers: npm
+          github-token: ${{ secrets.GH_LAWA_ACCESS_TOKEN }}
