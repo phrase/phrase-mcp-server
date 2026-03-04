@@ -5,8 +5,12 @@
     "moduleResolution": "NodeNext",
     "baseUrl": ".",
     "paths": {
-      "#package.json": ["package.json"],
-      "#*": ["src/*"]
+      "#package.json": [
+        "package.json"
+      ],
+      "#*": [
+        "src/*"
+      ]
     },
     "strict": true,
     "esModuleInterop": true,
@@ -15,8 +19,11 @@
     "outDir": "dist",
     "rootDir": "src",
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["src"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": [
+    "src"
+  ],
 }
