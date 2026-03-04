@@ -16,7 +16,7 @@
 ## Checklist
 
 - [ ] I added or updated tests where needed.
-- [ ] I updated docs/README when behavior or usage changed.
+- [ ] I updated README and Developer Hub content when behavior or usage changed.
 - [ ] I considered backward compatibility and noted breaking changes below.
 
 ## Breaking Changes
