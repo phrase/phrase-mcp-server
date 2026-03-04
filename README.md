@@ -166,3 +166,11 @@ The server uses [Phrase Platform API tokens](https://developers.phrase.com/en/ap
 
 - Use a dedicated service user token for automation
 - Prefer least-privilege project manager permissions over admin-level roles
+
+## Developer Documentation
+
+For maintainer-facing docs, see:
+
+- [Developer docs index](docs/developer/README.md)
+- [Running published vs local builds](docs/developer/running.md)
+- [Releasing](docs/developer/releasing.md)
