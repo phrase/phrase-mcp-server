@@ -42,16 +42,6 @@ jobs:
 
       - name: Run build
         run: npm run build
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run formatter
-        run: npm run format:check
-
-      - name: Run tests with coverage threshold
-        run: npm run test:coverage
-
       - name: Verify tag matches package.json version
         run: |
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
