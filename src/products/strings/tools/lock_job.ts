@@ -3,10 +3,7 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 
-export function registerLockJobTool(
-  server: McpServer,
-  runtime: ProductRuntime<"strings">,
-) {
+export function registerLockJobTool(server: McpServer, runtime: ProductRuntime<"strings">) {
   server.registerTool(
     "strings_lock_job",
     {

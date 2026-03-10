@@ -8,19 +8,17 @@ interface PaginateLikeOptions {
 
 function createTemplateClient(rawResponses: unknown[]) {
   return {
-    paginateGet: vi.fn(
-      async (_path: string, options: PaginateLikeOptions = {}) => {
-        const raw = rawResponses.shift();
-        const extractItems = options.extractItems ?? (() => []);
-        const items = extractItems(raw);
-        return {
-          items,
-          pages_fetched: 1,
-          items_returned: items.length,
-          truncated: false,
-        };
-      },
-    ),
+    paginateGet: vi.fn(async (_path: string, options: PaginateLikeOptions = {}) => {
+      const raw = rawResponses.shift();
+      const extractItems = options.extractItems ?? (() => []);
+      const items = extractItems(raw);
+      return {
+        items,
+        pages_fetched: 1,
+        items_returned: items.length,
+        truncated: false,
+      };
+    }),
   };
 }
 
@@ -56,10 +54,7 @@ describe("resolveTemplateUidByShorthand", () => {
       },
     ]);
 
-    const result = await resolveTemplateUidByShorthand(
-      client as never,
-      "abc-uid",
-    );
+    const result = await resolveTemplateUidByShorthand(client as never, "abc-uid");
     expect(result).toBe("ABC-UID");
   });
 
@@ -74,10 +69,7 @@ describe("resolveTemplateUidByShorthand", () => {
       },
     ]);
 
-    const result = await resolveTemplateUidByShorthand(
-      client as never,
-      "Leadership",
-    );
+    const result = await resolveTemplateUidByShorthand(client as never, "Leadership");
     expect(result).toBe("uid-222");
     expect(client.paginateGet).toHaveBeenCalledTimes(2);
   });
@@ -92,9 +84,9 @@ describe("resolveTemplateUidByShorthand", () => {
       },
     ]);
 
-    await expect(
-      resolveTemplateUidByShorthand(client as never, "Demo Template"),
-    ).rejects.toThrow("is ambiguous");
+    await expect(resolveTemplateUidByShorthand(client as never, "Demo Template")).rejects.toThrow(
+      "is ambiguous",
+    );
   });
 
   it("throws when matches exist but no template has a UID", async () => {
@@ -111,8 +103,8 @@ describe("resolveTemplateUidByShorthand", () => {
 
   it("rejects empty shorthand values", async () => {
     const client = createTemplateClient([]);
-    await expect(
-      resolveTemplateUidByShorthand(client as never, "   "),
-    ).rejects.toThrow("Template shorthand cannot be empty.");
+    await expect(resolveTemplateUidByShorthand(client as never, "   ")).rejects.toThrow(
+      "Template shorthand cannot be empty.",
+    );
   });
 });
