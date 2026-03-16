@@ -11,7 +11,7 @@ export function registerCreateProjectFromTemplateTool(
     "tms_create_project_from_template",
     {
       description:
-        "Create a Phrase TMS project by applying a template. The template pre-configures language pairs, TM, MT, and workflow. You must know the exact template UID, use list_project_templates to find it, or use create_project_from_template_shorthand to match by name automatically. (POST /api2/v2/projects/applyTemplate/{templateUid})",
+        "Create a Phrase TMS project by applying a template. The template pre-configures language pairs, TM, MT, and workflow. You must know the exact template UID, use tms_list_project_templates to find it, or use tms_create_project_from_template_shorthand to match by name automatically. (POST /api2/v2/projects/applyTemplate/{templateUid})",
       inputSchema: {
         template_uid: z.string().min(1).describe("Project template UID."),
         payload: z
