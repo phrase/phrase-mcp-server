@@ -13,7 +13,7 @@ export function registerCreateProjectTool(server: McpServer, runtime: ProductRun
         project: z
           .record(z.unknown())
           .describe(
-            'ProjectCreateV3 request body. Required: name (string), sourceLang (array, e.g. "en"), targetLangs (array, e.g. ["de", "fr"]). Optional: client.uid, businessUnit.uid, dateDue (ISO 8601), note, workflowSteps (array of step UIDs).',
+            'ProjectCreateV3 request body. Required: name (string), sourceLang (string, e.g. "en"), targetLangs (array, e.g. ["de", "fr"]). Optional: client.uid, businessUnit.uid, dateDue (ISO 8601), note, workflowSteps (array of step UIDs).',
           ),
       },
     },
