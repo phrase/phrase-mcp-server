@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { HttpError, buildUrl, requestBinary, requestJson } from "#lib/http.js";
+import { HttpError, buildUrl, requestBinary, requestJson } from "#lib/http";
 
 describe("buildUrl", () => {
   it("normalizes leading slashes and base URLs without trailing slash", () => {

@@ -1,23 +1,23 @@
-import type { ProductModule } from "#products/types.js";
-import { TmsClient } from "#products/tms/client.js";
-import { registerGetAsyncLimitsTool } from "#products/tms/tools/get-async-limits.js";
-import { registerGetAsyncRequestTool } from "#products/tms/tools/get-async-request.js";
-import { registerCreateJobFromFileTool } from "#products/tms/tools/create-job-from-file.js";
-import { registerCreateProjectTool } from "#products/tms/tools/create-project.js";
-import { registerDownloadTargetFileAsyncTool } from "#products/tms/tools/download-target-file-async.js";
-import { registerDownloadTargetFileByAsyncRequestTool } from "#products/tms/tools/download-target-file-by-async-request.js";
-import { registerCreateProjectFromTemplateShorthandTool } from "#products/tms/tools/create-project-from-template-shorthand.js";
-import { registerCreateProjectFromTemplateTool } from "#products/tms/tools/create-project-from-template.js";
-import { registerGetJobTool } from "#products/tms/tools/get-job.js";
-import { registerGetProjectTool } from "#products/tms/tools/get-project.js";
-import { registerGetProjectTemplateTool } from "#products/tms/tools/get-project-template.js";
-import { registerListJobsTool } from "#products/tms/tools/list-jobs.js";
-import { registerListPendingRequestsTool } from "#products/tms/tools/list-pending-requests.js";
-import { registerListProjectsTool } from "#products/tms/tools/list-projects.js";
-import { registerListProjectTemplatesTool } from "#products/tms/tools/list-project-templates.js";
-import { registerSearchJobsTool } from "#products/tms/tools/search-jobs.js";
-import { registerSetProjectStatusTool } from "#products/tms/tools/set-project-status.js";
-import { registerUpdateProjectTool } from "#products/tms/tools/update-project.js";
+import type { ProductModule } from "#products/types";
+import { TmsClient } from "#products/tms/client";
+import { registerGetAsyncLimitsTool } from "#products/tms/tools/get-async-limits";
+import { registerGetAsyncRequestTool } from "#products/tms/tools/get-async-request";
+import { registerCreateJobFromFileTool } from "#products/tms/tools/create-job-from-file";
+import { registerCreateProjectTool } from "#products/tms/tools/create-project";
+import { registerDownloadTargetFileAsyncTool } from "#products/tms/tools/download-target-file-async";
+import { registerDownloadTargetFileByAsyncRequestTool } from "#products/tms/tools/download-target-file-by-async-request";
+import { registerCreateProjectFromTemplateShorthandTool } from "#products/tms/tools/create-project-from-template-shorthand";
+import { registerCreateProjectFromTemplateTool } from "#products/tms/tools/create-project-from-template";
+import { registerGetJobTool } from "#products/tms/tools/get-job";
+import { registerGetProjectTool } from "#products/tms/tools/get-project";
+import { registerGetProjectTemplateTool } from "#products/tms/tools/get-project-template";
+import { registerListJobsTool } from "#products/tms/tools/list-jobs";
+import { registerListPendingRequestsTool } from "#products/tms/tools/list-pending-requests";
+import { registerListProjectsTool } from "#products/tms/tools/list-projects";
+import { registerListProjectTemplatesTool } from "#products/tms/tools/list-project-templates";
+import { registerSearchJobsTool } from "#products/tms/tools/search-jobs";
+import { registerSetProjectStatusTool } from "#products/tms/tools/set-project-status";
+import { registerUpdateProjectTool } from "#products/tms/tools/update-project";
 
 export const tmsModule: ProductModule<"tms"> = {
   key: "tms",

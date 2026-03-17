@@ -17,9 +17,9 @@ import {
   TranslationsApi,
   UploadsApi,
 } from "phrase-js";
-import { UnifiedAccessTokenProvider } from "#lib/auth.js";
-import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
-import type { ProductClientFactoryOptions } from "#products/types.js";
+import { UnifiedAccessTokenProvider } from "#lib/auth";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info";
+import type { ProductClientFactoryOptions } from "#products/types";
 
 export class StringsClient {
   readonly projectsApi: ProjectsApi;

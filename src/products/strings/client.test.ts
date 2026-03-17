@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
-import { StringsClient } from "#products/strings/client.js";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info";
+import { StringsClient } from "#products/strings/client";
 
 function asUrl(input: unknown): string {
   if (typeof input === "string") {

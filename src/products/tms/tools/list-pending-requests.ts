@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { asTextContent } from "#lib/mcp.js";
-import type { ProductRuntime } from "#products/types.js";
-import { paginationControlsSchema, querySchema } from "#products/tms/tools/query.js";
+import { asTextContent } from "#lib/mcp";
+import type { ProductRuntime } from "#products/types";
+import { paginationControlsSchema, querySchema } from "#products/tms/tools/query";
 
 export function registerListPendingRequestsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(

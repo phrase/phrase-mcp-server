@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { resolveTemplateUidByShorthand } from "#products/tms/tools/template-shorthand.js";
+import { resolveTemplateUidByShorthand } from "#products/tms/tools/template-shorthand";
 
 interface PaginateLikeOptions {
   query?: Record<string, unknown>;

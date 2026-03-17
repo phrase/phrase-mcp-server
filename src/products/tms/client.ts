@@ -4,10 +4,10 @@ import {
   type QueryValue,
   requestBinary,
   requestJson,
-} from "#lib/http.js";
-import { UnifiedAccessTokenProvider } from "#lib/auth.js";
-import { GLOBAL_USER_AGENT } from "#lib/runtime-info.js";
-import type { ProductClientFactoryOptions } from "#products/types.js";
+} from "#lib/http";
+import { UnifiedAccessTokenProvider } from "#lib/auth";
+import { GLOBAL_USER_AGENT } from "#lib/runtime-info";
+import type { ProductClientFactoryOptions } from "#products/types";
 
 const DEFAULT_PAGE_SIZE = 50;
 const DEFAULT_MAX_PAGES = 25;

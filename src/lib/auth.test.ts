@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { UnifiedAccessTokenProvider } from "#lib/auth.js";
+import { UnifiedAccessTokenProvider } from "#lib/auth";
 
 describe("UnifiedAccessTokenProvider", () => {
   let fetchMock: ReturnType<typeof vi.fn>;

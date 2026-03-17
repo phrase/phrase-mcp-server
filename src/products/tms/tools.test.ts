@@ -3,10 +3,10 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { HttpError, type BinaryResponse } from "#lib/http.js";
-import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info.js";
-import { tmsModule } from "#products/tms/index.js";
-import type { ProductRuntime } from "#products/types.js";
+import { HttpError, type BinaryResponse } from "#lib/http";
+import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info";
+import { tmsModule } from "#products/tms/index";
+import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
   handler: (input: Record<string, unknown>) => Promise<{ content: Array<{ text: string }> }>;
@@ -128,17 +128,25 @@ describe("tmsModule tools", () => {
   });
 
   it("handles direct get/post/put wrapper tools", async () => {
-    await invokeTool(registrations, "tms_get_project", { project_uid: "proj/1" });
+    await invokeTool(registrations, "tms_get_project", {
+      project_uid: "proj/1",
+    });
     expect(client.get).toHaveBeenCalledWith("/v1/projects/proj%2F1");
 
-    await invokeTool(registrations, "tms_create_project", { project: { name: "Demo" } });
-    expect(client.postJson).toHaveBeenCalledWith("/v3/projects", { name: "Demo" });
+    await invokeTool(registrations, "tms_create_project", {
+      project: { name: "Demo" },
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v3/projects", {
+      name: "Demo",
+    });
 
     await invokeTool(registrations, "tms_update_project", {
       project_uid: "proj/1",
       project: { note: "updated" },
     });
-    expect(client.putJson).toHaveBeenCalledWith("/v2/projects/proj%2F1", { note: "updated" });
+    expect(client.putJson).toHaveBeenCalledWith("/v2/projects/proj%2F1", {
+      note: "updated",
+    });
 
     await invokeTool(registrations, "tms_set_project_status", {
       project_uid: "proj/1",
@@ -190,8 +198,12 @@ describe("tmsModule tools", () => {
     });
 
     expect(client.get).toHaveBeenCalledWith("/v1/projects", { status: "NEW" });
-    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates", { name: "Demo" });
-    expect(client.get).toHaveBeenCalledWith("/v1/async", { action: "IMPORT_JOB" });
+    expect(client.get).toHaveBeenCalledWith("/v1/projectTemplates", {
+      name: "Demo",
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/async", {
+      action: "IMPORT_JOB",
+    });
 
     await invokeTool(registrations, "tms_list_projects", {
       paginate: true,
@@ -242,8 +254,12 @@ describe("tmsModule tools", () => {
       query: { status: "NEW" },
     });
 
-    expect(client.get).toHaveBeenNthCalledWith(1, "/v2/projects/proj-1/jobs", { status: "NEW" });
-    expect(client.get).toHaveBeenNthCalledWith(2, "/v1/projects/proj-1/jobs", { status: "NEW" });
+    expect(client.get).toHaveBeenNthCalledWith(1, "/v2/projects/proj-1/jobs", {
+      status: "NEW",
+    });
+    expect(client.get).toHaveBeenNthCalledWith(2, "/v1/projects/proj-1/jobs", {
+      status: "NEW",
+    });
     expect(result).toEqual({ content: [{ uid: "job-1" }] });
   });
 
@@ -505,7 +521,9 @@ describe("tmsModule tools", () => {
     });
 
     const headers = client.postBinary.mock.calls[0]?.[2] as Record<string, string>;
-    const memsource = JSON.parse(headers.Memsource) as { targetLangs: string[] };
+    const memsource = JSON.parse(headers.Memsource) as {
+      targetLangs: string[];
+    };
     expect(memsource.targetLangs).toEqual(["sv_se"]);
   });
 
