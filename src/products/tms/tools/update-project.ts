@@ -8,12 +8,14 @@ export function registerUpdateProjectTool(server: McpServer, runtime: ProductRun
     "tms_update_project",
     {
       description:
-        "Update a Phrase TMS project (PUT /api2/v2/projects/{projectUid}). This operation mutates data.",
+        "Update an existing Phrase TMS project settings such as name, due date, or note. To change project status (e.g. mark Completed), use tms_set_project_status instead. (PUT /api2/v2/projects/{projectUid})",
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         project: z
           .record(z.unknown())
-          .describe("ProjectEditV2 request payload as defined by Phrase TMS API."),
+          .describe(
+            "ProjectEditV2 request body. Common editable fields: name (string), dateDue (ISO 8601 datetime), note (string).",
+          ),
       },
     },
     async ({ project_uid, project }) => {

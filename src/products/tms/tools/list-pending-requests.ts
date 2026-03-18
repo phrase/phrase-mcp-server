@@ -8,7 +8,7 @@ export function registerListPendingRequestsTool(server: McpServer, runtime: Prod
     "tms_list_pending_requests",
     {
       description:
-        "List pending Phrase TMS asynchronous requests (GET /api2/v1/async). Read-only operation with optional auto-pagination.",
+        "List all currently in-progress (RUNNING) async requests across your TMS account. Use for monitoring bulk background operations. To check a specific request by ID, use tms_get_async_request instead. (GET /api2/v1/async)",
       inputSchema: {
         query: querySchema,
         ...paginationControlsSchema,

@@ -8,7 +8,7 @@ export function registerGetProjectTemplateTool(server: McpServer, runtime: Produ
     "tms_get_project_template",
     {
       description:
-        "Get a Phrase TMS project template by UID (GET /api2/v1/projectTemplates/{projectTemplateUid}). Read-only operation.",
+        "Fetch full details of a project template, including its configured source/target languages, translation memory, machine translation engine, and workflow steps. Use tms_list_project_templates to find the template UID. (GET /api2/v1/projectTemplates/{projectTemplateUid})",
       inputSchema: {
         template_uid: z.string().min(1).describe("Project template UID."),
       },

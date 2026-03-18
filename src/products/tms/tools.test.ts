@@ -16,6 +16,7 @@ type MockTmsClient = {
   get: ReturnType<typeof vi.fn>;
   postJson: ReturnType<typeof vi.fn>;
   putJson: ReturnType<typeof vi.fn>;
+  patchJson: ReturnType<typeof vi.fn>;
   postBinary: ReturnType<typeof vi.fn>;
   putBinary: ReturnType<typeof vi.fn>;
   getBinary: ReturnType<typeof vi.fn>;
@@ -41,6 +42,7 @@ function createClientMock(): MockTmsClient {
     get: vi.fn().mockResolvedValue({ ok: true }),
     postJson: vi.fn().mockResolvedValue({ ok: true }),
     putJson: vi.fn().mockResolvedValue({ ok: true }),
+    patchJson: vi.fn().mockResolvedValue({ ok: true }),
     postBinary: vi.fn().mockResolvedValue({ ok: true }),
     putBinary: vi.fn().mockResolvedValue({ ok: true }),
     getBinary: vi.fn().mockResolvedValue({
@@ -92,6 +94,8 @@ const EXPECTED_TOOL_NAMES = [
   "tms_list_jobs",
   "tms_get_job",
   "tms_search_jobs",
+  "tms_set_job_status",
+  "tms_update_job",
   "tms_create_job_from_file",
   "tms_download_target_file_async",
   "tms_download_target_file_by_async_request",
@@ -705,5 +709,34 @@ describe("tmsModule tools", () => {
         async_request_id: "req-1",
       }),
     ).rejects.toThrow("HTTP 500");
+  });
+
+  it("tms_update_job calls putJson with encoded identifiers", async () => {
+    const result = await invokeTool(registrations, "tms_update_job", {
+      project_uid: "proj/123",
+      job_uid: "job id",
+      job: { due: "today" },
+    });
+
+    expect(client.putJson).toHaveBeenCalledWith("/v1/projects/proj%2F123/jobs/job%20id", {
+      due: "today",
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_set_job_status calls postJson with status payload and encoded identifiers", async () => {
+    const result = await invokeTool(registrations, "tms_set_job_status", {
+      project_uid: "proj/123",
+      job_uid: "job id",
+      status: "COMPLETED",
+    });
+
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v1/projects/proj%2F123/jobs/job%20id/setStatus",
+      {
+        status: "COMPLETED",
+      },
+    );
+    expect(result).toEqual({ ok: true });
   });
 });

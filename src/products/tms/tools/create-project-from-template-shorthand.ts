@@ -13,7 +13,7 @@ export function registerCreateProjectFromTemplateShorthandTool(
     "tms_create_project_from_template_shorthand",
     {
       description:
-        "Create a Phrase TMS project by resolving template shorthand (UID, numeric ID, exact name, prefix, partial name) and applying it via /api2/v2/projects/applyTemplate/{projectTemplateUid}. This operation mutates data.",
+        "PREFERRED tool for creating a TMS project from a template in conversational/interactive contexts. Accepts a template name, partial name, UID, or numeric ID, no lookup step needed. Returns an error if the identifier is ambiguous (multiple matches) or not found. (POST /api2/v2/projects/applyTemplate/{templateUid})",
       inputSchema: {
         template: z
           .string()

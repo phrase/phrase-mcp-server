@@ -11,9 +11,11 @@ export function registerListProjectTemplatesTool(
     "tms_list_project_templates",
     {
       description:
-        "List Phrase TMS project templates (GET /api2/v1/projectTemplates). Read-only operation with optional auto-pagination.",
+        "List all available project templates. Use this to discover template UIDs before calling tms_create_project_from_template. For interaction/conversational use, prefer tms_create_project_from_template_shorthand which matches templates by name and skips this lookup. (GET /api2/v1/projectTemplates)",
       inputSchema: {
-        query: querySchema,
+        query: querySchema.describe(
+          "Supported filters: name (partial match). Pass additional raw query params accepted by this endpoint as needed.",
+        ),
         ...paginationControlsSchema,
       },
     },
