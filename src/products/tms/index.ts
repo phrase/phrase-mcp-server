@@ -14,7 +14,6 @@ import { registerGetProjectTemplateTool } from "#products/tms/tools/get-project-
 import { registerListJobsTool } from "#products/tms/tools/list-jobs.js";
 import { registerListPendingRequestsTool } from "#products/tms/tools/list-pending-requests.js";
 import { registerListProjectsTool } from "#products/tms/tools/list-projects.js";
-import { registerPatchJobTool } from "#products/tms/tools/patch-job.js";
 import { registerListProjectTemplatesTool } from "#products/tms/tools/list-project-templates.js";
 import { registerSearchJobsTool } from "#products/tms/tools/search-jobs.js";
 import { registerSetJobStatusTool } from "#products/tms/tools/set-job-status.js";
@@ -45,7 +44,6 @@ export const tmsModule: ProductModule<"tms"> = {
     registerListJobsTool(server, runtime);
     registerGetJobTool(server, runtime);
     registerUpdateJobTool(server, runtime);
-    registerPatchJobTool(server, runtime);
     registerSetJobStatusTool(server, runtime);
     registerSearchJobsTool(server, runtime);
     registerCreateJobFromFileTool(server, runtime);
