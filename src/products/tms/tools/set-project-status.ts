@@ -2,15 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
-
-const projectStatusSchema = z.enum([
-  "NEW",
-  "ASSIGNED",
-  "COMPLETED",
-  "CANCELLED",
-  "DECLINED",
-  "REJECTED",
-]);
+import { projectStatusSchema } from "#products/tms/tools/constants";
 
 export function registerSetProjectStatusTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
@@ -21,7 +13,7 @@ export function registerSetProjectStatusTool(server: McpServer, runtime: Product
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         status: projectStatusSchema.describe(
-          "Target project status. Allowed values: NEW, ASSIGNED, COMPLETED, CANCELLED, DECLINED, REJECTED. CANCELLED is irreversible.",
+          `Target project status. Allowed values: ${projectStatusSchema.options.join(", ")}. CANCELLED is irreversible.`,
         ),
       },
     },

@@ -4,6 +4,7 @@ import { HttpError } from "#lib/http";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 import { paginationControlsSchema, querySchema } from "#products/tms/tools/query";
+import { jobStatusSchema } from "#products/tms/tools/constants";
 
 function shouldFallbackToV1(error: unknown): boolean {
   return error instanceof HttpError && (error.status === 400 || error.status === 404);
@@ -22,7 +23,7 @@ export function registerListJobsTool(server: McpServer, runtime: ProductRuntime<
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID (not numeric internal ID)."),
         query: querySchema.describe(
-          'Supported filters for job listing. Common keys: status (e.g. "NEW", "ASSIGNED", "COMPLETED", "CANCELLED"), targetLang (locale code, e.g. "de"), filename (partial match).',
+          `Supported filters for job listing. Common keys: status (${jobStatusSchema.options.map((s) => `"${s}"`).join(", ")}), targetLang (locale code, e.g. "de"), filename (partial match).`,
         ),
         ...paginationControlsSchema,
       },

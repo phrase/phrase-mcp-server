@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
+import { jobStatusSchema } from "#products/tms/tools/constants";
 
 export function registerSearchJobsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
@@ -15,7 +16,7 @@ export function registerSearchJobsTool(server: McpServer, runtime: ProductRuntim
           .record(z.unknown())
           .optional()
           .describe(
-            'JobSearchRequest body. Useful fields: status: string[] (e.g. ["NEW", "ASSIGNED"]); targetLang: string[] locale codes (e.g. ["de", "fr"]); filename: string[] partial filename match; dueInHours: number jobs due within N hours; assignedTo: string[] provider user UIDs. All fields are optional and combined with AND logic.',
+            `JobSearchRequest body. Useful fields: status: string[] — valid values: ${jobStatusSchema.options.map((s) => `"${s}"`).join(", ")} (e.g. ["NEW", "ACCEPTED"]); targetLang: string[] locale codes (e.g. ["de", "fr"]); filename: string[] partial filename match; dueInHours: number jobs due within N hours; assignedTo: string[] provider user UIDs. All fields are optional and combined with AND logic.`,
           ),
       },
     },
