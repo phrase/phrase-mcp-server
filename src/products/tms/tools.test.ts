@@ -93,7 +93,6 @@ const EXPECTED_TOOL_NAMES = [
   "tms_create_project_from_template_shorthand",
   "tms_list_jobs",
   "tms_get_job",
-  "tms_patch_job",
   "tms_search_jobs",
   "tms_set_job_status",
   "tms_update_job",
