@@ -26,7 +26,9 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_create_glossary_term: "glossaryTermsApi.glossaryTermCreate",
   strings_create_glossary_term_translation:
     "glossaryTermTranslationsApi.glossaryTermTranslationCreate",
+  strings_create_key: "keysApi.keyCreate",
   strings_create_job: "jobsApi.jobCreate",
+  strings_create_translation: "translationsApi.translationCreate",
   strings_create_job_comment: "jobCommentsApi.jobCommentCreate",
   strings_create_job_template: "jobTemplatesApi.jobTemplateCreate",
   strings_create_job_template_locale: "jobTemplateLocalesApi.jobTemplateLocalesCreate",

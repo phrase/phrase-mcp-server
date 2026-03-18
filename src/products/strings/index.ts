@@ -32,6 +32,7 @@ import { registerListJobCommentsTool } from "#products/strings/tools/list_job_co
 import { registerListJobLocalesTool } from "#products/strings/tools/list_job_locales";
 import { registerListJobTemplateLocalesTool } from "#products/strings/tools/list_job_template_locales";
 import { registerListJobTemplatesTool } from "#products/strings/tools/list_job_templates";
+import { registerCreateKeyTool } from "#products/strings/tools/create_key";
 import { registerListKeysTool } from "#products/strings/tools/list_keys";
 import { registerListJobsTool } from "#products/strings/tools/list_jobs";
 import { registerListLocalesTool } from "#products/strings/tools/list_locales";
@@ -41,6 +42,7 @@ import { registerCreateUploadTool } from "#products/strings/tools/create_upload"
 import { registerGetUploadTool } from "#products/strings/tools/get_upload";
 import { registerListUploadsTool } from "#products/strings/tools/list_uploads";
 import { registerListProjectsTool } from "#products/strings/tools/list_projects";
+import { registerCreateTranslationTool } from "#products/strings/tools/create_translation";
 import { registerListTranslationsTool } from "#products/strings/tools/list_translations";
 import { registerLockJobTool } from "#products/strings/tools/lock_job";
 import { registerRemoveJobLocaleTool } from "#products/strings/tools/remove_job_locale";
@@ -111,7 +113,9 @@ export const stringsModule: ProductModule<"strings"> = {
     registerCreateUploadTool(wrappedServer, runtime);
     registerGetUploadTool(wrappedServer, runtime);
     registerListUploadsTool(wrappedServer, runtime);
+    registerCreateKeyTool(wrappedServer, runtime);
     registerListKeysTool(wrappedServer, runtime);
+    registerCreateTranslationTool(wrappedServer, runtime);
     registerListTranslationsTool(wrappedServer, runtime);
     registerListJobsTool(wrappedServer, runtime);
     registerListAccountJobsTool(wrappedServer, runtime);
