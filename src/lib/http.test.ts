@@ -201,6 +201,9 @@ describe("retry logic", () => {
     });
 
     it("respects Retry-After header (seconds)", async () => {
+      vi.useFakeTimers();
+      const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+
       const headers = new Headers();
       headers.set("Retry-After", "2");
 
@@ -210,13 +213,15 @@ describe("retry logic", () => {
         )
         .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
 
-      const start = Date.now();
-      const result = await requestJson("https://api.example.com", "/items");
-      const elapsed = Date.now() - start;
+      const promise = requestJson("https://api.example.com", "/items");
+      await vi.runAllTimersAsync();
+      const result = await promise;
 
       expect(result).toEqual({ ok: true });
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(elapsed).toBeGreaterThanOrEqual(2000);
+      expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+
+      vi.useRealTimers();
     });
 
     it.skip("respects Retry-After header (HTTP date)", async () => {

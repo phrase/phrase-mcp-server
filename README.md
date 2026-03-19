@@ -24,9 +24,11 @@ strings_create_job
 strings_create_job_comment
 strings_create_job_template
 strings_create_job_template_locale
+strings_create_key
 strings_create_locale
 strings_create_locale_download
 strings_create_project
+strings_create_translation
 strings_create_upload
 strings_get_glossary
 strings_get_glossary_term
