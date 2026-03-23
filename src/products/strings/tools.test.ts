@@ -93,6 +93,10 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_update_translation: "translationsApi.translationUpdate",
 };
 
+// Tools that orchestrate multiple API calls and filesystem I/O — excluded from the
+// single-method check above but still verified to be registered.
+const MULTI_STEP_TOOLS = new Set(["strings_pull", "strings_push"]);
+
 function createRecordingServer(registrations: Map<string, RegisteredTool>): McpServer {
   return {
     registerTool: (...args: unknown[]) => {
@@ -225,8 +229,10 @@ describe("strings tools", () => {
   });
 
   it("registers every strings tool", () => {
-    expect(registrations.size).toBe(Object.keys(EXPECTED_METHOD_BY_TOOL).length);
-    expect(new Set(registrations.keys())).toEqual(new Set(Object.keys(EXPECTED_METHOD_BY_TOOL)));
+    const expectedTotal = Object.keys(EXPECTED_METHOD_BY_TOOL).length + MULTI_STEP_TOOLS.size;
+    expect(registrations.size).toBe(expectedTotal);
+    const expectedKeys = new Set([...Object.keys(EXPECTED_METHOD_BY_TOOL), ...MULTI_STEP_TOOLS]);
+    expect(new Set(registrations.keys())).toEqual(expectedKeys);
   });
 
   for (const toolName of Object.keys(EXPECTED_METHOD_BY_TOOL).sort()) {

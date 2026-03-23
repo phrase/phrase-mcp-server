@@ -62,6 +62,8 @@ import { registerCreateBranchTool } from "#products/strings/tools/create_branch"
 import { registerUpdateBranchTool } from "#products/strings/tools/update_branch";
 import { registerDeleteBranchTool } from "#products/strings/tools/delete_branch";
 import { registerMergeBranchTool } from "#products/strings/tools/merge_branch";
+import { registerPullTool } from "#products/strings/tools/pull";
+import { registerPushTool } from "#products/strings/tools/push";
 import { registerLockJobTool } from "#products/strings/tools/lock_job";
 import { registerRemoveJobLocaleTool } from "#products/strings/tools/remove_job_locale";
 import { registerRemoveJobKeysTool } from "#products/strings/tools/remove_job_keys";
@@ -155,6 +157,8 @@ export const stringsModule: ProductModule<"strings"> = {
     registerUpdateBranchTool(wrappedServer, runtime);
     registerDeleteBranchTool(wrappedServer, runtime);
     registerMergeBranchTool(wrappedServer, runtime);
+    registerPullTool(wrappedServer, runtime);
+    registerPushTool(wrappedServer, runtime);
     registerListJobsTool(wrappedServer, runtime);
     registerListAccountJobsTool(wrappedServer, runtime);
     registerListJobTemplatesTool(wrappedServer, runtime);
