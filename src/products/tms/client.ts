@@ -129,7 +129,7 @@ export class TmsClient {
     this.authPrefix = options.authPrefix;
     this.userAgent = GLOBAL_USER_AGENT;
 
-    this.tokenProvider = new UnifiedAccessTokenProvider(options.authToken, options.region);
+    this.tokenProvider = new UnifiedAccessTokenProvider(options.authToken, options.region, options.idmBaseUrl);
   }
 
   private async request(

@@ -29,6 +29,7 @@ export type ProductClientFactoryOptions<K extends ProductKey = ProductKey> = {
   authHeader: string;
   authToken: string;
   authPrefix: string;
+  idmBaseUrl?: string;
 };
 
 export interface ProductClientConfig<K extends ProductKey = ProductKey> {
