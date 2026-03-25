@@ -44,6 +44,8 @@ import { registerListUploadsTool } from "#products/strings/tools/list_uploads";
 import { registerListProjectsTool } from "#products/strings/tools/list_projects";
 import { registerCreateTranslationTool } from "#products/strings/tools/create_translation";
 import { registerListTranslationsTool } from "#products/strings/tools/list_translations";
+import { registerPullTool } from "#products/strings/tools/pull";
+import { registerPushTool } from "#products/strings/tools/push";
 import { registerLockJobTool } from "#products/strings/tools/lock_job";
 import { registerRemoveJobLocaleTool } from "#products/strings/tools/remove_job_locale";
 import { registerRemoveJobKeysTool } from "#products/strings/tools/remove_job_keys";
@@ -117,6 +119,8 @@ export const stringsModule: ProductModule<"strings"> = {
     registerListKeysTool(wrappedServer, runtime);
     registerCreateTranslationTool(wrappedServer, runtime);
     registerListTranslationsTool(wrappedServer, runtime);
+    registerPullTool(wrappedServer, runtime);
+    registerPushTool(wrappedServer, runtime);
     registerListJobsTool(wrappedServer, runtime);
     registerListAccountJobsTool(wrappedServer, runtime);
     registerListJobTemplatesTool(wrappedServer, runtime);
