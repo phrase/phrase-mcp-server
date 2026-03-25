@@ -8,3 +8,4 @@ coverage/
 /tmp/
 
 .claude/*.local.*
+.mcp.json
