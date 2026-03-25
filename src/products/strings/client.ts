@@ -45,7 +45,7 @@ export class StringsClient {
     const useStaticTokenAuth = configuredAuthPrefix.toLowerCase() === "token";
     const tokenProvider = useStaticTokenAuth
       ? null
-      : new UnifiedAccessTokenProvider(options.authToken, options.region);
+      : new UnifiedAccessTokenProvider(options.authToken, options.region, options.idmBaseUrl);
     const authMiddleware: Middleware = {
       pre: async (context) => {
         let token: string;
