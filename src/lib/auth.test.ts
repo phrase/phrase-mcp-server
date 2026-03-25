@@ -109,6 +109,30 @@ describe("UnifiedAccessTokenProvider", () => {
       );
     });
 
+    it("uses custom idmBaseUrl when provided", async () => {
+      mockTokenResponse({ access_token: "t", expires_in: 60 }, { ok: true, status: 200 });
+
+      const provider = new UnifiedAccessTokenProvider("x", "eu", "https://eu.phrase-qa.com");
+      await provider.getAccessToken();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://eu.phrase-qa.com/idm/oauth/token",
+        expect.any(Object),
+      );
+    });
+
+    it("falls back to default region-based URL when idmBaseUrl is undefined", async () => {
+      mockTokenResponse({ access_token: "t", expires_in: 60 }, { ok: true, status: 200 });
+
+      const provider = new UnifiedAccessTokenProvider("x", "eu", undefined);
+      await provider.getAccessToken();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://eu.phrase.com/idm/oauth/token",
+        expect.any(Object),
+      );
+    });
+
     it("throws when server returns non-OK status", async () => {
       mockTokenResponse(
         { error: "unauthorized", error_description: "Bad token" },
