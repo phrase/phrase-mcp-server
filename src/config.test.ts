@@ -289,4 +289,42 @@ describe("loadProductRuntimes", () => {
       expect.stringContaining("Unsupported PHRASE_STRINGS_REGION 'moon'. Expected one of: eu, us"),
     );
   });
+
+  it("uses the connectors region-based base URL and ignores base-url overrides", async () => {
+    process.env.PHRASE_CONNECTORS_TOKEN = "token";
+    process.env.PHRASE_ENABLED_PRODUCTS = "connectors";
+    process.env.PHRASE_REGION = "us";
+    process.env.PHRASE_CONNECTORS_BASE_URL = "https://override.example.com/connectors";
+    process.env.PHRASE_BIFROST_BASE_URL = "https://legacy-override.example.com/connectors";
+
+    const client = { kind: "connectors" };
+    const createClient = vi.fn(async (_options: ProductClientFactoryOptions) => client);
+
+    const modules: ProductModule<"connectors">[] = [
+      {
+        key: "connectors",
+        client: {
+          defaultBaseUrlsByRegion: {
+            eu: "https://eu.phrase.com/connectors",
+            us: "https://us.phrase.com/connectors",
+          },
+          allowBaseUrlOverride: false,
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "connectors", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({
+        key: "connectors",
+        region: "us",
+        baseUrl: "https://us.phrase.com/connectors",
+        authToken: "token",
+      }),
+    );
+  });
 });

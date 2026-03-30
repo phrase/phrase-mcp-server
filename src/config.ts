@@ -48,11 +48,6 @@ function envName(product: ProductKey, suffix: string): string {
   return `PHRASE_${product.toUpperCase()}_${suffix}`;
 }
 
-function getEnvValue(primary: string, aliases: string[] = []): string | undefined {
-  const entry = getEnvValueWithSource(primary, aliases);
-  return entry?.value;
-}
-
 function getEnvValueWithSource(
   primary: string,
   aliases: string[] = [],
@@ -101,8 +96,12 @@ async function getProductClient<K extends ProductKey>(
     return null;
   }
 
+  const baseUrlEnvEntry =
+    clientConfig?.allowBaseUrlOverride === false
+      ? null
+      : getEnvValueWithSource(envName(product, "BASE_URL"), clientConfig?.baseUrlEnvAliases ?? []);
   const baseUrl =
-    getEnvValue(envName(product, "BASE_URL"), clientConfig?.baseUrlEnvAliases ?? []) ??
+    baseUrlEnvEntry?.value ??
     clientConfig?.defaultBaseUrlsByRegion?.[region] ??
     clientConfig?.defaultBaseUrl;
   const authTokenEntry = getEnvValueWithSource(
@@ -115,10 +114,17 @@ async function getProductClient<K extends ProductKey>(
   const authPrefix = authPrefixFromEnv ?? clientConfig?.defaultAuthPrefix ?? "Bearer";
 
   if (!baseUrl || !authToken) {
-    const baseVars = [envName(product, "BASE_URL"), ...(clientConfig?.baseUrlEnvAliases ?? [])];
+    const baseVars =
+      clientConfig?.allowBaseUrlOverride === false
+        ? []
+        : [envName(product, "BASE_URL"), ...(clientConfig?.baseUrlEnvAliases ?? [])];
     const tokenVars = [envName(product, "TOKEN"), ...(clientConfig?.tokenEnvAliases ?? [])];
+    const baseUrlSource =
+      baseVars.length > 0
+        ? `one of [${baseVars.join(", ")}]`
+        : `the built-in base URL for region '${region}'`;
     console.error(
-      `[phrase-mcp] Skipping product '${product}': missing one of [${baseVars.join(", ")}] or one of [${tokenVars.join(", ")}].`,
+      `[phrase-mcp] Skipping product '${product}': missing ${baseUrlSource} or one of [${tokenVars.join(", ")}].`,
     );
     return null;
   }
@@ -166,6 +172,8 @@ async function loadProductRuntime(
   productModule: AnyProductModule,
 ): Promise<AnyProductRuntime | null> {
   switch (productModule.key) {
+    case "connectors":
+      return loadTypedProductRuntime(productModule);
     case "strings":
       return loadTypedProductRuntime(productModule);
     case "tms":
