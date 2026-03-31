@@ -197,3 +197,7 @@ For maintainer-facing docs, see:
 - [Developer docs index](docs/developer/README.md)
 - [Running published vs local builds](docs/developer/running.md)
 - [Releasing](docs/developer/releasing.md)
+
+## Support
+
+For support, please [open an issue on GitHub](https://github.com/phrase/phrase-mcp-server/issues) or [submit a request](https://support.phrase.com/hc/requests/new) via Phrase Help Center.
