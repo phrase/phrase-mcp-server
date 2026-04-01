@@ -16,6 +16,7 @@
   "homepage": "https://phrase.com",
   "documentation": "https://github.com/phrase/phrase-mcp-server#readme",
   "support": "https://github.com/phrase/phrase-mcp-server/issues",
+  "icon": "icon.png",
   "license": "MIT",
   "keywords": ["phrase", "localization", "i18n", "translation", "strings", "tms", "mcp"],
   "privacy_policies": [
