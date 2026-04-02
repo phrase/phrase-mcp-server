@@ -114,6 +114,103 @@ tms_update_job
 tms_update_project
 ```
 
+## Examples
+
+The following examples build on each other as a complete end-to-end TMS workflow: discover your projects, kick off a new translation, then retrieve the result.
+
+### 1. List all projects
+
+**User prompt:** "List all my Phrase projects"
+
+**Expected behavior:**
+- Calls `tms_list_projects` and `strings_list_projects` in parallel
+- Returns all projects from both Phrase TMS and Phrase Strings
+
+**Expected output:**
+
+```
+Phrase TMS projects (3):
+- My Marketing Campaign (ID: ...) — en → de, fr — Status: COMPLETED
+- Product Documentation Q1 (ID: ...) — en → es — Status: NEW
+- Mobile App Strings (ID: ...) — en → ja, zh — Status: IN_PROGRESS
+
+Phrase Strings projects (2):
+- Web App (ID: ...) — Account: Acme Corp
+- Help Center (ID: ...) — Account: Acme Corp
+```
+
+### 2. Create a TMS project from a template and send a file for translation
+
+**User prompt:** "Create a new TMS project from the tech documentation template and send the README for translation"
+
+**Expected behavior:**
+- Calls `tms_list_project_templates` to resolve the template by name
+- Calls `tms_create_project_from_template_shorthand` to create the project
+- Calls `tms_create_job_from_file` to upload the file and create a translation job
+
+**Expected output:**
+
+```
+Created TMS project "README Translation" (ID: ...)
+  Template: tech documentation
+  Source: en → Target: es
+  Status: NEW
+
+Uploaded README.md as a translation job:
+  Job UID: ...
+  Target language: es
+  Status: NEW
+```
+
+### 3. Check translation status and download the completed file
+
+**User prompt:** "Check if the README translation job is done and download the translated file"
+
+**Expected behavior:**
+- Calls `tms_get_job` to check the current job status
+- Calls `tms_download_target_file_async` to trigger async file generation
+- Polls `tms_get_async_request` until the export is complete
+- Calls `tms_download_target_file_by_async_request` to retrieve and save the file
+
+**Expected output:**
+
+```
+Job "README.md"
+  Project: README Translation
+  Source: en → Target: es
+  Status: DELIVERED
+  Words: 535
+
+Triggering async export... done
+Downloading translated file... done
+
+Saved to: README.es.md
+```
+
+### 4. Create a Strings project and upload a localization file
+
+**User prompt:** "Create a new Strings project and upload biome.json for localization"
+
+**Expected behavior:**
+- Calls `strings_create_project` to create the project
+- Calls `strings_create_locale` to add the source locale
+- Calls `strings_create_upload` to upload the file and import translation keys
+- Calls `strings_get_upload` to confirm the upload succeeded
+
+**Expected output:**
+
+```
+Created Strings project "My App Config" (ID: ...)
+  Account: Acme Corp
+
+Added locale: English (en) — main locale
+
+Uploading biome.json (format: simple_json)... done
+  Upload state: success
+  Translation keys created: 9
+  Translations created: 9
+```
+
 ## Prerequisites
 
 - Node.js 20+
