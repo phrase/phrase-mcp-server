@@ -17,6 +17,7 @@ strings_add_job_keys
 strings_add_job_locale
 strings_complete_job
 strings_complete_job_locale
+strings_compare_branch
 strings_create_branch
 strings_create_glossary
 strings_create_glossary_term
@@ -37,6 +38,7 @@ strings_delete_key
 strings_delete_locale
 strings_delete_project
 strings_get_branch
+strings_get_branch_comparison
 strings_get_glossary
 strings_get_glossary_term
 strings_get_locale
@@ -67,6 +69,7 @@ strings_list_translations
 strings_list_uploads
 strings_lock_job
 strings_merge_branch
+strings_sync_branch
 strings_remove_job_keys
 strings_remove_job_locale
 strings_reopen_job
@@ -98,7 +101,6 @@ tms_download_target_file_by_async_request
 tms_get_async_limits
 tms_get_async_request
 tms_get_job
-tms_patch_job
 tms_get_project
 tms_get_project_template
 tms_list_jobs
@@ -189,6 +191,10 @@ The server uses [Phrase Platform API tokens](https://developers.phrase.com/en/ap
 
 - Use a dedicated service user token for automation
 - Prefer least-privilege project manager permissions over admin-level roles
+
+## Privacy Policy
+
+This server connects to Phrase APIs on your behalf using the credentials you provide. No data is collected or stored by this server itself. See the [Phrase Privacy Policy](https://phrase.com/privacy) for details on how Phrase handles your data.
 
 ## Developer Documentation
 
