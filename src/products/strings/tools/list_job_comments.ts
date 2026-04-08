@@ -8,6 +8,7 @@ export function registerListJobCommentsTool(server: McpServer, runtime: ProductR
     "strings_list_job_comments",
     {
       description: "List comments for a job in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

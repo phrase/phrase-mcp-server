@@ -9,6 +9,7 @@ import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
   inputSchema: Record<string, z.ZodTypeAny>;
+  annotations: { readOnlyHint?: boolean; destructiveHint?: boolean } | undefined;
   handler: (input: Record<string, unknown>) => Promise<{ content: Array<{ text: string }> }>;
 };
 
@@ -101,11 +102,12 @@ function createRecordingServer(registrations: Map<string, RegisteredTool>): McpS
     registerTool: (...args: unknown[]) => {
       const [name, options, handler] = args as [
         string,
-        { inputSchema: Record<string, z.ZodTypeAny> },
+        { inputSchema: Record<string, z.ZodTypeAny>; annotations?: RegisteredTool["annotations"] },
         RegisteredTool["handler"],
       ];
       registrations.set(name, {
         inputSchema: options.inputSchema,
+        annotations: options.annotations,
         handler,
       });
     },
@@ -230,6 +232,22 @@ describe("strings tools", () => {
   it("registers every strings tool", () => {
     expect(registrations.size).toBe(Object.keys(EXPECTED_METHOD_BY_TOOL).length);
     expect(new Set(registrations.keys())).toEqual(new Set(Object.keys(EXPECTED_METHOD_BY_TOOL)));
+  });
+
+  it("every tool declares exactly one of readOnlyHint or destructiveHint", () => {
+    for (const [name, tool] of registrations) {
+      const { readOnlyHint, destructiveHint } = tool.annotations ?? {};
+      const hasReadOnly = readOnlyHint === true;
+      const hasDestructive = destructiveHint === true;
+      expect(
+        hasReadOnly || hasDestructive,
+        `${name} must declare readOnlyHint: true or destructiveHint: true`,
+      ).toBe(true);
+      expect(
+        hasReadOnly && hasDestructive,
+        `${name} must not declare both readOnlyHint and destructiveHint`,
+      ).toBe(false);
+    }
   });
 
   for (const toolName of Object.keys(EXPECTED_METHOD_BY_TOOL).sort()) {

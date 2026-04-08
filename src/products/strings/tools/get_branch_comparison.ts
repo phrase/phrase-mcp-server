@@ -34,6 +34,7 @@ export function registerGetBranchComparisonTool(
     {
       description:
         "Fetch the comparison result between a branch and the main branch of a Phrase Strings project. Polls until the comparison is ready (up to 2 minutes). Use after strings_compare_branch.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1).describe("Name of the branch to get comparison for"),

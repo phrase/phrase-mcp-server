@@ -8,6 +8,7 @@ export function registerAddJobLocaleTool(server: McpServer, runtime: ProductRunt
     "strings_add_job_locale",
     {
       description: "Add a target locale to a job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

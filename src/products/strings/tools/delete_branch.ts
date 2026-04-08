@@ -8,6 +8,7 @@ export function registerDeleteBranchTool(server: McpServer, runtime: ProductRunt
     "strings_delete_branch",
     {
       description: "Delete an existing branch in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

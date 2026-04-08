@@ -8,6 +8,7 @@ export function registerDeleteLocaleTool(server: McpServer, runtime: ProductRunt
     "strings_delete_locale",
     {
       description: "Delete an existing locale in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

@@ -8,6 +8,7 @@ export function registerUpdateKeyTool(server: McpServer, runtime: ProductRuntime
     "strings_update_key",
     {
       description: "Update an existing translation key in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

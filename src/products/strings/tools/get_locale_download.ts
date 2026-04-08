@@ -11,6 +11,7 @@ export function registerGetLocaleDownloadTool(
     "strings_get_locale_download",
     {
       description: "Show status of an async locale download in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         locale_id: z.string().min(1),

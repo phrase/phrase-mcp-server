@@ -8,6 +8,7 @@ export function registerGetJobLocaleTool(server: McpServer, runtime: ProductRunt
     "strings_get_job_locale",
     {
       description: "Get a single target locale for a job in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

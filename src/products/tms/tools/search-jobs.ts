@@ -10,6 +10,7 @@ export function registerSearchJobsTool(server: McpServer, runtime: ProductRuntim
     {
       description:
         "Search for jobs in a Phrase TMS project using structured filters. Prefer this over tms_list_jobs when filtering by multiple fields at once (e.g. status + target language + filename). Returns matching jobs with full metadata. (POST /api2/v1/projects/{projectUid}/jobs/search)",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         query: z

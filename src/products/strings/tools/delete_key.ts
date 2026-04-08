@@ -8,6 +8,7 @@ export function registerDeleteKeyTool(server: McpServer, runtime: ProductRuntime
     "strings_delete_key",
     {
       description: "Delete an existing translation key in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

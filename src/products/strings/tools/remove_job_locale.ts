@@ -8,6 +8,7 @@ export function registerRemoveJobLocaleTool(server: McpServer, runtime: ProductR
     "strings_remove_job_locale",
     {
       description: "Remove a target locale from a job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

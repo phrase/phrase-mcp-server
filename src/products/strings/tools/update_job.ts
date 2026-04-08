@@ -8,6 +8,7 @@ export function registerUpdateJobTool(server: McpServer, runtime: ProductRuntime
     "strings_update_job",
     {
       description: "Update a job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

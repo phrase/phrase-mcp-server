@@ -8,6 +8,7 @@ export function registerListJobLocalesTool(server: McpServer, runtime: ProductRu
     "strings_list_job_locales",
     {
       description: "List target locales for a job in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

@@ -11,6 +11,7 @@ export function registerListTranslationsTool(
     "strings_list_translations",
     {
       description: "List translations for a locale in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         locale_id: z.string().min(1),

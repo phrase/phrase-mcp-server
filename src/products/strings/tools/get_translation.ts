@@ -8,6 +8,7 @@ export function registerGetTranslationTool(server: McpServer, runtime: ProductRu
     "strings_get_translation",
     {
       description: "Get details on a single translation in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

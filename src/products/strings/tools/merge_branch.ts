@@ -9,6 +9,7 @@ export function registerMergeBranchTool(server: McpServer, runtime: ProductRunti
     {
       description:
         "Merge an existing branch into the main branch of a Phrase Strings project. Note: Merging may take several minutes depending on diff size.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1).describe("Name of the branch to merge into main"),
