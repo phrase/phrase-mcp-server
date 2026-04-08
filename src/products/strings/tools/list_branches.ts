@@ -8,6 +8,7 @@ export function registerListBranchesTool(server: McpServer, runtime: ProductRunt
     "strings_list_branches",
     {
       description: "List all branches of a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         page: z.number().int().min(1).optional(),

@@ -9,6 +9,7 @@ export function registerListPendingRequestsTool(server: McpServer, runtime: Prod
     {
       description:
         "List all currently in-progress (RUNNING) async requests across your TMS account. Use for monitoring bulk background operations. To check a specific request by ID, use tms_get_async_request instead. (GET /api2/v1/async)",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         query: querySchema,
         ...paginationControlsSchema,

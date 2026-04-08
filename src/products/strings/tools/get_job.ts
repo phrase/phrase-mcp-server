@@ -8,6 +8,7 @@ export function registerGetJobTool(server: McpServer, runtime: ProductRuntime<"s
     "strings_get_job",
     {
       description: "Get a single job in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

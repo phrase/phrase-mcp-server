@@ -8,6 +8,7 @@ export function registerGlossaryCreateTool(server: McpServer, runtime: ProductRu
     "strings_create_glossary",
     {
       description: "Create a term base (previously: glossary) in Phrase Strings.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         name: z.string().min(1),

@@ -8,6 +8,7 @@ export function registerStartJobTool(server: McpServer, runtime: ProductRuntime<
     "strings_start_job",
     {
       description: "Start a draft job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

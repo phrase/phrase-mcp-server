@@ -8,6 +8,7 @@ export function registerUpdateLocaleTool(server: McpServer, runtime: ProductRunt
     "strings_update_locale",
     {
       description: "Update an existing locale in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

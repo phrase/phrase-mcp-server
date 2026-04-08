@@ -8,6 +8,7 @@ export function registerUpdateProjectTool(server: McpServer, runtime: ProductRun
     "strings_update_project",
     {
       description: "Update an existing project in Phrase Strings.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         id: z.string().min(1),
         name: z.string().optional(),

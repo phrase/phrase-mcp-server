@@ -11,6 +11,7 @@ export function registerListJobTemplatesTool(
     "strings_list_job_templates",
     {
       description: "List job templates for a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         branch: z.string().optional(),

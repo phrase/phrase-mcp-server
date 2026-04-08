@@ -8,6 +8,7 @@ export function registerReopenJobTool(server: McpServer, runtime: ProductRuntime
     "strings_reopen_job",
     {
       description: "Reopen a completed job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

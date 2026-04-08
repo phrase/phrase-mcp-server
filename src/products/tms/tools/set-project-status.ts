@@ -10,6 +10,7 @@ export function registerSetProjectStatusTool(server: McpServer, runtime: Product
     {
       description:
         "Change the status of a Phrase TMS project. Check current status with tms_get_project first. CANCELLED is irreversible. (POST /api2/v1/projects/{projectUid}/setStatus)",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         status: projectStatusSchema.describe(

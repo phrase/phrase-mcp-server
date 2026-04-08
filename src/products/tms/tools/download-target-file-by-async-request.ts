@@ -38,6 +38,7 @@ export function registerDownloadTargetFileByAsyncRequestTool(
     {
       description:
         "Retrieve the translated file once async generation is confirmed complete (status = COMPLETED from tms_get_async_request). Returns file content as base64 (bytes_base64) plus content_type and file_name. Optionally saves the decoded file to disk via output_path. (GET /api2/v3/projects/{projectUid}/jobs/{jobUid}/downloadTargetFile/{asyncRequestId})",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),

@@ -20,6 +20,7 @@ export function registerListJobsTool(server: McpServer, runtime: ProductRuntime<
     {
       description:
         "List all jobs in a Phrase TMS project. Returns job metadata including uid, filename, status, target language, word count, and due date. Use tms_search_jobs instead when filtering by multiple criteria simultaneously. (GET /api2/v2/projects/{projectUid}/jobs)",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID (not numeric internal ID)."),
         query: querySchema.describe(

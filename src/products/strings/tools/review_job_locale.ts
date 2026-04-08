@@ -8,6 +8,7 @@ export function registerReviewJobLocaleTool(server: McpServer, runtime: ProductR
     "strings_review_job_locale",
     {
       description: "Mark a job locale as reviewed in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

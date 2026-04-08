@@ -11,6 +11,7 @@ export function registerGlossaryTermTranslationUpdateTool(
     "strings_update_glossary_term_translation",
     {
       description: "Update a translation for a term in a term base (previously: glossary).",
+      annotations: { destructiveHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         glossary_id: z.string().min(1),

@@ -11,6 +11,7 @@ export function registerCreateTranslationTool(
     "strings_create_translation",
     {
       description: "Create a translation for a key and locale in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         locale_id: z.string().min(1),

@@ -8,6 +8,7 @@ export function registerGetAsyncLimitsTool(server: McpServer, runtime: ProductRu
     {
       description:
         "Check the async request quota: how many concurrent async operations are allowed and how many are currently in use. Call this before triggering a large number of async exports to avoid hitting rate limits. (GET /api2/v1/async/status)",
+      annotations: { readOnlyHint: true },
       inputSchema: {},
     },
     async () => {

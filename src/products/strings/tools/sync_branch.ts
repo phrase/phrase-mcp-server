@@ -9,6 +9,7 @@ export function registerSyncBranchTool(server: McpServer, runtime: ProductRuntim
     {
       description:
         "Sync an existing branch with the main branch of a Phrase Strings project. Note: Only available for branches created with new branching (currently in private beta).",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1).describe("Name of the branch to sync"),

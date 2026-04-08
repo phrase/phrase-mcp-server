@@ -17,6 +17,7 @@ export function registerDownloadTargetFileAsyncTool(
     {
       description:
         "Trigger asynchronous generation of the translated (target) file for a TMS job. Returns an asyncRequest object with an id field. The file is NOT immediately available. Next: call tms_get_async_request with the returned id and poll until status = COMPLETED, then call tms_download_target_file_by_async_request to retrieve the file. (PUT /api2/v3/projects/{projectUid}/jobs/{jobUid}/targetFile)",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),
