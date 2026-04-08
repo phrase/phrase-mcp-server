@@ -6,10 +6,20 @@ on:
       - published
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
+  mcpb-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: NimbleBrainInc/mcpb-pack@v2
+        with:
+          platform-os: any
+          platform-arch: any
+
   npm-publish:
     runs-on: ubuntu-latest
     steps:
