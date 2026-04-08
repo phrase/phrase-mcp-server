@@ -9,6 +9,7 @@ import { tmsModule } from "#products/tms/index";
 import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
+  annotations: { readOnlyHint?: boolean; destructiveHint?: boolean } | undefined;
   handler: (input: Record<string, unknown>) => Promise<{ content: Array<{ text: string }> }>;
 };
 
@@ -31,8 +32,12 @@ function createHttpError(status: number, statusText: string, body: string): Http
 function createRecordingServer(registrations: Map<string, RegisteredTool>): McpServer {
   return {
     registerTool: (...args: unknown[]) => {
-      const [name, _options, handler] = args as [string, unknown, RegisteredTool["handler"]];
-      registrations.set(name, { handler });
+      const [name, options, handler] = args as [
+        string,
+        { annotations?: RegisteredTool["annotations"] },
+        RegisteredTool["handler"],
+      ];
+      registrations.set(name, { annotations: options.annotations, handler });
     },
   } as unknown as McpServer;
 }
@@ -129,6 +134,22 @@ describe("tmsModule tools", () => {
 
   it("registers every expected tms tool", () => {
     expect(new Set(registrations.keys())).toEqual(new Set(EXPECTED_TOOL_NAMES));
+  });
+
+  it("every tool declares exactly one of readOnlyHint or destructiveHint", () => {
+    for (const [name, tool] of registrations) {
+      const { readOnlyHint, destructiveHint } = tool.annotations ?? {};
+      const hasReadOnly = readOnlyHint === true;
+      const hasDestructive = destructiveHint === true;
+      expect(
+        hasReadOnly || hasDestructive,
+        `${name} must declare readOnlyHint: true or destructiveHint: true`,
+      ).toBe(true);
+      expect(
+        hasReadOnly && hasDestructive,
+        `${name} must not declare both readOnlyHint and destructiveHint`,
+      ).toBe(false);
+    }
   });
 
   it("handles direct get/post/put wrapper tools", async () => {
