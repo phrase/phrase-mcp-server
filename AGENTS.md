@@ -2,6 +2,30 @@
 
 Guidance for AI agents (Claude, Copilot, etc.) contributing to this repository.
 
+## Commit Messages and PR Titles
+
+All commit messages and PR titles must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). This is enforced by CI on pull requests.
+
+**Format:** `<type>: <description>`
+
+Common types:
+- `feat` — new feature or capability
+- `fix` — bug fix
+- `docs` — documentation changes only
+- `chore` — maintenance, dependencies, config
+- `refactor` — code change that neither fixes a bug nor adds a feature
+- `test` — adding or updating tests
+
+**Examples:**
+```
+feat: add readOnlyHint/destructiveHint annotations to all tools
+fix: change download-target-file-async annotation to readOnlyHint
+docs: add working examples section to README
+chore: update Dependabot configuration
+```
+
+The PR title must also follow this format — the Semantic PR check will fail otherwise.
+
 ## Tool Annotations
 
 Every tool registered with `server.registerTool` must declare an `annotations` field in its config object. This is required for MCP directory submission.
