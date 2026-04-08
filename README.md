@@ -116,7 +116,7 @@ tms_update_project
 
 ## Examples
 
-The following examples build on each other as a complete end-to-end TMS workflow: discover your projects, kick off a new translation, then retrieve the result.
+The following examples build on each other as a complete end-to-end workflow: discover your projects, kick off a new translation with Phrase TMS, retrieve the result, and upload a localization file via Phrase Strings.
 
 ### 1. List all projects
 
