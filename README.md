@@ -189,7 +189,7 @@ Saved to: README.es.md
 
 ### 4. Create a Strings project and upload a localization file
 
-**User prompt:** "Create a new Strings project and upload docs/examples/en.json for localization"
+**User prompt:** "Create a new Strings project and upload docs/examples/en.json (Format: simple_json) for localization"
 
 **Expected behavior:**
 - Calls `strings_create_project` to create the project
@@ -207,8 +207,8 @@ Added locale: English (en) — main locale
 
 Uploading en.json (format: simple_json)... done
   Upload state: success
-  Translation keys created: 9
-  Translations created: 9
+  Translation keys created: 14
+  Translations created: 14
 ```
 
 ## Prerequisites
