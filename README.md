@@ -189,7 +189,7 @@ Saved to: README.es.md
 
 ### 4. Create a Strings project and upload a localization file
 
-**User prompt:** "Create a new Strings project and upload biome.json for localization"
+**User prompt:** "Create a new Strings project and upload docs/examples/en.json for localization"
 
 **Expected behavior:**
 - Calls `strings_create_project` to create the project
@@ -205,7 +205,7 @@ Created Strings project "My App Config" (ID: ...)
 
 Added locale: English (en) — main locale
 
-Uploading biome.json (format: simple_json)... done
+Uploading en.json (format: simple_json)... done
   Upload state: success
   Translation keys created: 9
   Translations created: 9

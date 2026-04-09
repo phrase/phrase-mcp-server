@@ -1,0 +1,20 @@
+{
+  "hello_world": "Hello world!",
+  "general": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "confirm": "Are you sure?",
+    "destroy": "Delete",
+    "edit": "Edit",
+    "new": "New"
+  },
+  "application": {
+    "about": "About",
+    "account": "Account",
+    "logout": "Logout",
+    "sign_in": "Login",
+    "sign_up": "Register",
+    "preview": "Preview",
+    "profile": "Profile"
+  }
+}
