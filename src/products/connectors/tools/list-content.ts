@@ -14,6 +14,7 @@ export function registerListContentTool(server: McpServer, runtime: ProductRunti
     {
       description:
         "List Google Drive content through the Connectors API. Pass request.connectorUuid plus request.configuration (usually {}). If request.path is omitted, the MCP wrapper lists the Google Drive navigation root with { pathType: 'ROOT' }.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         connector: z.string().min(1),
         request: z

@@ -48,6 +48,7 @@ export function registerListConnectorsTool(
     {
       description:
         "List Connectors API connectors. In v1, Phrase MCP supports only the google-drive connector for content operations.",
+      annotations: { readOnlyHint: true },
       inputSchema: {},
     },
     async () => {

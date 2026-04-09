@@ -104,6 +104,7 @@ export function registerUploadRawTool(server: McpServer, runtime: ProductRuntime
     {
       description:
         "Upload a local file to Google Drive through the Connectors API. Pass request.connectorUuid, request.configuration (usually {}), and request.path. Native Google Drive uploads want a FILE target path that includes the destination filename; as a convenience, this MCP wrapper also accepts a FOLDER path and rewrites it to a FILE target using request.name or the basename of file_path.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         connector: z.string().min(1),
         request: z

@@ -15,6 +15,7 @@ export function registerDownloadRawTool(server: McpServer, runtime: ProductRunti
     {
       description:
         "Download raw Google Drive content through the Connectors API. request must mirror the Bifrost Google Drive download-raw-file request body and use request.connectorUuid.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         connector: z.string().min(1),
         request: z.object({}).passthrough(),
