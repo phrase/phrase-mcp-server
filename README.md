@@ -1,12 +1,13 @@
 # Phrase MCP Server
 
-Use Phrase APIs from any MCP client (Claude, Cursor, etc.) with ready-to-use tools for Phrase Strings and Phrase TMS.
+Use Phrase APIs from any MCP client (Claude, Cursor, etc.) with ready-to-use tools for Phrase Strings, Phrase TMS, and Connectors.
 
 ## Who This Is For
 
 - Localization managers automating routine project and job operations
 - Engineers building AI workflows around Phrase
 - Teams that want one MCP server for both Strings and TMS
+- Teams that want one MCP server for Strings, TMS, and Connectors workflows
 
 ### Available Tools
 
@@ -114,6 +115,15 @@ tms_update_job
 tms_update_project
 ```
 
+#### Connectors (`connectors_*`)
+
+```text
+connectors_download_raw
+connectors_list_connectors
+connectors_list_content
+connectors_upload_raw
+```
+
 ## Prerequisites
 
 - Node.js 20+
@@ -134,7 +144,8 @@ args = ["-y", "phrase-mcp-server"]
 [mcp_servers.phrase.env]
 PHRASE_STRINGS_TOKEN = "your_token" # Required for Strings tools, optional for TMS-only usage
 PHRASE_TMS_TOKEN = "your_token" # Required for TMS tools, optional for Strings-only usage
-PHRASE_ENABLED_PRODUCTS = "strings,tms" # Optional, defaults to all products
+PHRASE_CONNECTORS_TOKEN = "your_token" # Required for Connectors tools
+PHRASE_ENABLED_PRODUCTS = "strings,tms,connectors" # Optional, defaults to all products
 PHRASE_REGION = "eu"
 ```
 
@@ -149,7 +160,8 @@ PHRASE_REGION = "eu"
       "env": {
         "PHRASE_STRINGS_TOKEN": "your_token",
         "PHRASE_TMS_TOKEN": "your_token",
-        "PHRASE_ENABLED_PRODUCTS": "strings,tms",
+        "PHRASE_CONNECTORS_TOKEN": "your_token",
+        "PHRASE_ENABLED_PRODUCTS": "strings,tms,connectors",
         "PHRASE_REGION": "eu"
       }
     }
@@ -166,12 +178,15 @@ Set at least one product token in your MCP client config:
   - `PHRASE_STRINGS_TOKEN=your_token`
   - `PHRASE_TMS_TOKEN=your_token`
   - `PHRASE_REGION=eu`
+- Connectors setup:
+  - `PHRASE_CONNECTORS_TOKEN=your_token`
+  - `PHRASE_REGION=eu`
 
 ## Configuration Reference
 
 ### Product selection
 
-- `PHRASE_ENABLED_PRODUCTS`: comma-separated subset of `strings,tms`
+- `PHRASE_ENABLED_PRODUCTS`: comma-separated subset of `strings,tms,connectors`
 - `PHRASE_DISABLED_PRODUCTS`: products removed from the enabled set
 - Default behavior: all products enabled
 
@@ -186,6 +201,84 @@ The server uses [Phrase Platform API tokens](https://developers.phrase.com/en/ap
 
 - Per product (`STRINGS`, `TMS`, etc.):
   - `PHRASE_<PRODUCT>_TOKEN`
+
+### Connectors notes
+
+- Connectors v1 currently supports only `google-drive`.
+- Connectors base URLs are built in and selected by `PHRASE_REGION`:
+  - `eu` -> `https://eu.phrase.com/connectors`
+  - `us` -> `https://us.phrase.com/connectors`
+- Only stored Phrase connector credentials are supported in v1. Pass `request.connectorUuid`; inline `googleDrive2Credentials` are rejected.
+- `request.configuration` is required and must be an object. Today it is forwarded as-is and is usually `{}`, but the wrapper still requires it because the upstream connector contract does.
+- The `request.path` object is the main Google Drive contract. The wrapper only validates or normalizes a few cases and otherwise forwards the path unchanged.
+- Google Drive list operations default to `{ "pathType": "ROOT" }` when `request.path` is omitted.
+- Google Drive requests default `locale` to `en` when the caller does not provide one.
+- Google Drive uploads use the connector's direct stream-upload flow from `file_path`; Connectors file storage is not used in v1.
+- XLIFF and async endpoints are intentionally out of scope in v1.
+
+Path model summary:
+
+- `ROOT`: connector navigation root. Use it for the first list call; it exposes entries such as My Drive and Shared drives.
+- `SHARED_DRIVES_ROOT`: shared-drive picker. Use it to enumerate available shared drives.
+- `FOLDER`: concrete folder listing target. Use it for list calls inside My Drive or a shared drive.
+- `FILE`: concrete file target. Use it for downloads and as the final target shape for uploads.
+
+Drive model summary:
+
+- My Drive paths use `"drive": { "driveType": "MY_DRIVE" }`.
+- Shared drive paths use `"drive": { "driveType": "SHARED_DRIVE", "driveId": "..." }`.
+- `parentChain` describes the ancestry of the file or folder within the drive. For list calls at the top of a drive it is usually `[]`. For file operations it points at the parent folders of the file.
+
+MCP wrapper behavior:
+
+- `connectors_list_content`:
+  - defaults to `ROOT` when `request.path` is omitted
+  - still requires `request.configuration`, which is usually `{}`
+  - otherwise forwards the provided path unchanged
+- `connectors_download_raw`:
+  - requires an explicit `FILE` path
+  - returns inline bytes plus optional `saved_to` instead of storing content in Connectors file storage
+- `connectors_upload_raw`:
+  - reads bytes from local `file_path`
+  - rejects `request.storageId` because file storage uploads are out of scope in v1
+  - fills `request.name` from the local filename when omitted
+  - overwrites `request.size` with the actual file size
+  - native Google Drive upload semantics expect a destination `FILE` path that includes the filename
+  - accepts a `FOLDER` path as a convenience and rewrites it into a `FILE` path by appending the folder to `parentChain` and filling the filename from `request.name` or `file_path`
+  - performs the upstream stream registration and `PUT` internally, even though MCP exposes it as one upload tool call
+
+For a detailed Google Drive path and configuration guide, including Bruno-aligned examples and the exact MCP normalization rules, see [docs/developer/connectors-google-drive.md](docs/developer/connectors-google-drive.md).
+
+Example root listing:
+
+```json
+{
+  "connector": "google-drive",
+  "request": {
+    "connectorUuid": "8d6655d6-1be2-46af-89c0-7615866d2523",
+    "configuration": {}
+  }
+}
+```
+
+Example upload from a local file:
+
+```json
+{
+  "connector": "google-drive",
+  "file_path": "./demo.txt",
+  "request": {
+    "connectorUuid": "8d6655d6-1be2-46af-89c0-7615866d2523",
+    "configuration": {},
+    "path": {
+      "pathType": "FOLDER",
+      "folderId": "root",
+      "drive": { "driveType": "MY_DRIVE" },
+      "parentChain": []
+    }
+  }
+}
+```
 
 ### Security recommendations
 

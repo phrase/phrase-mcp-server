@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { UnifiedAccessTokenProvider } from "#lib/auth";
+import { ConnectorsAccessTokenProvider, UnifiedAccessTokenProvider } from "#lib/auth";
 
 describe("UnifiedAccessTokenProvider", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
@@ -163,6 +163,68 @@ describe("UnifiedAccessTokenProvider", () => {
       const token = await provider.getAccessToken();
 
       expect(token).toBe("ok");
+    });
+  });
+
+  describe("ConnectorsAccessTokenProvider", () => {
+    it("posts token exchange to the IDM endpoint derived from the connectors base URL", async () => {
+      mockTokenResponse(
+        { access_token: "connectors-secret", expires_in: 600 },
+        { ok: true, status: 200 },
+      );
+
+      const provider = new ConnectorsAccessTokenProvider(
+        "subject-token",
+        "https://eu.phrase.com/connectors",
+      );
+      const token = await provider.getAccessToken();
+
+      expect(token).toBe("connectors-secret");
+      expect(fetchMock).toHaveBeenLastCalledWith(
+        "https://eu.phrase.com/idm/oauth/token",
+        expect.objectContaining({
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer subject-token",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: expect.any(URLSearchParams),
+        }),
+      );
+
+      const lastCall = fetchMock.mock.lastCall;
+      expect(lastCall).toBeDefined();
+      if (!lastCall) {
+        throw new Error("Expected a final fetch call");
+      }
+
+      const requestInit = lastCall[1];
+      expect(requestInit).toBeDefined();
+      if (!requestInit) {
+        throw new Error("Expected RequestInit in final fetch call");
+      }
+
+      const body = requestInit.body as URLSearchParams;
+      expect(body.get("grant_type")).toBe("urn:ietf:params:oauth:grant-type:token-exchange");
+      expect(body.get("subject_token")).toBe("subject-token");
+    });
+
+    it("caches the exchanged connectors token until expiry", async () => {
+      mockTokenResponse(
+        { access_token: "connectors-secret", expires_in: 600 },
+        { ok: true, status: 200 },
+      );
+
+      const provider = new ConnectorsAccessTokenProvider(
+        "subject-token",
+        "https://eu.phrase.com/connectors",
+      );
+
+      await expect(provider.getAccessToken()).resolves.toBe("connectors-secret");
+      await expect(provider.getAccessToken()).resolves.toBe("connectors-secret");
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
   });
 });

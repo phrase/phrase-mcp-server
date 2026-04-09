@@ -155,6 +155,31 @@ describe("requestBinary", () => {
       body: "missing",
     });
   });
+
+  it("accepts octet-stream bodies even when the status is non-OK if enabled", async () => {
+    const bytes = Buffer.from("hello");
+    fetchMock.mockResolvedValue(
+      new Response(bytes, {
+        status: 404,
+        statusText: "Not Found",
+        headers: {
+          "content-type": "application/octet-stream",
+          "content-disposition": "attachment; filename=test.bin",
+        },
+      }),
+    );
+
+    const result = await requestBinary("https://api.example.com", "/download", {
+      allowNonOkBinary: true,
+    });
+
+    expect(result).toEqual({
+      contentType: "application/octet-stream",
+      contentDisposition: "attachment; filename=test.bin",
+      bytesBase64: bytes.toString("base64"),
+      sizeBytes: bytes.byteLength,
+    });
+  });
 });
 
 describe("retry logic", () => {
