@@ -1,4 +1,5 @@
 import {
+  BranchesApi,
   Configuration,
   FormatsApi,
   GlossariesApi,
@@ -37,6 +38,7 @@ export class StringsClient {
   readonly jobCommentsApi: JobCommentsApi;
   readonly localeDownloadsApi: LocaleDownloadsApi;
   readonly uploadsApi: UploadsApi;
+  readonly branchesApi: BranchesApi;
 
   constructor(options: ProductClientFactoryOptions) {
     const authHeader = options.authHeader.trim() || "Authorization";
@@ -45,7 +47,7 @@ export class StringsClient {
     const useStaticTokenAuth = configuredAuthPrefix.toLowerCase() === "token";
     const tokenProvider = useStaticTokenAuth
       ? null
-      : new UnifiedAccessTokenProvider(options.authToken, options.region);
+      : new UnifiedAccessTokenProvider(options.authToken, options.region, options.idmBaseUrl);
     const authMiddleware: Middleware = {
       pre: async (context) => {
         let token: string;
@@ -94,5 +96,6 @@ export class StringsClient {
     this.jobCommentsApi = new JobCommentsApi(configuration);
     this.localeDownloadsApi = new LocaleDownloadsApi(configuration);
     this.uploadsApi = new UploadsApi(configuration);
+    this.branchesApi = new BranchesApi(configuration);
   }
 }

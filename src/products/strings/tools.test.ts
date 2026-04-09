@@ -9,6 +9,7 @@ import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
   inputSchema: Record<string, z.ZodTypeAny>;
+  annotations: { readOnlyHint?: boolean; destructiveHint?: boolean } | undefined;
   handler: (input: Record<string, unknown>) => Promise<{ content: Array<{ text: string }> }>;
 };
 
@@ -26,6 +27,7 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_create_glossary_term: "glossaryTermsApi.glossaryTermCreate",
   strings_create_glossary_term_translation:
     "glossaryTermTranslationsApi.glossaryTermTranslationCreate",
+  strings_create_branch: "branchesApi.branchCreate",
   strings_create_key: "keysApi.keyCreate",
   strings_create_job: "jobsApi.jobCreate",
   strings_create_translation: "translationsApi.translationCreate",
@@ -36,7 +38,14 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_create_locale_download: "localeDownloadsApi.localeDownloadCreate",
   strings_create_project: "projectsApi.projectCreate",
   strings_create_upload: "uploadsApi.uploadCreate",
+  strings_delete_branch: "branchesApi.branchDelete",
+  strings_delete_glossary_term: "glossaryTermsApi.glossaryTermDelete",
+  strings_delete_key: "keysApi.keyDelete",
+  strings_delete_locale: "localesApi.localeDelete",
+  strings_delete_project: "projectsApi.projectDelete",
+  strings_get_branch: "branchesApi.branchShow",
   strings_get_glossary: "glossariesApi.glossaryShow",
+  strings_get_locale: "localesApi.localeShow",
   strings_get_glossary_term: "glossaryTermsApi.glossaryTermShow",
   strings_get_job: "jobsApi.jobShow",
   strings_get_job_comment: "jobCommentsApi.jobCommentShow",
@@ -45,6 +54,8 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_get_job_template_locale: "jobTemplateLocalesApi.jobTemplateLocaleShow",
   strings_get_locale_download: "localeDownloadsApi.localeDownloadShow",
   strings_get_project: "projectsApi.projectShow",
+  strings_get_key: "keysApi.keyShow",
+  strings_get_translation: "translationsApi.translationShow",
   strings_get_upload: "uploadsApi.uploadShow",
   strings_list_account_jobs: "jobsApi.jobsByAccount",
   strings_list_formats: "formatsApi.formatsList",
@@ -55,6 +66,7 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_list_job_template_locales: "jobTemplateLocalesApi.jobTemplateLocalesList",
   strings_list_job_templates: "jobTemplatesApi.jobTemplatesList",
   strings_list_jobs: "jobsApi.jobsList",
+  strings_list_branches: "branchesApi.branchesList",
   strings_list_keys: "keysApi.keysList",
   strings_list_locales: "localesApi.localesList",
   strings_list_projects: "projectsApi.projectsList",
@@ -67,12 +79,22 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_reopen_job_locale: "jobLocalesApi.jobLocaleReopen",
   strings_review_job_locale: "jobLocalesApi.jobLocaleCompleteReview",
   strings_start_job: "jobsApi.jobStart",
+  strings_merge_branch: "branchesApi.branchMerge",
+  strings_compare_branch: "branchesApi.branchComparisonCreate",
+  strings_get_branch_comparison: "branchesApi.branchCompare",
+  strings_sync_branch: "branchesApi.branchSync",
   strings_unlock_job: "jobsApi.jobUnlock",
+  strings_update_branch: "branchesApi.branchUpdate",
   strings_update_glossary: "glossariesApi.glossaryUpdate",
+  strings_update_glossary_term: "glossaryTermsApi.glossaryTermUpdate",
+  strings_update_locale: "localesApi.localeUpdate",
+  strings_update_project: "projectsApi.projectUpdate",
   strings_update_glossary_term_translation:
     "glossaryTermTranslationsApi.glossaryTermTranslationUpdate",
   strings_update_job: "jobsApi.jobUpdate",
   strings_update_job_locale: "jobLocalesApi.jobLocaleUpdate",
+  strings_update_key: "keysApi.keyUpdate",
+  strings_update_translation: "translationsApi.translationUpdate",
 };
 
 function createRecordingServer(registrations: Map<string, RegisteredTool>): McpServer {
@@ -80,14 +102,16 @@ function createRecordingServer(registrations: Map<string, RegisteredTool>): McpS
     registerTool: (...args: unknown[]) => {
       const [name, options, handler] = args as [
         string,
-        { inputSchema: Record<string, z.ZodTypeAny> },
+        { inputSchema: Record<string, z.ZodTypeAny>; annotations?: RegisteredTool["annotations"] },
         RegisteredTool["handler"],
       ];
       registrations.set(name, {
         inputSchema: options.inputSchema,
+        annotations: options.annotations,
         handler,
       });
     },
+    registerPrompt: () => undefined,
   } as unknown as McpServer;
 }
 
@@ -208,6 +232,22 @@ describe("strings tools", () => {
   it("registers every strings tool", () => {
     expect(registrations.size).toBe(Object.keys(EXPECTED_METHOD_BY_TOOL).length);
     expect(new Set(registrations.keys())).toEqual(new Set(Object.keys(EXPECTED_METHOD_BY_TOOL)));
+  });
+
+  it("every tool declares exactly one of readOnlyHint or destructiveHint", () => {
+    for (const [name, tool] of registrations) {
+      const { readOnlyHint, destructiveHint } = tool.annotations ?? {};
+      const hasReadOnly = readOnlyHint === true;
+      const hasDestructive = destructiveHint === true;
+      expect(
+        hasReadOnly || hasDestructive,
+        `${name} must declare readOnlyHint: true or destructiveHint: true`,
+      ).toBe(true);
+      expect(
+        hasReadOnly && hasDestructive,
+        `${name} must not declare both readOnlyHint and destructiveHint`,
+      ).toBe(false);
+    }
   });
 
   for (const toolName of Object.keys(EXPECTED_METHOD_BY_TOOL).sort()) {

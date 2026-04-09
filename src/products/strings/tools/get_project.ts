@@ -8,6 +8,7 @@ export function registerGetProjectTool(server: McpServer, runtime: ProductRuntim
     "strings_get_project",
     {
       description: "Get a single project in a Phrase Strings account.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         id: z.string().min(1),
       },

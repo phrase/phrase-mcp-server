@@ -8,6 +8,7 @@ export function registerCreateJobTool(server: McpServer, runtime: ProductRuntime
     "strings_create_job",
     {
       description: "Create a job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

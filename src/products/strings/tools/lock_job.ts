@@ -8,6 +8,7 @@ export function registerLockJobTool(server: McpServer, runtime: ProductRuntime<"
     "strings_lock_job",
     {
       description: "Lock a job in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

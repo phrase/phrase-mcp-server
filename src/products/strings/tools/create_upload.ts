@@ -20,6 +20,7 @@ export function registerCreateUploadTool(server: McpServer, runtime: ProductRunt
     {
       description:
         "Upload a new language file in a Phrase Strings project. This operation mutates data and reads a file from the MCP server filesystem.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         file_path: z

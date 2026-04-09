@@ -1,6 +1,6 @@
 {
   "name": "phrase-mcp-server",
-  "version": "0.1.2",
+  "version": "0.3.0",
   "description": "MCP server for Phrase localization API",
   "type": "module",
   "main": "dist/index.js",
@@ -36,7 +36,7 @@
     "@modelcontextprotocol/sdk": "^1.17.4",
     "form-data": "^3.0.4",
     "node-fetch": "^2.7.0",
-    "phrase-js": "3.12.1",
+    "phrase-js": "^3.17.0",
     "zod": "^3.24.2"
   },
   "engines": {

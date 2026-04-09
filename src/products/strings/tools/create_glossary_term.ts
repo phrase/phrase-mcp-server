@@ -11,6 +11,7 @@ export function registerGlossaryTermCreateTool(
     "strings_create_glossary_term",
     {
       description: "Create a term in a term base (previously: glossary).",
+      annotations: { destructiveHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         glossary_id: z.string().min(1),

@@ -129,6 +129,8 @@ async function getProductClient<K extends ProductKey>(
     return null;
   }
 
+  const idmBaseUrl = getEnvValue("PHRASE_IDM_BASE_URL");
+
   const options: ProductClientFactoryOptions<K> = {
     key: product,
     region,
@@ -136,6 +138,7 @@ async function getProductClient<K extends ProductKey>(
     authHeader,
     authToken,
     authPrefix,
+    idmBaseUrl,
   };
 
   if (clientConfig?.createClient) {

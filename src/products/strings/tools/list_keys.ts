@@ -8,6 +8,7 @@ export function registerListKeysTool(server: McpServer, runtime: ProductRuntime<
     "strings_list_keys",
     {
       description: "List keys in a Phrase Strings project.",
+      annotations: { readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         page: z.number().int().min(1).optional(),

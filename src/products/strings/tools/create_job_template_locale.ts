@@ -11,6 +11,7 @@ export function registerCreateJobTemplateLocaleTool(
     "strings_create_job_template_locale",
     {
       description: "Create a job template locale for a job template in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_template_id: z.string().min(1),

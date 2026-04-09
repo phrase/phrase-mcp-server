@@ -8,6 +8,7 @@ export function registerGlossaryUpdateTool(server: McpServer, runtime: ProductRu
     "strings_update_glossary",
     {
       description: "Update a term base (previously: glossary) in Phrase Strings.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         id: z.string().min(1),

@@ -11,6 +11,7 @@ export function registerCompleteJobLocaleTool(
     "strings_complete_job_locale",
     {
       description: "Complete a job locale in a Phrase Strings project.",
+      annotations: { destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

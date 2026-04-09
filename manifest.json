@@ -1,0 +1,85 @@
+{
+  "manifest_version": "0.3",
+  "name": "phrase-mcp-server",
+  "display_name": "Phrase",
+  "version": "0.3.0",
+  "description": "Use Phrase APIs from any MCP client with ready-to-use tools for Phrase Strings and Phrase TMS.",
+  "long_description": "Automates localization workflows across Phrase Strings and Phrase TMS. Covers projects, jobs, locales, translation keys, branches, glossaries, and file uploads/downloads.",
+  "author": {
+    "name": "Phrase",
+    "url": "https://phrase.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phrase/phrase-mcp-server"
+  },
+  "homepage": "https://phrase.com",
+  "documentation": "https://github.com/phrase/phrase-mcp-server#readme",
+  "support": "https://github.com/phrase/phrase-mcp-server/issues",
+  "icon": "icon.png",
+  "license": "MIT",
+  "keywords": [
+    "phrase",
+    "localization",
+    "i18n",
+    "translation",
+    "strings",
+    "tms",
+    "mcp"
+  ],
+  "privacy_policies": [
+    "https://phrase.com/privacy"
+  ],
+  "tools_generated": true,
+  "server": {
+    "type": "node",
+    "mcp_config": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "phrase-mcp-server"
+      ],
+      "env": {
+        "PHRASE_STRINGS_TOKEN": "${user_config.strings_token}",
+        "PHRASE_TMS_TOKEN": "${user_config.tms_token}",
+        "PHRASE_REGION": "${user_config.region}",
+        "PHRASE_ENABLED_PRODUCTS": "${user_config.enabled_products}"
+      }
+    }
+  },
+  "user_config": {
+    "strings_token": {
+      "type": "string",
+      "title": "Phrase Strings API Token",
+      "description": "Required for Strings tools. Create one at app.phrase.com → Account Settings → API Tokens.",
+      "sensitive": true,
+      "required": false
+    },
+    "tms_token": {
+      "type": "string",
+      "title": "Phrase TMS API Token",
+      "description": "Required for TMS tools. Create one in your Phrase TMS account settings.",
+      "sensitive": true,
+      "required": false
+    },
+    "region": {
+      "type": "string",
+      "title": "Region",
+      "description": "Your Phrase data region: 'eu' or 'us'.",
+      "default": "eu",
+      "required": false
+    },
+    "enabled_products": {
+      "type": "string",
+      "title": "Enabled Products",
+      "description": "Comma-separated list of products to enable: 'strings', 'tms', or 'strings,tms'.",
+      "default": "strings,tms",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  }
+}

@@ -18,6 +18,8 @@ strings_add_job_keys
 strings_add_job_locale
 strings_complete_job
 strings_complete_job_locale
+strings_compare_branch
+strings_create_branch
 strings_create_glossary
 strings_create_glossary_term
 strings_create_glossary_term_translation
@@ -31,17 +33,28 @@ strings_create_locale_download
 strings_create_project
 strings_create_translation
 strings_create_upload
+strings_delete_branch
+strings_delete_glossary_term
+strings_delete_key
+strings_delete_locale
+strings_delete_project
+strings_get_branch
+strings_get_branch_comparison
 strings_get_glossary
 strings_get_glossary_term
+strings_get_locale
 strings_get_job
 strings_get_job_comment
 strings_get_job_locale
 strings_get_job_template
 strings_get_job_template_locale
+strings_get_key
 strings_get_locale_download
 strings_get_project
+strings_get_translation
 strings_get_upload
 strings_list_account_jobs
+strings_list_branches
 strings_list_formats
 strings_list_glossaries
 strings_list_glossary_terms
@@ -56,6 +69,8 @@ strings_list_projects
 strings_list_translations
 strings_list_uploads
 strings_lock_job
+strings_merge_branch
+strings_sync_branch
 strings_remove_job_keys
 strings_remove_job_locale
 strings_reopen_job
@@ -63,10 +78,16 @@ strings_reopen_job_locale
 strings_review_job_locale
 strings_start_job
 strings_unlock_job
+strings_update_branch
 strings_update_glossary
+strings_update_glossary_term
 strings_update_glossary_term_translation
 strings_update_job
 strings_update_job_locale
+strings_update_key
+strings_update_locale
+strings_update_project
+strings_update_translation
 ```
 
 #### TMS (`tms_*`)
@@ -81,7 +102,6 @@ tms_download_target_file_by_async_request
 tms_get_async_limits
 tms_get_async_request
 tms_get_job
-tms_patch_job
 tms_get_project
 tms_get_project_template
 tms_list_jobs
@@ -265,6 +285,10 @@ Example upload from a local file:
 - Use a dedicated service user token for automation
 - Prefer least-privilege project manager permissions over admin-level roles
 
+## Privacy Policy
+
+This server connects to Phrase APIs on your behalf using the credentials you provide. No data is collected or stored by this server itself. See the [Phrase Privacy Policy](https://phrase.com/privacy) for details on how Phrase handles your data.
+
 ## Developer Documentation
 
 For maintainer-facing docs, see:
@@ -272,3 +296,7 @@ For maintainer-facing docs, see:
 - [Developer docs index](docs/developer/README.md)
 - [Running published vs local builds](docs/developer/running.md)
 - [Releasing](docs/developer/releasing.md)
+
+## Support
+
+For support, please [open an issue on GitHub](https://github.com/phrase/phrase-mcp-server/issues) or [submit a request](https://support.phrase.com/hc/requests/new) via Phrase Help Center.

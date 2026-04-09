@@ -36,12 +36,14 @@ export interface AccessTokenProvider {
 export class UnifiedAccessTokenProvider implements AccessTokenProvider {
   private readonly phraseApiToken: string;
   private readonly region: string;
+  private readonly idmBaseUrl: string | undefined;
   private accessToken: string | null = null;
   private accessTokenExpiresAt = 0;
 
-  constructor(phraseApiToken: string, region: string) {
+  constructor(phraseApiToken: string, region: string, idmBaseUrl?: string) {
     this.phraseApiToken = phraseApiToken;
     this.region = normalizeRegion(region);
+    this.idmBaseUrl = idmBaseUrl;
   }
 
   async getAccessToken(): Promise<string> {
@@ -50,7 +52,8 @@ export class UnifiedAccessTokenProvider implements AccessTokenProvider {
       return this.accessToken;
     }
 
-    const endpoint = `https://${this.region}.phrase.com/idm/oauth/token`;
+    const base = this.idmBaseUrl ?? `https://${this.region}.phrase.com`;
+    const endpoint = `${base}/idm/oauth/token`;
     const body = new URLSearchParams({
       grant_type: TOKEN_EXCHANGE_GRANT,
       subject_token_type: TOKEN_EXCHANGE_SUBJECT_TOKEN_TYPE,
