@@ -129,7 +129,7 @@ async function getProductClient<K extends ProductKey>(
     return null;
   }
 
-  const idmBaseUrl = getEnvValue("PHRASE_IDM_BASE_URL");
+  const idmBaseUrl = process.env.PHRASE_IDM_BASE_URL;
 
   const options: ProductClientFactoryOptions<K> = {
     key: product,
