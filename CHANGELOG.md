@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.3.0...phrase-mcp-server-v0.3.1) (2026-04-10)
+
+
+### Miscellaneous Chores
+
+* release 0.3.1 ([#67](https://github.com/phrase/phrase-mcp-server/issues/67)) ([62fd356](https://github.com/phrase/phrase-mcp-server/commit/62fd356385816f16a13a4a7f0c0c1226d50800e6))
+
 ## [0.3.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.2.0...phrase-mcp-server-v0.3.0) (2026-04-08)
 
 
