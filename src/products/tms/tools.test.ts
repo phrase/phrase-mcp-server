@@ -152,6 +152,14 @@ describe("tmsModule tools", () => {
     }
   });
 
+  // Anthropic MCP Directory Policy requires tool names to be at most 64 characters.
+  // https://support.claude.com/en/articles/11697096-anthropic-mcp-directory-policy
+  it("every tool name is at most 64 characters", () => {
+    for (const name of registrations.keys()) {
+      expect(name.length, `tool name "${name}" exceeds 64 characters (${name.length})`).toBeLessThanOrEqual(64);
+    }
+  });
+
   it("handles direct get/post/put wrapper tools", async () => {
     await invokeTool(registrations, "tms_get_project", {
       project_uid: "proj/1",
