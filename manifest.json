@@ -1,5 +1,5 @@
 {
-  "manifest_version": "0.3",
+  "manifest_version": "0.3.1",
   "name": "phrase-mcp-server",
   "display_name": "Phrase",
   "version": "0.3.1",
@@ -33,6 +33,7 @@
   "tools_generated": true,
   "server": {
     "type": "node",
+    "entry_point": "dist/index.js",
     "mcp_config": {
       "command": "npx",
       "args": [
