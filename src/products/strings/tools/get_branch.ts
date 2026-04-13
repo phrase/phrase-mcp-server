@@ -8,7 +8,7 @@ export function registerGetBranchTool(server: McpServer, runtime: ProductRuntime
     "strings_get_branch",
     {
       description: "Get details on a single branch of a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Branch", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

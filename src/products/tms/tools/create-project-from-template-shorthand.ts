@@ -14,7 +14,7 @@ export function registerCreateProjectFromTemplateShorthandTool(
     {
       description:
         "PREFERRED tool for creating a TMS project from a template in conversational/interactive contexts. Accepts a template name, partial name, UID, or numeric ID, no lookup step needed. Returns an error if the identifier is ambiguous (multiple matches) or not found. (POST /api2/v2/projects/applyTemplate/{templateUid})",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[TMS] Create Project from Template", destructiveHint: true },
       inputSchema: {
         template: z
           .string()

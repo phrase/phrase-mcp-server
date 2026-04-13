@@ -8,7 +8,7 @@ export function registerRemoveJobKeysTool(server: McpServer, runtime: ProductRun
     "strings_remove_job_keys",
     {
       description: "Remove translation keys from a job in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Remove Keys from Job", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

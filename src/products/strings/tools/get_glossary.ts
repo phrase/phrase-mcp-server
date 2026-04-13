@@ -8,7 +8,7 @@ export function registerGlossaryShowTool(server: McpServer, runtime: ProductRunt
     "strings_get_glossary",
     {
       description: "Get a single term base (previously: glossary) in Phrase Strings.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Term Base", readOnlyHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         id: z.string().min(1),

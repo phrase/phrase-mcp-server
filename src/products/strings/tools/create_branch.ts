@@ -9,7 +9,7 @@ export function registerCreateBranchTool(server: McpServer, runtime: ProductRunt
     {
       description:
         "Create a new branch in a Phrase Strings project. WARNING: Creating a branch copies all keys and translations from the main branch. This operation can take several minutes and consume significant resources on large projects. Only create a branch when explicitly requested by the user.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Create Branch", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

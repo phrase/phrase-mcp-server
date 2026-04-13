@@ -10,7 +10,7 @@ export function registerListProjectsTool(server: McpServer, runtime: ProductRunt
     {
       description:
         "List all Phrase TMS projects you have access to. Use this to discover project UIDs before fetching job lists or project details. Returns an array of project objects, each containing uid, name, status, sourceLang, and targetLangs. (GET /api2/v1/projects)",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[TMS] List Projects", readOnlyHint: true },
       inputSchema: {
         query: querySchema.describe(
           `Supported filters: name (partial match), status (${projectStatusSchema.options.join(" | ")}).`,

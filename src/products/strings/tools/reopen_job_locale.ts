@@ -8,7 +8,7 @@ export function registerReopenJobLocaleTool(server: McpServer, runtime: ProductR
     "strings_reopen_job_locale",
     {
       description: "Reopen a job locale in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Reopen Job Locale", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

@@ -8,7 +8,7 @@ export function registerGetJobCommentTool(server: McpServer, runtime: ProductRun
     "strings_get_job_comment",
     {
       description: "Get a single comment for a job in a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Job Comment", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

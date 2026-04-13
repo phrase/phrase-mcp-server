@@ -26,11 +26,17 @@ chore: update Dependabot configuration
 
 The PR title must also follow this format — the Semantic PR check will fail otherwise.
 
+## Tool Names
+
+Tool names must be at most **64 characters**. This is enforced by the Anthropic MCP Directory Policy and verified by the test suite.
+
 ## Tool Annotations
 
-Every tool registered with `server.registerTool` must declare an `annotations` field in its config object. This is required for MCP directory submission.
+Every tool registered with `server.registerTool` must declare an `annotations` field in its config object with three required fields. This is required for MCP directory submission.
 
-### Rule
+### Required annotation fields
+
+- `title` — a short human-readable label. Must be prefixed with `[Strings]` or `[TMS]` to disambiguate between the two Phrase products (e.g. both have "Get Job", "List Projects", etc.).
 
 - `readOnlyHint: true` — the tool does not modify operational user data. Use for:
   - `get_*` / `get-*` — fetch a single resource
@@ -51,14 +57,14 @@ Every tool registered with `server.registerTool` must declare an `annotations` f
 
 ### Format
 
-Place `annotations` directly after `description` in the config object:
+Place `annotations` directly after `description` in the config object, with `title` first:
 
 ```typescript
 server.registerTool(
   "strings_get_job",
   {
     description: "Get a single job in a Phrase Strings project.",
-    annotations: { readOnlyHint: true },
+    annotations: { title: "[Strings] Get Job", readOnlyHint: true },
     inputSchema: { ... },
   },
   async (params) => { ... },

@@ -11,7 +11,7 @@ export function registerGlossaryTermsListTool(
     "strings_list_glossary_terms",
     {
       description: "List terms in a term base (previously: glossary).",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List Terms", readOnlyHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         glossary_id: z.string().min(1),

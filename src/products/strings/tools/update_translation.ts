@@ -11,7 +11,7 @@ export function registerUpdateTranslationTool(
     "strings_update_translation",
     {
       description: "Update an existing translation in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Update Translation", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

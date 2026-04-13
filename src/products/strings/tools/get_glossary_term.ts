@@ -11,7 +11,7 @@ export function registerGlossaryTermShowTool(
     "strings_get_glossary_term",
     {
       description: "Get a single term in a term base (previously: glossary).",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Term", readOnlyHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         glossary_id: z.string().min(1),

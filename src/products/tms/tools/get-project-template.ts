@@ -9,7 +9,7 @@ export function registerGetProjectTemplateTool(server: McpServer, runtime: Produ
     {
       description:
         "Fetch full details of a project template, including its configured source/target languages, translation memory, machine translation engine, and workflow steps. Use tms_list_project_templates to find the template UID. (GET /api2/v1/projectTemplates/{projectTemplateUid})",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[TMS] Get Project Template", readOnlyHint: true },
       inputSchema: {
         template_uid: z.string().min(1).describe("Project template UID."),
       },

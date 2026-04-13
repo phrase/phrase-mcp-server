@@ -8,7 +8,7 @@ export function registerListAccountJobsTool(server: McpServer, runtime: ProductR
     "strings_list_account_jobs",
     {
       description: "List jobs for a Phrase Strings account.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List Account Jobs", readOnlyHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         page: z.number().int().min(1).optional(),

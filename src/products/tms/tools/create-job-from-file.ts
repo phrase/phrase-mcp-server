@@ -38,7 +38,7 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
     {
       description:
         "Upload a source file from the MCP server filesystem to create translation jobs in a Phrase TMS project. One job is created per target language. Common supported formats: XLIFF, PO, DOCX, XLSX, HTML, JSON, SRT, and most standard content formats. (POST /api2/v1/projects/{projectUid}/jobs)",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[TMS] Create Job from File", destructiveHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         file_path: z

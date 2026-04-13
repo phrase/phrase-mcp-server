@@ -7,7 +7,7 @@ export function registerListFormatsTool(server: McpServer, runtime: ProductRunti
     "strings_list_formats",
     {
       description: "List all localization file formats supported in Phrase Strings.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List File Formats", readOnlyHint: true },
       inputSchema: {},
     },
     async () => {

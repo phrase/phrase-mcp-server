@@ -8,7 +8,7 @@ export function registerUpdateBranchTool(server: McpServer, runtime: ProductRunt
     "strings_update_branch",
     {
       description: "Update an existing branch in a Phrase Strings project (e.g. rename it).",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Update Branch", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1).describe("Current name of the branch"),

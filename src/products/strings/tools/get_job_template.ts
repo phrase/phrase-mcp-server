@@ -8,7 +8,7 @@ export function registerGetJobTemplateTool(server: McpServer, runtime: ProductRu
     "strings_get_job_template",
     {
       description: "Get a single job template in a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Job Template", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

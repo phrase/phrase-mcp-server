@@ -11,7 +11,7 @@ export function registerCreateJobCommentTool(
     "strings_create_job_comment",
     {
       description: "Create a comment for a job in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Create Job Comment", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_id: z.string().min(1),

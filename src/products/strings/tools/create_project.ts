@@ -8,7 +8,7 @@ export function registerCreateProjectTool(server: McpServer, runtime: ProductRun
     "strings_create_project",
     {
       description: "Create a project in Phrase Strings.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Create Project", destructiveHint: true },
       inputSchema: {
         name: z.string().min(1),
         main_format: z.string().optional(),
