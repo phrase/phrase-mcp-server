@@ -33,6 +33,7 @@
   "tools_generated": true,
   "server": {
     "type": "node",
+    "entry_point": "dist/index.js",
     "mcp_config": {
       "command": "npx",
       "args": [
