@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.3.1...phrase-mcp-server-v0.4.0) (2026-04-14)
+
+
+### Features
+
+* add title annotations to all tools for MCP directory compliance ([#72](https://github.com/phrase/phrase-mcp-server/issues/72)) ([3a0875a](https://github.com/phrase/phrase-mcp-server/commit/3a0875a1c0abf5d850dda373a1c02d12d4692cbe))
+
+
+### Bug Fixes
+
+* add missing entry_point to manifest.json for mcpb-pack ([#70](https://github.com/phrase/phrase-mcp-server/issues/70)) ([173232b](https://github.com/phrase/phrase-mcp-server/commit/173232bbb16e9d42d93cb3c0f01b7415f956414e))
+
 ## [0.3.1](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.3.0...phrase-mcp-server-v0.3.1) (2026-04-10)
 
 
