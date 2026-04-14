@@ -8,7 +8,7 @@ export function registerGetLocaleTool(server: McpServer, runtime: ProductRuntime
     "strings_get_locale",
     {
       description: "Get details of a single locale in a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Locale", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

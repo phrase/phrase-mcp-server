@@ -9,7 +9,7 @@ export function registerGetAsyncRequestTool(server: McpServer, runtime: ProductR
     {
       description:
         'Poll the status of an async operation. Call this after tms_download_target_file_async until the returned status = "COMPLETED". Then proceed to tms_download_target_file_by_async_request. Expected status values: RUNNING, COMPLETED, FAILED. (GET /api2/v1/async/{asyncRequestId})',
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[TMS] Get Async Request Status", readOnlyHint: true },
       inputSchema: {
         async_request_id: z
           .string()

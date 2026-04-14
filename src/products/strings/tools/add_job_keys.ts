@@ -8,7 +8,7 @@ export function registerAddJobKeysTool(server: McpServer, runtime: ProductRuntim
     "strings_add_job_keys",
     {
       description: "Add translation keys to a job in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Add Keys to Job", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

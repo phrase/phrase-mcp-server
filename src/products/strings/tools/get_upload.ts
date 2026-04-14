@@ -8,7 +8,7 @@ export function registerGetUploadTool(server: McpServer, runtime: ProductRuntime
     "strings_get_upload",
     {
       description: "Get a single upload in a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Get Upload", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

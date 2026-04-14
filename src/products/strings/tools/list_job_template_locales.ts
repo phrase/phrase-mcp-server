@@ -11,7 +11,7 @@ export function registerListJobTemplateLocalesTool(
     "strings_list_job_template_locales",
     {
       description: "List job template locales for a job template in a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List Job Template Locales", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         job_template_id: z.string().min(1),

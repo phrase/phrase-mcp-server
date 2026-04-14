@@ -8,7 +8,7 @@ export function registerCreateLocaleTool(server: McpServer, runtime: ProductRunt
     "strings_create_locale",
     {
       description: "Create a locale in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Create Locale", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

@@ -9,7 +9,7 @@ export function registerGetProjectTool(server: McpServer, runtime: ProductRuntim
     {
       description:
         "Fetch full details of a single Phrase TMS project, including status, source/target languages, due date, owner, and settings. Use tms_list_projects to find the project UID first if you only know the name. (GET /api2/v1/projects/{projectUid})",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[TMS] Get Project", readOnlyHint: true },
       inputSchema: {
         project_uid: z
           .string()

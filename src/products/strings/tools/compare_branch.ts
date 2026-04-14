@@ -9,7 +9,7 @@ export function registerCompareBranchTool(server: McpServer, runtime: ProductRun
     {
       description:
         "Create an async comparison between a branch and the main branch of a Phrase Strings project. Returns a comparison job — use strings_get_branch_comparison to fetch the result.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Compare Branch", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1).describe("Name of the branch to compare with main"),

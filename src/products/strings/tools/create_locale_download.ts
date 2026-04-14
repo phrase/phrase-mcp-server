@@ -11,7 +11,7 @@ export function registerCreateLocaleDownloadTool(
     "strings_create_locale_download",
     {
       description: "Initiate async download of a locale in a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] Download Locale File", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         locale_id: z.string().min(1),

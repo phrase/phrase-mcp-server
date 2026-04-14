@@ -8,7 +8,7 @@ export function registerListJobsTool(server: McpServer, runtime: ProductRuntime<
     "strings_list_jobs",
     {
       description: "List jobs for a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List Jobs", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         page: z.number().int().min(1).optional(),

@@ -8,7 +8,7 @@ export function registerUnlockJobTool(server: McpServer, runtime: ProductRuntime
     "strings_unlock_job",
     {
       description: "Unlock a job in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Unlock Job", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         id: z.string().min(1),

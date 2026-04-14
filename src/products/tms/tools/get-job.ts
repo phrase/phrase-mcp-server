@@ -9,7 +9,7 @@ export function registerGetJobTool(server: McpServer, runtime: ProductRuntime<"t
     {
       description:
         "Fetch full details of a single TMS job: status, target language, filename, word count, assigned providers, due date, and workflow step. Note: in workflow projects, each step has a distinct job UID, tms_list_jobs returns one entry per step. (GET /api2/v1/projects/{projectUid}/jobs/{jobUid})",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[TMS] Get Job", readOnlyHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),

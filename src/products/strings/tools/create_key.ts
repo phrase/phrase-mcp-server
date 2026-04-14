@@ -8,7 +8,7 @@ export function registerCreateKeyTool(server: McpServer, runtime: ProductRuntime
     "strings_create_key",
     {
       description: "Create a new translation key in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Create Translation Key", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

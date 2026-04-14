@@ -11,7 +11,7 @@ export function registerCreateJobTemplateTool(
     "strings_create_job_template",
     {
       description: "Create a job template in a Phrase Strings project.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Create Job Template", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         name: z.string().min(1),

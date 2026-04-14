@@ -9,7 +9,7 @@ export function registerUpdateJobTool(server: McpServer, runtime: ProductRuntime
     {
       description:
         "Update a Phrase TMS job (PUT /api2/v1/projects/{projectUid}/jobs/{jobUid}). This operation mutates data.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[TMS] Update Job", destructiveHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),

@@ -8,7 +8,7 @@ export function registerListProjectsTool(server: McpServer, runtime: ProductRunt
     "strings_list_projects",
     {
       description: "List Phrase Strings projects available for the authenticated account.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List Projects", readOnlyHint: true },
       inputSchema: {
         page: z.number().int().min(1).optional(),
         per_page: z.number().int().min(1).max(100).optional(),

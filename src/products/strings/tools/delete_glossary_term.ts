@@ -11,7 +11,7 @@ export function registerGlossaryTermDeleteTool(
     "strings_delete_glossary_term",
     {
       description: "Delete an existing term from a Phrase Strings term base (glossary).",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[Strings] Delete Term", destructiveHint: true },
       inputSchema: {
         account_id: z.string().min(1),
         glossary_id: z.string().min(1),

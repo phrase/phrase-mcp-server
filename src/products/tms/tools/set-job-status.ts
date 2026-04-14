@@ -10,7 +10,7 @@ export function registerSetJobStatusTool(server: McpServer, runtime: ProductRunt
     {
       description:
         "Set Phrase TMS job status (POST /api2/v1/projects/{projectUid}/jobs/{jobUid}/setStatus). This operation mutates data.",
-      annotations: { destructiveHint: true },
+      annotations: { title: "[TMS] Set Job Status", destructiveHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         job_uid: z.string().min(1).describe("TMS job UID."),

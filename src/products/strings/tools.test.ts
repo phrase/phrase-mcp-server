@@ -9,7 +9,7 @@ import type { ProductRuntime } from "#products/types";
 
 type RegisteredTool = {
   inputSchema: Record<string, z.ZodTypeAny>;
-  annotations: { readOnlyHint?: boolean; destructiveHint?: boolean } | undefined;
+  annotations: { readOnlyHint?: boolean; destructiveHint?: boolean; title?: string } | undefined;
   handler: (input: Record<string, unknown>) => Promise<{ content: Array<{ text: string }> }>;
 };
 
@@ -247,6 +247,26 @@ describe("strings tools", () => {
         hasReadOnly && hasDestructive,
         `${name} must not declare both readOnlyHint and destructiveHint`,
       ).toBe(false);
+    }
+  });
+
+  // Anthropic MCP Directory Policy requires tool names to be at most 64 characters.
+  // https://support.claude.com/en/articles/11697096-anthropic-mcp-directory-policy
+  it("every tool name is at most 64 characters", () => {
+    for (const name of registrations.keys()) {
+      expect(
+        name.length,
+        `tool name "${name}" exceeds 64 characters (${name.length})`,
+      ).toBeLessThanOrEqual(64);
+    }
+  });
+
+  // Anthropic MCP Directory Policy requires tools to declare a human-readable title annotation.
+  // https://support.claude.com/en/articles/11697096-anthropic-mcp-directory-policy
+  it("every tool declares a title annotation", () => {
+    for (const [name, tool] of registrations) {
+      const { title } = tool.annotations ?? {};
+      expect(title, `${name} must declare a non-empty title annotation`).toBeTruthy();
     }
   });
 

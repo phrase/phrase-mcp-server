@@ -8,7 +8,7 @@ export function registerListUploadsTool(server: McpServer, runtime: ProductRunti
     "strings_list_uploads",
     {
       description: "List uploads for a Phrase Strings project.",
-      annotations: { readOnlyHint: true },
+      annotations: { title: "[Strings] List Uploads", readOnlyHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         page: z.number().int().min(1).optional(),
