@@ -1,6 +1,6 @@
 {
   "manifest_version": "0.3",
-  "name": "phrase-mcp-server",
+  "name": "@phrase/phrase-mcp-server",
   "display_name": "Phrase",
   "version": "0.4.0",
   "description": "Use Phrase APIs from any MCP client with ready-to-use tools for Phrase Strings and Phrase TMS.",
@@ -38,7 +38,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "phrase-mcp-server"
+        "@phrase/phrase-mcp-server"
       ],
       "env": {
         "PHRASE_STRINGS_TOKEN": "${user_config.strings_token}",

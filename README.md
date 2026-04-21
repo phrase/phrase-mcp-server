@@ -226,7 +226,7 @@ Use the published package with `npx` in your MCP client config.
 ```toml
 [mcp_servers.phrase]
 command = "npx"
-args = ["-y", "phrase-mcp-server"]
+args = ["-y", "@phrase/phrase-mcp-server"]
 
 [mcp_servers.phrase.env]
 PHRASE_STRINGS_TOKEN = "your_token" # Required for Strings tools, optional for TMS-only usage
@@ -242,7 +242,7 @@ PHRASE_REGION = "eu"
   "mcpServers": {
     "phrase": {
       "command": "npx",
-      "args": ["-y", "phrase-mcp-server"],
+      "args": ["-y", "@phrase/phrase-mcp-server"],
       "env": {
         "PHRASE_STRINGS_TOKEN": "your_token",
         "PHRASE_TMS_TOKEN": "your_token",
