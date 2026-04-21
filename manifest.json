@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "@phrase/phrase-mcp-server",
   "display_name": "Phrase",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Use Phrase APIs from any MCP client with ready-to-use tools for Phrase Strings and Phrase TMS.",
   "long_description": "Automates localization workflows across Phrase Strings and Phrase TMS. Covers projects, jobs, locales, translation keys, branches, glossaries, and file uploads/downloads.",
   "author": {
