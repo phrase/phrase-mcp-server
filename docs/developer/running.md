@@ -9,7 +9,7 @@ Use this when you want the published npm package.
 ```toml
 [mcp_servers.phrase]
 command = "npx"
-args = ["-y", "phrase-mcp-server"]
+args = ["-y", "@phrase/phrase-mcp-server"]
 ```
 
 Characteristics:
