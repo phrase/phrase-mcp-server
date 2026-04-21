@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.4.0...phrase-mcp-server-v0.5.0) (2026-04-21)
+
+
+### Features
+
+* scope npm package name for mcp registry ([#75](https://github.com/phrase/phrase-mcp-server/issues/75)) ([8272898](https://github.com/phrase/phrase-mcp-server/commit/82728981d42a4007a169d11dc68d4656a7405202))
+
 ## [0.4.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.3.1...phrase-mcp-server-v0.4.0) (2026-04-14)
 
 
