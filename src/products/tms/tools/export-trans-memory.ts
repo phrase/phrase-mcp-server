@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Runtime } from "#products/types.js";
+import type { Runtime } from "#products/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";

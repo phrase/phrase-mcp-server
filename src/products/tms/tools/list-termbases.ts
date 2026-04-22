@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { type Runtime } from "#products/types.js";
+import type { Runtime } from "#products/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { getClient } from "../client.js";
 
 export function registerListTermbasesTool(server: Server, runtime: Runtime) {
   server.registerTool(

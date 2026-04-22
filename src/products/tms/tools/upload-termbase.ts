@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Runtime } from "#products/types.js";
+import type { Runtime } from "#products/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";

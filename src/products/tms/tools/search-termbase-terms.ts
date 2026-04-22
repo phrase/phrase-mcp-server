@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Runtime } from "#products/types.js";
+import type { Runtime } from "#products/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 
 export function registerSearchTermbaseTermsTool(server: Server, runtime: Runtime) {
