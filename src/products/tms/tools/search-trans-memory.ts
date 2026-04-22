@@ -11,7 +11,7 @@ export function registerSearchTransMemoryTool(server: Server, runtime: Runtime) 
       inputSchema: z.object({
         tm_uid: z.string().describe("The UID of the translation memory."),
         query: z.string().describe("The term/segment to search for."),
-        lang: z.string().describe("Language code."),
+        lang: z.string().optional().describe("Language code."),
       }),
     },
     async (params) => {
