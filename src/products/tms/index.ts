@@ -1,6 +1,11 @@
 import type { ProductModule } from "#products/types.js";
 import { TmsClient } from "#products/tms/client.js";
 import { registerListTermbasesTool } from "#products/tms/tools/list-termbases.js";
+import { registerListTransMemoriesTool } from "#products/tms/tools/list-trans-memories.js";
+import { registerGetTransMemoryTool } from "#products/tms/tools/get-trans-memory.js";
+import { registerSearchTransMemoryTool } from "#products/tms/tools/search-trans-memory.js";
+import { registerImportTransMemoryTool } from "#products/tms/tools/import-trans-memory.js";
+import { registerExportTransMemoryTool } from "#products/tms/tools/export-trans-memory.js";
 import { registerSearchTermbaseTermsTool } from "#products/tms/tools/search-termbase-terms.js";
 import { registerSearchJobTermbasesTool } from "#products/tms/tools/search-job-termbases.js";
 import { registerUploadTermbaseTool } from "#products/tms/tools/upload-termbase.js";
@@ -57,6 +62,11 @@ export const tmsModule: ProductModule<"tms"> = {
     registerListPendingRequestsTool(server, runtime);
     registerGetAsyncRequestTool(server, runtime);
     registerListTermbasesTool(server, runtime);
+    registerListTransMemoriesTool(server, runtime);
+    registerGetTransMemoryTool(server, runtime);
+    registerSearchTransMemoryTool(server, runtime);
+    registerImportTransMemoryTool(server, runtime);
+    registerExportTransMemoryTool(server, runtime);
     registerGetTermbaseTool(server, runtime);
     registerSearchTermbaseTermsTool(server, runtime);
     registerSearchJobTermbasesTool(server, runtime);
