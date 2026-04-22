@@ -1,5 +1,10 @@
 import type { ProductModule } from "#products/types.js";
 import { TmsClient } from "#products/tms/client.js";
+import { registerListTermbasesTool } from "#products/tms/tools/list-termbases.js";
+import { registerSearchTermbaseTermsTool } from "#products/tms/tools/search-termbase-terms.js";
+import { registerSearchJobTermbasesTool } from "#products/tms/tools/search-job-termbases.js";
+import { registerUploadTermbaseTool } from "#products/tms/tools/upload-termbase.js";
+import { registerGetTermbaseTool } from "#products/tms/tools/get-termbase.js";
 import { registerGetAsyncLimitsTool } from "#products/tms/tools/get-async-limits.js";
 import { registerGetAsyncRequestTool } from "#products/tms/tools/get-async-request.js";
 import { registerCreateJobFromFileTool } from "#products/tms/tools/create-job-from-file.js";
@@ -51,6 +56,11 @@ export const tmsModule: ProductModule<"tms"> = {
     registerDownloadTargetFileByAsyncRequestTool(server, runtime);
     registerListPendingRequestsTool(server, runtime);
     registerGetAsyncRequestTool(server, runtime);
+    registerListTermbasesTool(server, runtime);
+    registerGetTermbaseTool(server, runtime);
+    registerSearchTermbaseTermsTool(server, runtime);
+    registerSearchJobTermbasesTool(server, runtime);
+    registerUploadTermbaseTool(server, runtime);
     registerGetAsyncLimitsTool(server, runtime);
   },
 };

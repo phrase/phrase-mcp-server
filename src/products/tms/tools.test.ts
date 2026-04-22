@@ -107,6 +107,11 @@ const EXPECTED_TOOL_NAMES = [
   "tms_list_pending_requests",
   "tms_get_async_request",
   "tms_get_async_limits",
+  "tms_list_termbases",
+  "tms_get_termbase",
+  "tms_search_termbase_terms",
+  "tms_search_job_termbases",
+  "tms_upload_termbase",
 ];
 
 describe("tmsModule tools", () => {
