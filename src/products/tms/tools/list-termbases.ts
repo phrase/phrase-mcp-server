@@ -15,7 +15,7 @@ export function registerListTermbasesTool(server: Server, runtime: Runtime) {
     },
     async (params) => {
       const client = runtime.createClient(params);
-      const response = await client.request("GET", "/web/api2/v1/termBases", {
+      const response = await client.request("GET", "/v1/termBases", {
         query: {
           pageNumber: params.pageNumber ?? 1,
           pageSize: params.pageSize ?? 50,

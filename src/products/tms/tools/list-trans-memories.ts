@@ -15,7 +15,7 @@ export function registerListTransMemoriesTool(server: Server, runtime: Runtime) 
     },
     async (params) => {
       const client = runtime.createClient(params);
-      const response = await client.request("GET", "/web/api2/v1/transMemories", {
+      const response = await client.request("GET", "/v1/transMemories", {
         query: {
           pageNumber: params.pageNumber ?? 1,
           pageSize: params.pageSize ?? 50,

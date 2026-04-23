@@ -22,7 +22,7 @@ export function registerUploadTermbaseTool(server: Server, runtime: Runtime) {
 
       const response = await client.request(
         "POST",
-        `/web/api2/v1/termBases/${encodeURIComponent(params.termbase_uid)}/upload`,
+        `/v1/termBases/${encodeURIComponent(params.termbase_uid)}/upload`,
         {
           body: fileContent,
           headers: {

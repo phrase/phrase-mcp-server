@@ -18,7 +18,7 @@ export function registerSearchTransMemoryTool(server: Server, runtime: Runtime) 
       const client = runtime.createClient(params);
       const response = await client.request(
         "POST",
-        `/web/api2/v1/transMemories/${encodeURIComponent(params.tm_uid)}/search`,
+        `/v1/transMemories/${encodeURIComponent(params.tm_uid)}/search`,
         { body: { query: params.query, lang: params.lang } },
       );
       return response.data;

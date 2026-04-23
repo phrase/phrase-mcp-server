@@ -22,7 +22,7 @@ export function registerImportTransMemoryTool(server: Server, runtime: Runtime) 
 
       const response = await client.request(
         "POST",
-        `/web/api2/v1/transMemories/${encodeURIComponent(params.tm_uid)}/import`,
+        `/v1/transMemories/${encodeURIComponent(params.tm_uid)}/import`,
         {
           body: fileContent,
           headers: {

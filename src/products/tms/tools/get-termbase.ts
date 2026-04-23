@@ -16,7 +16,7 @@ export function registerGetTermbaseTool(server: Server, runtime: Runtime) {
       const client = runtime.createClient(params);
       const response = await client.request(
         "GET",
-        `/web/api2/v1/termBases/${encodeURIComponent(params.termbase_uid)}`,
+        `/v1/termBases/${encodeURIComponent(params.termbase_uid)}`,
       );
       return response.data;
     },

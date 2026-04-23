@@ -18,7 +18,7 @@ export function registerSearchTermbaseTermsTool(server: Server, runtime: Runtime
       const client = runtime.createClient(params);
       const response = await client.request(
         "POST",
-        `/web/api2/v1/termBases/${encodeURIComponent(params.termbase_uid)}/search`,
+        `/v1/termBases/${encodeURIComponent(params.termbase_uid)}/search`,
         {
           body: {
             query: params.query,

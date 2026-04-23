@@ -19,7 +19,7 @@ export function registerSearchJobTermbasesTool(server: Server, runtime: Runtime)
       const client = runtime.createClient(params);
       const response = await client.request(
         "POST",
-        `/web/api2/v1/projects/${encodeURIComponent(params.project_uid)}/jobs/${encodeURIComponent(params.job_uid)}/termBases/search`,
+        `/v1/projects/${encodeURIComponent(params.project_uid)}/jobs/${encodeURIComponent(params.job_uid)}/termBases/search`,
         {
           body: {
             query: params.query,

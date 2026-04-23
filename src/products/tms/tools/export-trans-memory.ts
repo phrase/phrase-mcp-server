@@ -19,7 +19,7 @@ export function registerExportTransMemoryTool(server: Server, runtime: Runtime) 
       const client = runtime.createClient(params);
       const response = await client.request(
         "GET",
-        `/web/api2/v1/transMemories/${encodeURIComponent(params.tm_uid)}/export`,
+        `/v1/transMemories/${encodeURIComponent(params.tm_uid)}/export`,
       );
       const outputPath = resolve(params.output_path);
       await mkdir(dirname(outputPath), { recursive: true });
