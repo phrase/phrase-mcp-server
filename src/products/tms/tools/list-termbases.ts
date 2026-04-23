@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
+import { paginationControlsSchema } from "#products/tms/tools/query";
 
 export function registerListTermbasesTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
@@ -9,15 +10,21 @@ export function registerListTermbasesTool(server: McpServer, runtime: ProductRun
     {
       description: "List termbases in Phrase TMS. (GET /api2/v1/termBases)",
       annotations: { title: "[TMS] List Termbases", readOnlyHint: true },
-      inputSchema: z.object({
-        pageNumber: z.number().optional().describe("Page number, starting at 1."),
-        pageSize: z.number().optional().describe("Number of results per page, max 50."),
-      }),
+      inputSchema: {
+        ...paginationControlsSchema,
+      },
     },
-    async ({ pageNumber, pageSize }) => {
-      const termbases = await runtime.client.get("/v1/termBases", {
-        pageNumber: pageNumber ?? 1,
-        pageSize: pageSize ?? 50,
+    async ({ paginate, page_size, max_pages, max_items }) => {
+      const client = runtime.client;
+      if (!paginate) {
+        const termbases = await client.get("/v1/termBases");
+        return asTextContent(termbases);
+      }
+
+      const termbases = await client.paginateGet("/v1/termBases", {
+        pageSize: page_size,
+        maxPages: max_pages,
+        maxItems: max_items,
       });
       return asTextContent(termbases);
     },
