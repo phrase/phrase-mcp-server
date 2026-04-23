@@ -1,8 +1,8 @@
 import { z } from "zod";
 import type { Runtime } from "#products/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { writeFile, mkdir } from "node:fs/promises";
+import { resolve, dirname } from "node:path";
 
 export function registerExportTransMemoryTool(server: Server, runtime: Runtime) {
   server.registerTool(
@@ -22,6 +22,7 @@ export function registerExportTransMemoryTool(server: Server, runtime: Runtime) 
         `/web/api2/v1/transMemories/${encodeURIComponent(params.tm_uid)}/export`,
       );
       const outputPath = resolve(params.output_path);
+      await mkdir(dirname(outputPath), { recursive: true });
       await writeFile(outputPath, response.data);
       return { saved_to: outputPath };
     },
