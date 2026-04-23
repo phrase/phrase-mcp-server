@@ -16,6 +16,7 @@ export function registerGetTransMemoryTool(server: McpServer, runtime: ProductRu
     },
     async ({ tm_uid }) => {
       const tm = await runtime.client.get(`/v1/transMemories/${encodeURIComponent(tm_uid)}`);
+
       return asTextContent(tm);
     },
   );
