@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.5.0...phrase-mcp-server-v0.5.1) (2026-04-24)
+
+
+### Bug Fixes
+
+* pin mcpb-pack action to commit sha in release workflow ([#78](https://github.com/phrase/phrase-mcp-server/issues/78)) ([cca4449](https://github.com/phrase/phrase-mcp-server/commit/cca4449afa513cbb70479787a4c379fa4341629f))
+
 ## [0.5.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.4.0...phrase-mcp-server-v0.5.0) (2026-04-21)
 
 
