@@ -1,4 +1,3 @@
-import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";

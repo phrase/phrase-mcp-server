@@ -1,32 +1,30 @@
 import { z } from "zod";
-import type { Runtime } from "#products/types.js";
-import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { asTextContent } from "#lib/mcp";
+import type { ProductRuntime } from "#products/types";
 
-export function registerSearchTermbaseTermsTool(server: Server, runtime: Runtime) {
+export function registerSearchTermbaseTermsTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_search_termbase_terms",
     {
-      description: "Search for terms within a Phrase TMS termbase.",
+      description:
+        "Search for terms within a Phrase TMS termbase. (POST /api2/v1/termBases/{uid}/search)",
       annotations: { title: "[TMS] Search Termbase Terms", readOnlyHint: true },
       inputSchema: z.object({
-        termbase_uid: z.string().describe("The UID of the termbase."),
-        query: z.string().describe("The term to search for."),
+        termbase_uid: z.string().min(1).describe("The UID of the termbase."),
+        query: z.string().min(1).describe("The term to search for."),
         lang: z.string().optional().describe("Language code (e.g., en, de)."),
       }),
     },
-    async (params) => {
-      const client = runtime.createClient(params);
-      const response = await client.request(
-        "POST",
-        `/v1/termBases/${encodeURIComponent(params.termbase_uid)}/search`,
+    async ({ termbase_uid, query, lang }) => {
+      const response = await runtime.client.postJson(
+        `/v1/termBases/${encodeURIComponent(termbase_uid)}/search`,
         {
-          body: {
-            query: params.query,
-            lang: params.lang,
-          },
+          query,
+          lang,
         },
       );
-      return response.data;
+      return asTextContent(response);
     },
   );
 }

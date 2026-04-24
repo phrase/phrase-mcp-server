@@ -1,27 +1,31 @@
-import { z } from "zod";
-import type { Runtime } from "#products/types.js";
-import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { asTextContent } from "#lib/mcp";
+import type { ProductRuntime } from "#products/types";
+import { paginationControlsSchema } from "#products/tms/tools/query";
 
-export function registerListTransMemoriesTool(server: Server, runtime: Runtime) {
+export function registerListTransMemoriesTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
     "tms_list_trans_memories",
     {
-      description: "List translation memories in Phrase TMS.",
+      description: "List translation memories in Phrase TMS. (GET /api2/v1/transMemories)",
       annotations: { title: "[TMS] List Translation Memories", readOnlyHint: true },
-      inputSchema: z.object({
-        pageNumber: z.number().optional().describe("Page number, starting at 1."),
-        pageSize: z.number().optional().describe("Number of results per page, max 50."),
-      }),
+      inputSchema: {
+        ...paginationControlsSchema,
+      },
     },
-    async (params) => {
-      const client = runtime.createClient(params);
-      const response = await client.request("GET", "/v1/transMemories", {
-        query: {
-          pageNumber: params.pageNumber ?? 1,
-          pageSize: params.pageSize ?? 50,
-        },
+    async ({ paginate, page_size, max_pages, max_items }) => {
+      const client = runtime.client;
+      if (!paginate) {
+        const transMemories = await client.get("/v1/transMemories");
+        return asTextContent(transMemories);
+      }
+
+      const transMemories = await client.paginateGet("/v1/transMemories", {
+        pageSize: page_size,
+        maxPages: max_pages,
+        maxItems: max_items,
       });
-      return response.data;
+      return asTextContent(transMemories);
     },
   );
 }

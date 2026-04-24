@@ -6,27 +6,10 @@ import { HttpError } from "#lib/http";
 import type { BinaryResponse } from "#lib/http";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
+import { tryDecodeFilename } from "#products/tms/tools/content-disposition";
 
 function shouldFallback(error: unknown): boolean {
   return error instanceof HttpError && (error.status === 400 || error.status === 404);
-}
-
-function tryDecodeFilename(contentDisposition: string | null): string | null {
-  if (!contentDisposition) {
-    return null;
-  }
-
-  const match = contentDisposition.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i);
-  const encoded = match?.[1] ?? match?.[2];
-  if (!encoded) {
-    return null;
-  }
-
-  try {
-    return decodeURIComponent(encoded);
-  } catch {
-    return encoded;
-  }
 }
 
 export function registerDownloadTargetFileByAsyncRequestTool(

@@ -4,6 +4,7 @@ import { writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
+import { tryDecodeFilename } from "#products/tms/tools/content-disposition";
 
 export function registerExportTransMemoryTool(server: McpServer, runtime: ProductRuntime<"tms">) {
   server.registerTool(
@@ -25,11 +26,10 @@ export function registerExportTransMemoryTool(server: McpServer, runtime: Produc
       const absoluteOutputPath = resolve(output_path);
       await mkdir(dirname(absoluteOutputPath), { recursive: true });
       await writeFile(absoluteOutputPath, Buffer.from(file.bytesBase64, "base64"));
+      const fileName = tryDecodeFilename(file.contentDisposition) ?? "tm-export.tmx";
 
       return asTextContent({
-        file_name: file.contentDisposition
-          ? file.contentDisposition.split("filename=").pop()
-          : "tm-export.tmx",
+        file_name: fileName,
         saved_to: absoluteOutputPath,
         size_bytes: file.sizeBytes,
       });
