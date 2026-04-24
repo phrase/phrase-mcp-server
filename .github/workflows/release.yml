@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: NimbleBrainInc/mcpb-pack@v2
+      - uses: NimbleBrainInc/mcpb-pack@bcc565454580b378121fef0f5086d2979f07ddbd
         with:
           platform-os: any
           platform-arch: any
