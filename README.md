@@ -98,20 +98,30 @@ tms_create_project_from_template
 tms_create_project_from_template_shorthand
 tms_download_target_file_async
 tms_download_target_file_by_async_request
+tms_export_trans_memory
 tms_get_async_limits
 tms_get_async_request
 tms_get_job
 tms_get_project
 tms_get_project_template
+tms_get_termbase
+tms_get_trans_memory
+tms_import_trans_memory
 tms_list_jobs
 tms_list_pending_requests
 tms_list_project_templates
 tms_list_projects
+tms_list_termbases
+tms_list_trans_memories
+tms_search_job_termbases
 tms_search_jobs
+tms_search_termbase_terms
+tms_search_trans_memory
 tms_set_job_status
 tms_set_project_status
 tms_update_job
 tms_update_project
+tms_upload_termbase
 ```
 
 ## Examples

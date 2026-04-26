@@ -107,6 +107,16 @@ const EXPECTED_TOOL_NAMES = [
   "tms_list_pending_requests",
   "tms_get_async_request",
   "tms_get_async_limits",
+  "tms_list_termbases",
+  "tms_list_trans_memories",
+  "tms_get_trans_memory",
+  "tms_search_trans_memory",
+  "tms_import_trans_memory",
+  "tms_export_trans_memory",
+  "tms_get_termbase",
+  "tms_search_termbase_terms",
+  "tms_search_job_termbases",
+  "tms_upload_termbase",
 ];
 
 describe("tmsModule tools", () => {
@@ -229,6 +239,81 @@ describe("tmsModule tools", () => {
 
     await invokeTool(registrations, "tms_get_async_limits", {});
     expect(client.get).toHaveBeenCalledWith("/v1/async/status");
+  });
+
+  it("handles translation memory and termbase tools", async () => {
+    await invokeTool(registrations, "tms_get_trans_memory", {
+      tm_uid: "tm/1",
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/transMemories/tm%2F1");
+
+    await invokeTool(registrations, "tms_list_trans_memories", {});
+    expect(client.get).toHaveBeenCalledWith("/v1/transMemories");
+
+    await invokeTool(registrations, "tms_list_trans_memories", {
+      paginate: true,
+      page_size: 20,
+      max_pages: 2,
+      max_items: 40,
+    });
+    expect(client.paginateGet).toHaveBeenCalledWith("/v1/transMemories", {
+      pageSize: 20,
+      maxPages: 2,
+      maxItems: 40,
+    });
+
+    await invokeTool(registrations, "tms_search_trans_memory", {
+      tm_uid: "tm/1",
+      query: "hello",
+      lang: "en",
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/transMemories/tm%2F1/search", {
+      query: "hello",
+      lang: "en",
+    });
+
+    await invokeTool(registrations, "tms_import_trans_memory", {
+      tm_uid: "tm/1",
+      file_path: uploadFilePath,
+      file_name: "tm import.tmx",
+    });
+    expect(client.postBinary).toHaveBeenCalledWith(
+      "/v1/transMemories/tm%2F1/import",
+      expect.any(Buffer),
+      {
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": 'filename="tm import.tmx"',
+      },
+    );
+
+    await invokeTool(registrations, "tms_get_termbase", {
+      termbase_uid: "tb/1",
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/termBases/tb%2F1");
+
+    await invokeTool(registrations, "tms_search_termbase_terms", {
+      termbase_uid: "tb/1",
+      query: "term",
+      lang: "de",
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/termBases/tb%2F1/search", {
+      query: "term",
+      lang: "de",
+    });
+
+    await invokeTool(registrations, "tms_search_job_termbases", {
+      project_uid: "proj/1",
+      job_uid: "job/1",
+      query: "term",
+      lang: "en",
+    });
+    expect(client.postJson).toHaveBeenCalledWith(
+      "/v1/projects/proj%2F1/jobs/job%2F1/termBases/search",
+      {
+        query: "term",
+        lang: "en",
+      },
+    );
   });
 
   it("lists projects/templates/pending requests without and with pagination", async () => {
@@ -750,6 +835,125 @@ describe("tmsModule tools", () => {
         async_request_id: "req-1",
       }),
     ).rejects.toThrow("HTTP 500");
+  });
+
+  it("upload termbase sends file with content-disposition header", async () => {
+    client.postBinary.mockResolvedValueOnce({ ok: true });
+
+    await invokeTool(registrations, "tms_upload_termbase", {
+      termbase_uid: "tb/1",
+      file_path: uploadFilePath,
+      file_name: "my terms.tbx",
+    });
+
+    expect(client.postBinary).toHaveBeenCalledWith(
+      "/v1/termBases/tb%2F1/upload",
+      expect.any(Buffer),
+      {
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": 'filename="my terms.tbx"',
+      },
+    );
+  });
+
+  it("upload termbase falls back to basename when file_name omitted", async () => {
+    client.postBinary.mockResolvedValueOnce({ ok: true });
+
+    await invokeTool(registrations, "tms_upload_termbase", {
+      termbase_uid: "tb/1",
+      file_path: uploadFilePath,
+    });
+
+    const headers = client.postBinary.mock.calls[0]?.[2] as Record<string, string>;
+    expect(headers["Content-Disposition"]).toBe('filename="upload-source.md"');
+  });
+
+  it("upload termbase rejects empty file_name", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_name: "   ",
+      }),
+    ).rejects.toThrow("file_name cannot be empty.");
+  });
+
+  it("upload termbase rejects file_name with CR/LF", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_name: "bad\nname.tbx",
+      }),
+    ).rejects.toThrow("file_name cannot contain CR/LF characters.");
+  });
+
+  it("upload termbase rejects file_name with unsupported characters", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_name: "bad/name.tbx",
+      }),
+    ).rejects.toThrow("file_name contains unsupported characters");
+  });
+
+  it("list termbases without pagination calls get", async () => {
+    client.get.mockResolvedValueOnce({ content: [{ uid: "tb-1" }] });
+
+    const result = await invokeTool(registrations, "tms_list_termbases", {});
+
+    expect(client.get).toHaveBeenCalledWith("/v1/termBases");
+    expect(result).toEqual({ content: [{ uid: "tb-1" }] });
+  });
+
+  it("list termbases with pagination calls paginateGet", async () => {
+    client.paginateGet.mockResolvedValueOnce({
+      items: [{ uid: "tb-1" }],
+      pages_fetched: 1,
+      items_returned: 1,
+      truncated: false,
+    });
+
+    const result = await invokeTool(registrations, "tms_list_termbases", {
+      paginate: true,
+      page_size: 10,
+      max_pages: 2,
+      max_items: 20,
+    });
+
+    expect(client.paginateGet).toHaveBeenCalledWith("/v1/termBases", {
+      pageSize: 10,
+      maxPages: 2,
+      maxItems: 20,
+    });
+    expect(result).toEqual({
+      items: [{ uid: "tb-1" }],
+      pages_fetched: 1,
+      items_returned: 1,
+      truncated: false,
+    });
+  });
+
+  it("export trans memory decodes filename and writes output", async () => {
+    client.getBinary.mockResolvedValueOnce({
+      contentType: "application/octet-stream",
+      contentDisposition: "attachment; filename*=UTF-8''tm%20export.tmx",
+      bytesBase64: Buffer.from("<tmx/>").toString("base64"),
+      sizeBytes: 6,
+    } satisfies BinaryResponse);
+
+    const outputPath = join(tempDir, "exports", "tm-export.tmx");
+    const result = await invokeTool(registrations, "tms_export_trans_memory", {
+      tm_uid: "tm/1",
+      output_path: outputPath,
+    });
+
+    expect(client.getBinary).toHaveBeenCalledWith("/v1/transMemories/tm%2F1/export");
+    expect(result.file_name).toBe("tm export.tmx");
+    expect(result.saved_to).toBe(resolve(outputPath));
+    const savedContent = await readFile(resolve(outputPath), "utf8");
+    expect(savedContent).toBe("<tmx/>");
   });
 
   it("tms_update_job calls putJson with encoded identifiers", async () => {
