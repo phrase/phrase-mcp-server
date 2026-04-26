@@ -98,6 +98,7 @@ tms_create_project_from_template
 tms_create_project_from_template_shorthand
 tms_download_target_file_async
 tms_download_target_file_by_async_request
+tms_export_trans_memory
 tms_get_async_limits
 tms_get_async_request
 tms_get_job
@@ -106,7 +107,6 @@ tms_get_project_template
 tms_get_termbase
 tms_get_trans_memory
 tms_import_trans_memory
-tms_export_trans_memory
 tms_list_jobs
 tms_list_pending_requests
 tms_list_project_templates

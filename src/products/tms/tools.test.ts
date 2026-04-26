@@ -837,6 +837,104 @@ describe("tmsModule tools", () => {
     ).rejects.toThrow("HTTP 500");
   });
 
+  it("upload termbase sends file with content-disposition header", async () => {
+    client.postBinary.mockResolvedValueOnce({ ok: true });
+
+    await invokeTool(registrations, "tms_upload_termbase", {
+      termbase_uid: "tb/1",
+      file_path: uploadFilePath,
+      file_name: "my terms.tbx",
+    });
+
+    expect(client.postBinary).toHaveBeenCalledWith(
+      "/v1/termBases/tb%2F1/upload",
+      expect.any(Buffer),
+      {
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": 'filename="my terms.tbx"',
+      },
+    );
+  });
+
+  it("upload termbase falls back to basename when file_name omitted", async () => {
+    client.postBinary.mockResolvedValueOnce({ ok: true });
+
+    await invokeTool(registrations, "tms_upload_termbase", {
+      termbase_uid: "tb/1",
+      file_path: uploadFilePath,
+    });
+
+    const headers = client.postBinary.mock.calls[0]?.[2] as Record<string, string>;
+    expect(headers["Content-Disposition"]).toBe('filename="upload-source.md"');
+  });
+
+  it("upload termbase rejects empty file_name", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_name: "   ",
+      }),
+    ).rejects.toThrow("file_name cannot be empty.");
+  });
+
+  it("upload termbase rejects file_name with CR/LF", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_name: "bad\nname.tbx",
+      }),
+    ).rejects.toThrow("file_name cannot contain CR/LF characters.");
+  });
+
+  it("upload termbase rejects file_name with unsupported characters", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_name: "bad/name.tbx",
+      }),
+    ).rejects.toThrow("file_name contains unsupported characters");
+  });
+
+  it("list termbases without pagination calls get", async () => {
+    client.get.mockResolvedValueOnce({ content: [{ uid: "tb-1" }] });
+
+    const result = await invokeTool(registrations, "tms_list_termbases", {});
+
+    expect(client.get).toHaveBeenCalledWith("/v1/termBases");
+    expect(result).toEqual({ content: [{ uid: "tb-1" }] });
+  });
+
+  it("list termbases with pagination calls paginateGet", async () => {
+    client.paginateGet.mockResolvedValueOnce({
+      items: [{ uid: "tb-1" }],
+      pages_fetched: 1,
+      items_returned: 1,
+      truncated: false,
+    });
+
+    const result = await invokeTool(registrations, "tms_list_termbases", {
+      paginate: true,
+      page_size: 10,
+      max_pages: 2,
+      max_items: 20,
+    });
+
+    expect(client.paginateGet).toHaveBeenCalledWith("/v1/termBases", {
+      pageSize: 10,
+      maxPages: 2,
+      maxItems: 20,
+    });
+    expect(result).toEqual({
+      items: [{ uid: "tb-1" }],
+      pages_fetched: 1,
+      items_returned: 1,
+      truncated: false,
+    });
+  });
+
   it("export trans memory decodes filename and writes output", async () => {
     client.getBinary.mockResolvedValueOnce({
       contentType: "application/octet-stream",
