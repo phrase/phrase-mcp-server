@@ -2,8 +2,7 @@
   "$schema": "https://cdn.mpak.dev/schemas/2025-10-19/mpak.json",
   "name": "@phrase/phrase-mcp-server",
   "maintainers": [
-    {
-      "github": "sorenfandrich"
-    }
+    "sorenfandrich",
+    "docstun"
   ]
 }
