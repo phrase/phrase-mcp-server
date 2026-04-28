@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.5.1...phrase-mcp-server-v0.6.0) (2026-04-28)
+
+
+### Features
+
+* **tms:** add termbase and translation memory management ([#77](https://github.com/phrase/phrase-mcp-server/issues/77)) ([110945a](https://github.com/phrase/phrase-mcp-server/commit/110945a0b2f19af7b85d9c7f5d18252e0ba058ed))
+
+
+### Bug Fixes
+
+* **mpak:** fix maintainers format and add docstun as maintainer ([#82](https://github.com/phrase/phrase-mcp-server/issues/82)) ([227359c](https://github.com/phrase/phrase-mcp-server/commit/227359c6a84e3edf0e07c5ca68b2d2c1c285cc28))
+
 ## [0.5.1](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.5.0...phrase-mcp-server-v0.5.1) (2026-04-24)
 
 
