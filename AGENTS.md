@@ -71,6 +71,15 @@ server.registerTool(
 );
 ```
 
+## Commands
+
+- `npm test` — run full test suite (vitest)
+- `npm run format` — auto-format with biome (run before committing)
+- `npm run format:check` — check formatting without writing
+- `npm run build` — build to `dist/`
+
+Always run `npm run format` before committing. CI enforces formatting via biome.
+
 ### Key distinction
 
 The deciding factor is whether the tool changes **operational user data** (translations, keys, projects, jobs, locales, glossaries, branches). Creating a transient server-side async job as part of a download flow does **not** count as modifying user data.
