@@ -961,14 +961,10 @@ describe("tmsModule tools", () => {
       file_name: "terms.tbx",
     });
 
-    expect(client.postBinary).toHaveBeenCalledWith(
-      "/v1/termBases/tb%2F1/upload",
-      fileBytes,
-      {
-        "Content-Type": "application/octet-stream",
-        "Content-Disposition": 'filename="terms.tbx"',
-      },
-    );
+    expect(client.postBinary).toHaveBeenCalledWith("/v1/termBases/tb%2F1/upload", fileBytes, {
+      "Content-Type": "application/octet-stream",
+      "Content-Disposition": 'filename="terms.tbx"',
+    });
   });
 
   it("upload termbase rejects when neither file_path nor file_content provided", async () => {
@@ -1007,14 +1003,10 @@ describe("tmsModule tools", () => {
       file_name: "memory.tmx",
     });
 
-    expect(client.postBinary).toHaveBeenCalledWith(
-      "/v1/transMemories/tm%2F1/import",
-      fileBytes,
-      {
-        "Content-Type": "application/octet-stream",
-        "Content-Disposition": 'filename="memory.tmx"',
-      },
-    );
+    expect(client.postBinary).toHaveBeenCalledWith("/v1/transMemories/tm%2F1/import", fileBytes, {
+      "Content-Type": "application/octet-stream",
+      "Content-Disposition": 'filename="memory.tmx"',
+    });
   });
 
   it("import trans memory rejects when neither file_path nor file_content provided", async () => {
