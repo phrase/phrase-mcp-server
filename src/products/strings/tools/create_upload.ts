@@ -5,8 +5,7 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 
-function createUploadFile(data: Buffer, filePath: string): Blob {
-  const filename = basename(filePath) || "upload";
+function createUploadFile(data: Buffer, filename: string): Blob {
   const bytes = new Uint8Array(data);
   if (typeof File !== "undefined") {
     return new File([bytes], filename);
@@ -19,15 +18,30 @@ export function registerCreateUploadTool(server: McpServer, runtime: ProductRunt
     "strings_create_upload",
     {
       description:
-        "Upload a new language file in a Phrase Strings project. This operation mutates data and reads a file from the MCP server filesystem.",
+        "Upload a new language file in a Phrase Strings project. Provide either file_path (host filesystem path, for local MCP server use) or file_content + file_name (base64-encoded file bytes, for Claude Desktop uploaded files).",
       annotations: { title: "[Strings] Upload Language File", destructiveHint: true },
       inputSchema: {
         project_id: z.string().min(1),
         file_path: z
           .string()
           .min(1)
+          .optional()
           .describe(
-            "Absolute or relative filesystem path to the source file on the MCP server host.",
+            "Absolute or relative filesystem path to the source file on the MCP server host. Mutually exclusive with file_content.",
+          ),
+        file_content: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            "Base64-encoded file content. Use when the user uploaded a file in the conversation. Requires file_name. Mutually exclusive with file_path.",
+          ),
+        file_name: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            "Filename for the upload. Required when using file_content. Optional override when using file_path.",
           ),
         file_format: z.string().min(1),
         locale_id: z.string().min(1),
@@ -55,6 +69,8 @@ export function registerCreateUploadTool(server: McpServer, runtime: ProductRunt
     async ({
       project_id,
       file_path,
+      file_content,
+      file_name,
       file_format,
       locale_id,
       branch,
@@ -77,8 +93,28 @@ export function registerCreateUploadTool(server: McpServer, runtime: ProductRunt
       tag_only_affected_keys,
       translation_key_prefix,
     }) => {
-      const data = await readFile(file_path);
-      const file = createUploadFile(data, file_path);
+      if (!file_path && !file_content) {
+        throw new Error("Either file_path or file_content must be provided.");
+      }
+      if (file_path && file_content) {
+        throw new Error("file_path and file_content are mutually exclusive. Provide only one.");
+      }
+
+      let data: Buffer;
+      let resolvedFilename: string;
+
+      if (file_content) {
+        if (!file_name) {
+          throw new Error("file_name is required when using file_content.");
+        }
+        data = Buffer.from(file_content, "base64");
+        resolvedFilename = file_name;
+      } else {
+        data = await readFile(file_path!);
+        resolvedFilename = file_name ?? (basename(file_path!) || "upload");
+      }
+
+      const file = createUploadFile(data, resolvedFilename);
       const upload = await runtime.client.uploadsApi.uploadCreate({
         projectId: project_id,
         file,
