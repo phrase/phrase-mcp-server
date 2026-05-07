@@ -14,6 +14,7 @@ import { registerGetAsyncLimitsTool } from "#products/tms/tools/get-async-limits
 import { registerGetAsyncRequestTool } from "#products/tms/tools/get-async-request.js";
 import { registerCreateJobFromFileTool } from "#products/tms/tools/create-job-from-file.js";
 import { registerCreateProjectTool } from "#products/tms/tools/create-project.js";
+import { registerEvaluateQualityProfileTool } from "#products/tms/tools/evaluate-quality-profile.js";
 import { registerDownloadTargetFileAsyncTool } from "#products/tms/tools/download-target-file-async.js";
 import { registerDownloadTargetFileByAsyncRequestTool } from "#products/tms/tools/download-target-file-by-async-request.js";
 import { registerCreateProjectFromTemplateShorthandTool } from "#products/tms/tools/create-project-from-template-shorthand.js";
@@ -72,5 +73,6 @@ export const tmsModule: ProductModule<"tms"> = {
     registerSearchJobTermbasesTool(server, runtime);
     registerUploadTermbaseTool(server, runtime);
     registerGetAsyncLimitsTool(server, runtime);
+    registerEvaluateQualityProfileTool(server, runtime);
   },
 };

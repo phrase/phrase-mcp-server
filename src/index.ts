@@ -6,6 +6,7 @@ import { loadProductRuntimes } from "#config";
 import { APP_NAME, APP_VERSION } from "#lib/runtime-info";
 import { productModules } from "#products/index";
 import type { AnyProductRuntime } from "#products/types";
+import { bqeModule } from "#products/bqe/index";
 import { stringsModule } from "#products/strings/index";
 import { tmsModule } from "#products/tms/index";
 
@@ -28,6 +29,9 @@ function registerRuntime(runtime: AnyProductRuntime): void {
       return;
     case "tms":
       tmsModule.register(server, runtime);
+      return;
+    case "bqe":
+      bqeModule.register(server, runtime);
       return;
   }
 }

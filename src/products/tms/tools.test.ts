@@ -117,6 +117,7 @@ const EXPECTED_TOOL_NAMES = [
   "tms_search_termbase_terms",
   "tms_search_job_termbases",
   "tms_upload_termbase",
+  "tms_evaluate_quality_profile",
 ];
 
 describe("tmsModule tools", () => {

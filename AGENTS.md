@@ -36,7 +36,7 @@ Every tool registered with `server.registerTool` must declare an `annotations` f
 
 ### Required annotation fields
 
-- `title` — a short human-readable label. Must be prefixed with `[Strings]` or `[TMS]` to disambiguate between the two Phrase products (e.g. both have "Get Job", "List Projects", etc.).
+- `title` — a short human-readable label. Must be prefixed with `[Strings]`, `[TMS]`, or `[BQE]` to disambiguate between the Phrase products (e.g. both Strings and TMS have "Get Job", "List Projects", etc.).
 
 - `readOnlyHint: true` — the tool does not modify operational user data. Use for:
   - `get_*` / `get-*` — fetch a single resource

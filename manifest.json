@@ -43,6 +43,7 @@
       "env": {
         "PHRASE_STRINGS_TOKEN": "${user_config.strings_token}",
         "PHRASE_TMS_TOKEN": "${user_config.tms_token}",
+        "PHRASE_BQE_TOKEN": "${user_config.bqe_token}",
         "PHRASE_REGION": "${user_config.region}",
         "PHRASE_ENABLED_PRODUCTS": "${user_config.enabled_products}"
       }
@@ -63,6 +64,13 @@
       "sensitive": true,
       "required": false
     },
+    "bqe_token": {
+      "type": "string",
+      "title": "Phrase Quality Evaluator API Token",
+      "description": "Required for Quality Evaluator (BQE) tools. Create one at app.phrase.com → Account Settings → API Tokens.",
+      "sensitive": true,
+      "required": false
+    },
     "region": {
       "type": "string",
       "title": "Region",
@@ -73,8 +81,8 @@
     "enabled_products": {
       "type": "string",
       "title": "Enabled Products",
-      "description": "Comma-separated list of products to enable: 'strings', 'tms', or 'strings,tms'.",
-      "default": "strings,tms",
+      "description": "Comma-separated list of products to enable: any subset of 'tms' 'strings', 'bqe'.",
+      "default": "strings,tms,bqe",
       "required": false
     }
   },
