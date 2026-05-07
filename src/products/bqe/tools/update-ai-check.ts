@@ -23,10 +23,10 @@ export function registerUpdateAiCheckTool(server: McpServer, runtime: ProductRun
       },
     },
     async ({ uid, name, qualityRequirements }) => {
-      const result = await runtime.client.putJson(
-        `/v1/aiChecks/${encodeURIComponent(uid)}`,
-        { name, qualityRequirements },
-      );
+      const result = await runtime.client.putJson(`/v1/aiChecks/${encodeURIComponent(uid)}`, {
+        name,
+        qualityRequirements,
+      });
       return asTextContent(result);
     },
   );

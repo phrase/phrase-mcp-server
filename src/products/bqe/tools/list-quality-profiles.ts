@@ -3,10 +3,7 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 
-export function registerListQualityProfilesTool(
-  server: McpServer,
-  runtime: ProductRuntime<"bqe">,
-) {
+export function registerListQualityProfilesTool(server: McpServer, runtime: ProductRuntime<"bqe">) {
   server.registerTool(
     "bqe_list_quality_profiles",
     {
@@ -23,10 +20,7 @@ export function registerListQualityProfilesTool(
           .string()
           .optional()
           .describe("Filter by the UID of the user who created the profile."),
-        name: z
-          .string()
-          .optional()
-          .describe("Filter by name (case-insensitive, partial match)."),
+        name: z.string().optional().describe("Filter by name (case-insensitive, partial match)."),
       },
     },
     async ({ sort, order, createdByUid, name }) => {
