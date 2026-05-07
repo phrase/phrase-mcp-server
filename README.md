@@ -296,7 +296,7 @@ Set at least one product token in your MCP client config:
 
 ### Product selection
 
-- `PHRASE_ENABLED_PRODUCTS`: comma-separated subset of `strings,tms`
+- `PHRASE_ENABLED_PRODUCTS`: comma-separated subset of `strings,tms,bqe`
 - `PHRASE_DISABLED_PRODUCTS`: products removed from the enabled set
 - Default behavior: all products enabled
 
