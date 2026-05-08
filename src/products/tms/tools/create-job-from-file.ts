@@ -37,21 +37,31 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
     "tms_create_job_from_file",
     {
       description:
-        "Upload a source file from the MCP server filesystem to create translation jobs in a Phrase TMS project. One job is created per target language. Common supported formats: XLIFF, PO, DOCX, XLSX, HTML, JSON, SRT, and most standard content formats. (POST /api2/v1/projects/{projectUid}/jobs)",
+        "Upload a source file to create translation jobs in a Phrase TMS project. One job is created per target language. Common supported formats: XLIFF, PO, DOCX, XLSX, HTML, JSON, SRT, and most standard content formats. Provide either file_path (host filesystem path, for local MCP server use) or file_content + file_name (base64-encoded file bytes, for Claude Desktop uploaded files). (POST /api2/v1/projects/{projectUid}/jobs)",
       annotations: { title: "[TMS] Create Job from File", destructiveHint: true },
       inputSchema: {
         project_uid: z.string().min(1).describe("TMS project UID."),
         file_path: z
           .string()
           .min(1)
+          .optional()
           .describe(
-            "Absolute or relative filesystem path to the source file on the MCP server host.",
+            "Absolute or relative filesystem path to the source file on the MCP server host. Use this when the file is on the host filesystem. Mutually exclusive with file_content.",
+          ),
+        file_content: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            "Base64-encoded file content. Use this when the user uploaded a file in the conversation (e.g. from Claude Desktop). Read the uploaded file and pass its contents as base64. Requires file_name. Mutually exclusive with file_path.",
           ),
         file_name: z
           .string()
           .min(1)
           .optional()
-          .describe("Optional uploaded filename override (Content-Disposition filename)."),
+          .describe(
+            "Filename for the upload (Content-Disposition filename). Required when using file_content. Optional override when using file_path.",
+          ),
         target_langs: targetLangsSchema
           .optional()
           .describe(
@@ -65,9 +75,28 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
           ),
       },
     },
-    async ({ project_uid, file_path, file_name, target_langs, memsource }) => {
-      const data = await readFile(file_path);
-      const resolvedFilename = sanitizeFilename(file_name ?? basename(file_path));
+    async ({ project_uid, file_path, file_content, file_name, target_langs, memsource }) => {
+      if (!file_path && !file_content) {
+        throw new Error("Either file_path or file_content must be provided.");
+      }
+      if (file_path && file_content) {
+        throw new Error("file_path and file_content are mutually exclusive. Provide only one.");
+      }
+
+      let data: Buffer;
+      let resolvedFilename: string;
+
+      if (file_content) {
+        if (!file_name) {
+          throw new Error("file_name is required when using file_content.");
+        }
+        data = Buffer.from(file_content, "base64");
+        resolvedFilename = sanitizeFilename(file_name);
+      } else {
+        data = await readFile(file_path!);
+        resolvedFilename = sanitizeFilename(file_name ?? basename(file_path!));
+      }
+
       const mergedMemsource = {
         ...memsource,
         targetLangs: target_langs ?? memsource?.targetLangs,

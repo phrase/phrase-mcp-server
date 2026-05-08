@@ -1,9 +1,10 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { BqeClient } from "#products/bqe/client";
+import type { ConnectorsClient } from "#products/connectors/client";
 import type { StringsClient } from "#products/strings/client";
 import type { TmsClient } from "#products/tms/client";
 
-export const ALL_PRODUCTS = ["strings", "tms", "bqe"] as const;
+export const ALL_PRODUCTS = ["strings", "tms", "bqe", "connectors"] as const;
 export const ALL_REGIONS = ["eu", "us"] as const;
 
 export type ProductKey = (typeof ALL_PRODUCTS)[number];
@@ -14,6 +15,7 @@ export function isRegion(value: string): value is Region {
 }
 
 export interface ProductClientMap {
+  connectors: ConnectorsClient;
   strings: StringsClient;
   tms: TmsClient;
   bqe: BqeClient;
@@ -38,6 +40,7 @@ export interface ProductClientConfig<K extends ProductKey = ProductKey> {
   defaultBaseUrl?: string;
   defaultBaseUrlsByRegion?: Partial<Record<Region, string>>;
   defaultAuthPrefix?: string;
+  allowBaseUrlOverride?: boolean;
   baseUrlEnvAliases?: string[];
   tokenEnvAliases?: string[];
   createClient?: (
