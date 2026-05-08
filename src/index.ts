@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadProductRuntimes } from "#config";
 import { APP_NAME, APP_VERSION } from "#lib/runtime-info";
+import { connectorsModule } from "#products/connectors";
 import { productModules } from "#products/index";
 import type { AnyProductRuntime } from "#products/types";
 import { stringsModule } from "#products/strings/index";
@@ -23,6 +24,9 @@ if (runtimes.length === 0) {
 
 function registerRuntime(runtime: AnyProductRuntime): void {
   switch (runtime.key) {
+    case "connectors":
+      connectorsModule.register(server, runtime);
+      return;
     case "strings":
       stringsModule.register(server, runtime);
       return;
