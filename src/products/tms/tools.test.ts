@@ -666,6 +666,58 @@ describe("tmsModule tools", () => {
     ).rejects.toThrow("Missing required target languages");
   });
 
+  it("create job from file accepts file_content + file_name instead of file_path", async () => {
+    client.postBinary.mockResolvedValueOnce({ id: "new-job" });
+    const fileBytes = Buffer.from("file content");
+    const fileContentBase64 = fileBytes.toString("base64");
+
+    await invokeTool(registrations, "tms_create_job_from_file", {
+      project_uid: "proj/1",
+      file_content: fileContentBase64,
+      file_name: "source.xliff",
+      target_langs: ["es_es"],
+    });
+
+    const [path, body, headers] = client.postBinary.mock.calls[0] as [
+      string,
+      Buffer,
+      Record<string, string>,
+    ];
+    expect(path).toBe("/v1/projects/proj%2F1/jobs");
+    expect(body).toEqual(fileBytes);
+    expect(headers["Content-Disposition"]).toBe('filename="source.xliff"');
+  });
+
+  it("create job from file rejects when neither file_path nor file_content provided", async () => {
+    await expect(
+      invokeTool(registrations, "tms_create_job_from_file", {
+        project_uid: "proj-1",
+        target_langs: ["es_es"],
+      }),
+    ).rejects.toThrow("Either file_path or file_content must be provided.");
+  });
+
+  it("create job from file rejects when both file_path and file_content provided", async () => {
+    await expect(
+      invokeTool(registrations, "tms_create_job_from_file", {
+        project_uid: "proj-1",
+        file_path: uploadFilePath,
+        file_content: Buffer.from("x").toString("base64"),
+        target_langs: ["es_es"],
+      }),
+    ).rejects.toThrow("mutually exclusive");
+  });
+
+  it("create job from file rejects file_content without file_name", async () => {
+    await expect(
+      invokeTool(registrations, "tms_create_job_from_file", {
+        project_uid: "proj-1",
+        file_content: Buffer.from("x").toString("base64"),
+        target_langs: ["es_es"],
+      }),
+    ).rejects.toThrow("file_name is required when using file_content.");
+  });
+
   it("create job from file validates file_name constraints", async () => {
     await expect(
       invokeTool(registrations, "tms_create_job_from_file", {
@@ -896,6 +948,90 @@ describe("tmsModule tools", () => {
         file_name: "bad/name.tbx",
       }),
     ).rejects.toThrow("file_name contains unsupported characters");
+  });
+
+  it("upload termbase accepts file_content + file_name instead of file_path", async () => {
+    client.postBinary.mockResolvedValueOnce({ ok: true });
+    const fileBytes = Buffer.from("termbase content");
+    const fileContentBase64 = fileBytes.toString("base64");
+
+    await invokeTool(registrations, "tms_upload_termbase", {
+      termbase_uid: "tb/1",
+      file_content: fileContentBase64,
+      file_name: "terms.tbx",
+    });
+
+    expect(client.postBinary).toHaveBeenCalledWith("/v1/termBases/tb%2F1/upload", fileBytes, {
+      "Content-Type": "application/octet-stream",
+      "Content-Disposition": 'filename="terms.tbx"',
+    });
+  });
+
+  it("upload termbase rejects when neither file_path nor file_content provided", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", { termbase_uid: "tb/1" }),
+    ).rejects.toThrow("Either file_path or file_content must be provided.");
+  });
+
+  it("upload termbase rejects when both file_path and file_content provided", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_path: uploadFilePath,
+        file_content: Buffer.from("x").toString("base64"),
+      }),
+    ).rejects.toThrow("mutually exclusive");
+  });
+
+  it("upload termbase rejects file_content without file_name", async () => {
+    await expect(
+      invokeTool(registrations, "tms_upload_termbase", {
+        termbase_uid: "tb/1",
+        file_content: Buffer.from("x").toString("base64"),
+      }),
+    ).rejects.toThrow("file_name is required when using file_content.");
+  });
+
+  it("import trans memory accepts file_content + file_name instead of file_path", async () => {
+    client.postBinary.mockResolvedValueOnce({ ok: true });
+    const fileBytes = Buffer.from("tm content");
+    const fileContentBase64 = fileBytes.toString("base64");
+
+    await invokeTool(registrations, "tms_import_trans_memory", {
+      tm_uid: "tm/1",
+      file_content: fileContentBase64,
+      file_name: "memory.tmx",
+    });
+
+    expect(client.postBinary).toHaveBeenCalledWith("/v1/transMemories/tm%2F1/import", fileBytes, {
+      "Content-Type": "application/octet-stream",
+      "Content-Disposition": 'filename="memory.tmx"',
+    });
+  });
+
+  it("import trans memory rejects when neither file_path nor file_content provided", async () => {
+    await expect(
+      invokeTool(registrations, "tms_import_trans_memory", { tm_uid: "tm/1" }),
+    ).rejects.toThrow("Either file_path or file_content must be provided.");
+  });
+
+  it("import trans memory rejects when both file_path and file_content provided", async () => {
+    await expect(
+      invokeTool(registrations, "tms_import_trans_memory", {
+        tm_uid: "tm/1",
+        file_path: uploadFilePath,
+        file_content: Buffer.from("x").toString("base64"),
+      }),
+    ).rejects.toThrow("mutually exclusive");
+  });
+
+  it("import trans memory rejects file_content without file_name", async () => {
+    await expect(
+      invokeTool(registrations, "tms_import_trans_memory", {
+        tm_uid: "tm/1",
+        file_content: Buffer.from("x").toString("base64"),
+      }),
+    ).rejects.toThrow("file_name is required when using file_content.");
   });
 
   it("list termbases without pagination calls get", async () => {

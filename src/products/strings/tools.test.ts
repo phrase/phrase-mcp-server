@@ -279,6 +279,9 @@ describe("strings tools", () => {
       }
 
       const input = buildRequiredInput(registration.inputSchema, uploadFilePath);
+      if (toolName === "strings_create_upload") {
+        input.file_path = uploadFilePath;
+      }
       const response = await registration.handler(input);
 
       expect(calls).toHaveLength(1);
@@ -318,6 +321,9 @@ describe("strings tools", () => {
       }
 
       const input = buildRequiredInput(registration.inputSchema, uploadFilePath);
+      if (toolName === "strings_create_upload") {
+        input.file_path = uploadFilePath;
+      }
       await expect(registration.handler(input)).rejects.toThrow(
         `Phrase Strings request failed (503 Service Unavailable): ${toolName} api failure`,
       );

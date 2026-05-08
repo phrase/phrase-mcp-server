@@ -31,21 +31,57 @@ export function registerImportTransMemoryTool(server: McpServer, runtime: Produc
     "tms_import_trans_memory",
     {
       description:
-        "Import terms into a Phrase TMS translation memory. (POST /api2/v1/transMemories/{tmUid}/import)",
+        "Import terms into a Phrase TMS translation memory. Provide either file_path (host filesystem path, for local MCP server use) or file_content + file_name (base64-encoded file bytes, for Claude Desktop uploaded files). (POST /api2/v1/transMemories/{tmUid}/import)",
       annotations: { title: "[TMS] Import Translation Memory", destructiveHint: true },
       inputSchema: z.object({
         tm_uid: z.string().min(1).describe("The UID of the translation memory."),
-        file_path: z.string().min(1).describe("Path to the TMX, XLSX, or CSV file."),
-        file_name: z.string().optional().describe("Optional filename override."),
+        file_path: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            "Path to the TMX, XLSX, or CSV file on the MCP server host. Mutually exclusive with file_content.",
+          ),
+        file_content: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            "Base64-encoded file content. Use when the user uploaded a file in the conversation. Requires file_name. Mutually exclusive with file_path.",
+          ),
+        file_name: z
+          .string()
+          .optional()
+          .describe(
+            "Filename for the upload. Required when using file_content. Optional override when using file_path.",
+          ),
       }),
     },
-    async ({ tm_uid, file_path, file_name }) => {
-      const fileContent = await readFile(file_path);
-      const fileName = sanitizeFilename(file_name ?? basename(file_path));
+    async ({ tm_uid, file_path, file_content, file_name }) => {
+      if (!file_path && !file_content) {
+        throw new Error("Either file_path or file_content must be provided.");
+      }
+      if (file_path && file_content) {
+        throw new Error("file_path and file_content are mutually exclusive. Provide only one.");
+      }
+
+      let data: Buffer;
+      let fileName: string;
+
+      if (file_content) {
+        if (!file_name) {
+          throw new Error("file_name is required when using file_content.");
+        }
+        data = Buffer.from(file_content, "base64");
+        fileName = sanitizeFilename(file_name);
+      } else {
+        data = await readFile(file_path!);
+        fileName = sanitizeFilename(file_name ?? basename(file_path!));
+      }
 
       const response = await runtime.client.postBinary(
         `/v1/transMemories/${encodeURIComponent(tm_uid)}/import`,
-        fileContent,
+        data,
         {
           "Content-Type": "application/octet-stream",
           "Content-Disposition": `filename="${fileName}"`,
