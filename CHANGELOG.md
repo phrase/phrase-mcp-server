@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.7.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.6.0...phrase-mcp-server-v0.7.0) (2026-05-08)
+
+
+### Features
+
+* add Google Drive connector support ([#64](https://github.com/phrase/phrase-mcp-server/issues/64)) ([c84d94d](https://github.com/phrase/phrase-mcp-server/commit/c84d94d3a1787e1b3a49631e829fd1917f21ea10))
+* **bqe:** Quality Evaluation support in MCP server (AQUA-152) ([#86](https://github.com/phrase/phrase-mcp-server/issues/86)) ([731eefc](https://github.com/phrase/phrase-mcp-server/commit/731eefcc2bd8e1faadd5f74d50231fcdaf220a36))
+* **mcp:** support base64 file_content as alternative to file_path for file upload tools ([#84](https://github.com/phrase/phrase-mcp-server/issues/84)) ([8638263](https://github.com/phrase/phrase-mcp-server/commit/863826389febdf6d6a2e0cabefa04318fa6270f1))
+
 ## [0.6.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.5.1...phrase-mcp-server-v0.6.0) (2026-04-28)
 
 
