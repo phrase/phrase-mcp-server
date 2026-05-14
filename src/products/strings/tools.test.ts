@@ -95,6 +95,8 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_update_job_locale: "jobLocalesApi.jobLocaleUpdate",
   strings_update_key: "keysApi.keyUpdate",
   strings_update_translation: "translationsApi.translationUpdate",
+  strings_create_screenshot: "screenshotsApi.screenshotCreate",
+  strings_create_screenshot_marker: "screenshotMarkersApi.screenshotMarkerCreate",
 };
 
 function createRecordingServer(registrations: Map<string, RegisteredTool>): McpServer {
