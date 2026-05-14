@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.7.0...phrase-mcp-server-v0.8.0) (2026-05-14)
+
+
+### Features
+
+* **strings:** add create_screenshot and create_screenshot_marker tools ([#91](https://github.com/phrase/phrase-mcp-server/issues/91)) ([9f86444](https://github.com/phrase/phrase-mcp-server/commit/9f864442aca9e4f38aaec0684ddb73f8574432e7))
+
 ## [0.7.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.6.0...phrase-mcp-server-v0.7.0) (2026-05-08)
 
 
