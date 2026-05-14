@@ -19,7 +19,9 @@ export function registerCreateScreenshotMarkerTool(
         key_id: z
           .string()
           .min(1)
-          .describe("ID of the translation key to highlight on the screenshot. Must belong to the project."),
+          .describe(
+            "ID of the translation key to highlight on the screenshot. Must belong to the project.",
+          ),
         presentation: z
           .string()
           .optional()
