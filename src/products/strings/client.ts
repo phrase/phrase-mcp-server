@@ -15,6 +15,8 @@ import {
   LocalesApi,
   type Middleware,
   ProjectsApi,
+  ScreenshotMarkersApi,
+  ScreenshotsApi,
   TranslationsApi,
   UploadsApi,
 } from "phrase-js";
@@ -39,6 +41,8 @@ export class StringsClient {
   readonly localeDownloadsApi: LocaleDownloadsApi;
   readonly uploadsApi: UploadsApi;
   readonly branchesApi: BranchesApi;
+  readonly screenshotsApi: ScreenshotsApi;
+  readonly screenshotMarkersApi: ScreenshotMarkersApi;
 
   constructor(options: ProductClientFactoryOptions) {
     const authHeader = options.authHeader.trim() || "Authorization";
@@ -97,5 +101,7 @@ export class StringsClient {
     this.localeDownloadsApi = new LocaleDownloadsApi(configuration);
     this.uploadsApi = new UploadsApi(configuration);
     this.branchesApi = new BranchesApi(configuration);
+    this.screenshotsApi = new ScreenshotsApi(configuration);
+    this.screenshotMarkersApi = new ScreenshotMarkersApi(configuration);
   }
 }

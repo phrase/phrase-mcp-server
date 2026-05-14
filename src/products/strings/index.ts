@@ -76,6 +76,8 @@ import { registerUpdateJobLocaleTool } from "#products/strings/tools/update_job_
 import { registerUnlockJobTool } from "#products/strings/tools/unlock_job";
 import { registerUpdateJobTool } from "#products/strings/tools/update_job";
 import { toStringsApiError } from "#products/strings/tools/error";
+import { registerCreateScreenshotTool } from "#products/strings/tools/create_screenshot";
+import { registerCreateScreenshotMarkerTool } from "#products/strings/tools/create_screenshot_marker";
 
 function withStringsErrorHandling(server: McpServer): McpServer {
   const registerTool = ((...args: unknown[]) => {
@@ -188,5 +190,7 @@ export const stringsModule: ProductModule<"strings"> = {
     registerListJobCommentsTool(wrappedServer, runtime);
     registerCreateJobCommentTool(wrappedServer, runtime);
     registerGetJobCommentTool(wrappedServer, runtime);
+    registerCreateScreenshotTool(wrappedServer, runtime);
+    registerCreateScreenshotMarkerTool(wrappedServer, runtime);
   },
 };
