@@ -15,6 +15,7 @@ type RegisteredTool = {
 
 type MockTmsClient = {
   get: ReturnType<typeof vi.fn>;
+  del: ReturnType<typeof vi.fn>;
   postJson: ReturnType<typeof vi.fn>;
   putJson: ReturnType<typeof vi.fn>;
   patchJson: ReturnType<typeof vi.fn>;
@@ -45,6 +46,7 @@ function createRecordingServer(registrations: Map<string, RegisteredTool>): McpS
 function createClientMock(): MockTmsClient {
   return {
     get: vi.fn().mockResolvedValue({ ok: true }),
+    del: vi.fn().mockResolvedValue({ ok: true }),
     postJson: vi.fn().mockResolvedValue({ ok: true }),
     putJson: vi.fn().mockResolvedValue({ ok: true }),
     patchJson: vi.fn().mockResolvedValue({ ok: true }),
@@ -118,6 +120,10 @@ const EXPECTED_TOOL_NAMES = [
   "tms_search_job_termbases",
   "tms_upload_termbase",
   "tms_evaluate_quality_profile",
+  "tms_create_quote",
+  "tms_get_quote",
+  "tms_delete_quote",
+  "tms_email_quotes",
 ];
 
 describe("tmsModule tools", () => {
@@ -1119,6 +1125,47 @@ describe("tmsModule tools", () => {
         status: "COMPLETED",
       },
     );
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_create_quote calls postJson with quote body", async () => {
+    const quote = {
+      name: "My Quote",
+      analyse: { uid: "an/1" },
+      priceList: { uid: "pl/1" },
+      project: { uid: "proj/1" },
+    };
+    const result = await invokeTool(registrations, "tms_create_quote", { quote });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/quotes", quote);
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_get_quote calls get with encoded UID", async () => {
+    const result = await invokeTool(registrations, "tms_get_quote", { quote_uid: "quote/1" });
+    expect(client.get).toHaveBeenCalledWith("/v1/quotes/quote%2F1");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_delete_quote calls del with encoded UID", async () => {
+    client.del = vi.fn().mockResolvedValue({ ok: true });
+    const result = await invokeTool(registrations, "tms_delete_quote", { quote_uid: "quote/1" });
+    expect(client.del).toHaveBeenCalledWith("/v1/quotes/quote%2F1");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_email_quotes calls postJson with required and optional fields", async () => {
+    const result = await invokeTool(registrations, "tms_email_quotes", {
+      body: "Please review",
+      quotes: [{ uid: "quote/1" }],
+      subject: "Quote for review",
+      cc: "cc@example.com",
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/quotes/email", {
+      body: "Please review",
+      quotes: [{ uid: "quote/1" }],
+      subject: "Quote for review",
+      cc: "cc@example.com",
+    });
     expect(result).toEqual({ ok: true });
   });
 });

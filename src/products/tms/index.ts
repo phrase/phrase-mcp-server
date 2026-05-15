@@ -31,6 +31,10 @@ import { registerSetJobStatusTool } from "#products/tms/tools/set-job-status.js"
 import { registerSetProjectStatusTool } from "#products/tms/tools/set-project-status.js";
 import { registerUpdateJobTool } from "#products/tms/tools/update-job.js";
 import { registerUpdateProjectTool } from "#products/tms/tools/update-project.js";
+import { registerCreateQuoteTool } from "#products/tms/tools/create-quote.js";
+import { registerGetQuoteTool } from "#products/tms/tools/get-quote.js";
+import { registerDeleteQuoteTool } from "#products/tms/tools/delete-quote.js";
+import { registerEmailQuotesTool } from "#products/tms/tools/email-quotes.js";
 
 export const tmsModule: ProductModule<"tms"> = {
   key: "tms",
@@ -74,5 +78,9 @@ export const tmsModule: ProductModule<"tms"> = {
     registerUploadTermbaseTool(server, runtime);
     registerGetAsyncLimitsTool(server, runtime);
     registerEvaluateQualityProfileTool(server, runtime);
+    registerCreateQuoteTool(server, runtime);
+    registerGetQuoteTool(server, runtime);
+    registerDeleteQuoteTool(server, runtime);
+    registerEmailQuotesTool(server, runtime);
   },
 };
