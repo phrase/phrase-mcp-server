@@ -11,7 +11,7 @@ export function registerGetAnalysisLanguagePartTool(
     "tms_get_analysis_language_part",
     {
       description:
-        "Fetch a specific language part of an analysis in Phrase TMS. Returns word counts, match rates, and up to 100 associated jobs (use tms_list_analysis_jobs for more). (GET /api2/v1/analyses/{analyseUid}/analyseLanguageParts/{analyseLanguagePartId})",
+        "Fetch a specific language part of an analysis in Phrase TMS. Returns word counts, match rates, and up to 100 associated jobs (use tms_list_analysis_language_part_jobs for more). (GET /api2/v1/analyses/{analyseUid}/analyseLanguageParts/{analyseLanguagePartId})",
       annotations: { title: "[TMS] Get Analysis Language Part", readOnlyHint: true },
       inputSchema: {
         analyse_uid: z.string().min(1).describe("Analysis UID."),
