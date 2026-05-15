@@ -124,6 +124,21 @@ tms_set_project_status
 tms_update_job
 tms_update_project
 tms_upload_termbase
+tms_create_analyses_by_languages
+tms_create_analyses_by_providers
+tms_create_quote
+tms_delete_analyses_batch
+tms_delete_analysis
+tms_delete_quote
+tms_download_analysis
+tms_email_quotes
+tms_get_analysis
+tms_get_analysis_language_part
+tms_get_job_analysis
+tms_get_quote
+tms_list_analysis_language_part_jobs
+tms_recalculate_analysis
+tms_set_analysis_net_rate_scheme
 ```
 
 #### Quality Evaluator (`bqe_*`)

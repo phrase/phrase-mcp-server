@@ -15,6 +15,8 @@ type RegisteredTool = {
 
 type MockTmsClient = {
   get: ReturnType<typeof vi.fn>;
+  del: ReturnType<typeof vi.fn>;
+  delJson: ReturnType<typeof vi.fn>;
   postJson: ReturnType<typeof vi.fn>;
   putJson: ReturnType<typeof vi.fn>;
   patchJson: ReturnType<typeof vi.fn>;
@@ -45,6 +47,8 @@ function createRecordingServer(registrations: Map<string, RegisteredTool>): McpS
 function createClientMock(): MockTmsClient {
   return {
     get: vi.fn().mockResolvedValue({ ok: true }),
+    del: vi.fn().mockResolvedValue({ ok: true }),
+    delJson: vi.fn().mockResolvedValue({ ok: true }),
     postJson: vi.fn().mockResolvedValue({ ok: true }),
     putJson: vi.fn().mockResolvedValue({ ok: true }),
     patchJson: vi.fn().mockResolvedValue({ ok: true }),
@@ -118,6 +122,21 @@ const EXPECTED_TOOL_NAMES = [
   "tms_search_job_termbases",
   "tms_upload_termbase",
   "tms_evaluate_quality_profile",
+  "tms_create_quote",
+  "tms_get_quote",
+  "tms_delete_quote",
+  "tms_email_quotes",
+  "tms_get_analysis",
+  "tms_delete_analysis",
+  "tms_delete_analyses_batch",
+  "tms_create_analyses_by_languages",
+  "tms_create_analyses_by_providers",
+  "tms_recalculate_analysis",
+  "tms_get_analysis_language_part",
+  "tms_list_analysis_language_part_jobs",
+  "tms_download_analysis",
+  "tms_get_job_analysis",
+  "tms_set_analysis_net_rate_scheme",
 ];
 
 describe("tmsModule tools", () => {
@@ -1119,6 +1138,155 @@ describe("tmsModule tools", () => {
         status: "COMPLETED",
       },
     );
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_create_quote calls postJson with quote body", async () => {
+    const quote = {
+      name: "My Quote",
+      analyse: { uid: "an/1" },
+      priceList: { uid: "pl/1" },
+      project: { uid: "proj/1" },
+    };
+    const result = await invokeTool(registrations, "tms_create_quote", { quote });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/quotes", quote);
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_get_quote calls get with encoded UID", async () => {
+    const result = await invokeTool(registrations, "tms_get_quote", { quote_uid: "quote/1" });
+    expect(client.get).toHaveBeenCalledWith("/v1/quotes/quote%2F1");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_delete_quote calls del with encoded UID", async () => {
+    client.del = vi.fn().mockResolvedValue({ ok: true });
+    const result = await invokeTool(registrations, "tms_delete_quote", { quote_uid: "quote/1" });
+    expect(client.del).toHaveBeenCalledWith("/v1/quotes/quote%2F1");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_email_quotes calls postJson with required and optional fields", async () => {
+    const result = await invokeTool(registrations, "tms_email_quotes", {
+      body: "Please review",
+      quotes: [{ uid: "quote/1" }],
+      subject: "Quote for review",
+      cc: "cc@example.com",
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/quotes/email", {
+      body: "Please review",
+      quotes: [{ uid: "quote/1" }],
+      subject: "Quote for review",
+      cc: "cc@example.com",
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_get_analysis calls get with encoded UID on v3", async () => {
+    const result = await invokeTool(registrations, "tms_get_analysis", { analyse_uid: "an/1" });
+    expect(client.get).toHaveBeenCalledWith("/v3/analyses/an%2F1");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_delete_analysis calls del with encoded UID and purge query", async () => {
+    const result = await invokeTool(registrations, "tms_delete_analysis", {
+      analyse_uid: "an/1",
+      purge: true,
+    });
+    expect(client.del).toHaveBeenCalledWith("/v1/analyses/an%2F1", { purge: true });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_delete_analyses_batch calls delJson with analyses array", async () => {
+    const result = await invokeTool(registrations, "tms_delete_analyses_batch", {
+      analyses: [{ uid: "an/1" }, { uid: "an/2" }],
+    });
+    expect(client.delJson).toHaveBeenCalledWith("/v1/analyses", {
+      analyses: [{ uid: "an/1" }, { uid: "an/2" }],
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_create_analyses_by_languages calls postJson with jobs", async () => {
+    const result = await invokeTool(registrations, "tms_create_analyses_by_languages", {
+      jobs: [{ uid: "job/1" }],
+      name: "My Analysis",
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/analyses/byLanguages", {
+      jobs: [{ uid: "job/1" }],
+      name: "My Analysis",
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_create_analyses_by_providers calls postJson with jobs", async () => {
+    const result = await invokeTool(registrations, "tms_create_analyses_by_providers", {
+      jobs: [{ uid: "job/1" }],
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/analyses/byProviders", {
+      jobs: [{ uid: "job/1" }],
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_recalculate_analysis calls postJson with analyses ids", async () => {
+    const result = await invokeTool(registrations, "tms_recalculate_analysis", {
+      analyses: [{ id: "123" }],
+    });
+    expect(client.postJson).toHaveBeenCalledWith("/v1/analyses/recalculate", {
+      analyses: [{ id: "123" }],
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_get_analysis_language_part calls get with encoded UID and numeric part id", async () => {
+    const result = await invokeTool(registrations, "tms_get_analysis_language_part", {
+      analyse_uid: "an/1",
+      analyse_language_part_id: 42,
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/analyses/an%2F1/analyseLanguageParts/42");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_list_analysis_language_part_jobs calls get with encoded UID and part id", async () => {
+    const result = await invokeTool(registrations, "tms_list_analysis_language_part_jobs", {
+      analyse_uid: "an/1",
+      analyse_language_part_id: 42,
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/analyses/an%2F1/analyseLanguageParts/42/jobs");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_download_analysis calls getBinary with format query and saves file", async () => {
+    const outputPath = join(tempDir, "analysis.csv");
+    const result = await invokeTool(registrations, "tms_download_analysis", {
+      analyse_uid: "an/1",
+      format: "CSV",
+      output_path: outputPath,
+    });
+    expect(client.getBinary).toHaveBeenCalledWith("/v1/analyses/an%2F1/download", {
+      format: "CSV",
+    });
+    expect(result.saved_to).toBe(resolve(outputPath));
+  });
+
+  it("tms_get_job_analysis calls get with encoded UIDs", async () => {
+    const result = await invokeTool(registrations, "tms_get_job_analysis", {
+      analyse_uid: "an/1",
+      job_uid: "job/1",
+    });
+    expect(client.get).toHaveBeenCalledWith("/v1/analyses/an%2F1/jobs/job%2F1");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("tms_set_analysis_net_rate_scheme calls putJson with scheme", async () => {
+    const result = await invokeTool(registrations, "tms_set_analysis_net_rate_scheme", {
+      analyse_uid: "an/1",
+      net_rate_scheme: { uid: "nrs/1" },
+    });
+    expect(client.putJson).toHaveBeenCalledWith("/v1/analyses/an%2F1/netRateScheme", {
+      uid: "nrs/1",
+    });
     expect(result).toEqual({ ok: true });
   });
 });

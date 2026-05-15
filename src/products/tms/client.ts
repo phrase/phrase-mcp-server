@@ -167,6 +167,14 @@ export class TmsClient {
     return this.request("GET", path, { query });
   }
 
+  async del(path: string, query?: Record<string, QueryValue>): Promise<unknown> {
+    return this.request("DELETE", path, { query });
+  }
+
+  async delJson(path: string, json: unknown, query?: Record<string, QueryValue>): Promise<unknown> {
+    return this.request("DELETE", path, { query, json });
+  }
+
   async postJson(
     path: string,
     json: unknown,
