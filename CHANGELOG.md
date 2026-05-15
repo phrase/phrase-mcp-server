@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.8.0...phrase-mcp-server-v0.9.0) (2026-05-15)
+
+
+### Features
+
+* **tms:** add Analysis and Quotes API MCP tools ([#94](https://github.com/phrase/phrase-mcp-server/issues/94)) ([2505881](https://github.com/phrase/phrase-mcp-server/commit/2505881aa30eccc955bf004f6d1322b37960eae7))
+
 ## [0.8.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.7.0...phrase-mcp-server-v0.8.0) (2026-05-14)
 
 
