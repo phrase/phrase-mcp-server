@@ -35,6 +35,17 @@ import { registerCreateQuoteTool } from "#products/tms/tools/create-quote.js";
 import { registerGetQuoteTool } from "#products/tms/tools/get-quote.js";
 import { registerDeleteQuoteTool } from "#products/tms/tools/delete-quote.js";
 import { registerEmailQuotesTool } from "#products/tms/tools/email-quotes.js";
+import { registerGetAnalysisTool } from "#products/tms/tools/get-analysis.js";
+import { registerDeleteAnalysisTool } from "#products/tms/tools/delete-analysis.js";
+import { registerDeleteAnalysesBatchTool } from "#products/tms/tools/delete-analyses-batch.js";
+import { registerCreateAnalysesByLanguagesTool } from "#products/tms/tools/create-analyses-by-languages.js";
+import { registerCreateAnalysesByProvidersTool } from "#products/tms/tools/create-analyses-by-providers.js";
+import { registerRecalculateAnalysisTool } from "#products/tms/tools/recalculate-analysis.js";
+import { registerGetAnalysisLanguagePartTool } from "#products/tms/tools/get-analysis-language-part.js";
+import { registerListAnalysisLanguagePartJobsTool } from "#products/tms/tools/list-analysis-language-part-jobs.js";
+import { registerDownloadAnalysisTool } from "#products/tms/tools/download-analysis.js";
+import { registerGetJobAnalysisTool } from "#products/tms/tools/get-job-analysis.js";
+import { registerSetAnalysisNetRateSchemeTool } from "#products/tms/tools/set-analysis-net-rate-scheme.js";
 
 export const tmsModule: ProductModule<"tms"> = {
   key: "tms",
@@ -82,5 +93,16 @@ export const tmsModule: ProductModule<"tms"> = {
     registerGetQuoteTool(server, runtime);
     registerDeleteQuoteTool(server, runtime);
     registerEmailQuotesTool(server, runtime);
+    registerGetAnalysisTool(server, runtime);
+    registerDeleteAnalysisTool(server, runtime);
+    registerDeleteAnalysesBatchTool(server, runtime);
+    registerCreateAnalysesByLanguagesTool(server, runtime);
+    registerCreateAnalysesByProvidersTool(server, runtime);
+    registerRecalculateAnalysisTool(server, runtime);
+    registerGetAnalysisLanguagePartTool(server, runtime);
+    registerListAnalysisLanguagePartJobsTool(server, runtime);
+    registerDownloadAnalysisTool(server, runtime);
+    registerGetJobAnalysisTool(server, runtime);
+    registerSetAnalysisNetRateSchemeTool(server, runtime);
   },
 };
