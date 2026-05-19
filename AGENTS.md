@@ -36,7 +36,7 @@ Every tool registered with `server.registerTool` must declare an `annotations` f
 
 ### Required annotation fields
 
-- `title` — a short human-readable label. Must be prefixed with `[Strings]`, `[TMS]`, or `[BQE]` to disambiguate between the Phrase products (e.g. both Strings and TMS have "Get Job", "List Projects", etc.).
+- `title` — a short human-readable label. Must be prefixed with `[Strings]`, `[TMS]`, `[BQE]`, or `[Connectors]` to disambiguate between the Phrase products (e.g. both Strings and TMS have "Get Job", "List Projects", etc.).
 
 - `readOnlyHint: true` — the tool does not modify operational user data. Use for:
   - `get_*` / `get-*` — fetch a single resource
@@ -70,6 +70,18 @@ server.registerTool(
   async (params) => { ... },
 );
 ```
+
+## manifest.json
+
+`manifest.json` defines the MCP server's metadata and the settings UI shown to users in MCP clients (e.g. Claude Desktop). It must be kept in sync with the server's product modules.
+
+When adding a new product or token:
+
+- Add a `<product>_token` entry to `user_config` (with `sensitive: true`, `required: false`)
+- Add the corresponding `PHRASE_<PRODUCT>_TOKEN` env mapping in `server.mcp_config.env`
+- Add the product key to the `enabled_products` default value and its description
+
+When adding a new tool, no manifest changes are needed — tools are registered at runtime.
 
 ## Commands
 
