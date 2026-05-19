@@ -158,6 +158,15 @@ bqe_update_ai_check
 bqe_update_quality_profile
 ```
 
+#### Connectors (`connectors_*`)
+
+```text
+connectors_download_raw
+connectors_list_connectors
+connectors_list_content
+connectors_upload_raw
+```
+
 ## Examples
 
 The following examples build on each other as a complete end-to-end workflow: discover your projects, kick off a new translation with Phrase TMS, retrieve the result, and upload a localization file via Phrase Strings.
@@ -253,15 +262,6 @@ Uploading en.json (format: simple_json)... done
   Upload state: success
   Translation keys created: 14
   Translations created: 14
-```
-
-#### Connectors (`connectors_*`)
-
-```text
-connectors_download_raw
-connectors_list_connectors
-connectors_list_content
-connectors_upload_raw
 ```
 
 ## Prerequisites
