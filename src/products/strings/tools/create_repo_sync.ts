@@ -12,10 +12,7 @@ export function registerCreateRepoSyncTool(server: McpServer, runtime: ProductRu
       inputSchema: {
         account_id: z.string().min(1).describe("Account ID"),
         project_id: z.string().min(1).describe("ID of the Phrase Strings project to connect"),
-        git_provider: z
-          .enum(["github", "gitlab", "bitbucket"])
-          .optional()
-          .describe("Git provider"),
+        git_provider: z.enum(["github", "gitlab", "bitbucket"]).optional().describe("Git provider"),
         connection_type: z
           .enum(["token", "github_app", "self_hosted"])
           .describe(
@@ -25,10 +22,7 @@ export function registerCreateRepoSyncTool(server: McpServer, runtime: ProductRu
           .string()
           .min(1)
           .describe("Full repository name including owner, e.g. 'my-org/my-repo'"),
-        base_branch: z
-          .string()
-          .optional()
-          .describe("Default branch for imports and exports"),
+        base_branch: z.string().optional().describe("Default branch for imports and exports"),
         pr_branch: z
           .string()
           .optional()

@@ -13,14 +13,8 @@ export function registerExportRepoSyncTool(server: McpServer, runtime: ProductRu
       inputSchema: {
         account_id: z.string().min(1).describe("Account ID"),
         id: z.string().min(1).describe("Repo Sync ID"),
-        pr_branch: z
-          .string()
-          .optional()
-          .describe("Source branch to open a pull request from"),
-        branch: z
-          .string()
-          .optional()
-          .describe("Strings branch to export from"),
+        pr_branch: z.string().optional().describe("Source branch to open a pull request from"),
+        branch: z.string().optional().describe("Strings branch to export from"),
       },
     },
     async ({ account_id, id, pr_branch, branch }) => {

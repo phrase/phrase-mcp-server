@@ -3,7 +3,10 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 
-export function registerActivateRepoSyncTool(server: McpServer, runtime: ProductRuntime<"strings">) {
+export function registerActivateRepoSyncTool(
+  server: McpServer,
+  runtime: ProductRuntime<"strings">,
+) {
   server.registerTool(
     "strings_activate_repo_sync",
     {

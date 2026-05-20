@@ -13,14 +13,8 @@ export function registerImportRepoSyncTool(server: McpServer, runtime: ProductRu
       inputSchema: {
         account_id: z.string().min(1).describe("Account ID"),
         id: z.string().min(1).describe("Repo Sync ID"),
-        repository_branch: z
-          .string()
-          .optional()
-          .describe("Repository branch to import from"),
-        branch: z
-          .string()
-          .optional()
-          .describe("Strings branch to import to"),
+        repository_branch: z.string().optional().describe("Repository branch to import from"),
+        branch: z.string().optional().describe("Strings branch to import to"),
       },
     },
     async ({ account_id, id, repository_branch, branch }) => {
