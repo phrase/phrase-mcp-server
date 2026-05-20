@@ -31,6 +31,8 @@ strings_create_key
 strings_create_locale
 strings_create_locale_download
 strings_create_project
+strings_create_screenshot
+strings_create_screenshot_marker
 strings_create_translation
 strings_create_upload
 strings_delete_branch
