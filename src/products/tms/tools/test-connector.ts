@@ -13,12 +13,17 @@ export function registerTestConnectorTool(server: McpServer, runtime: ProductRun
       inputSchema: {
         connector_id: z
           .string()
+          .min(1)
           .optional()
           .describe(
             "UID of an existing connector to test by ID. When provided, connector_payload is ignored.",
           ),
         connector_payload: z
-          .record(z.unknown())
+          .object({
+            name: z.string().min(1),
+            type: z.string().min(1),
+          })
+          .passthrough()
           .optional()
           .describe(
             "Full connector payload to test before saving. Same shape as the connector field in tms_create_connector.",
@@ -27,10 +32,9 @@ export function registerTestConnectorTool(server: McpServer, runtime: ProductRun
     },
     async ({ connector_id, connector_payload }) => {
       if (!connector_id && !connector_payload) {
-        return asTextContent({
-          error:
-            "Provide either connector_id (to test an existing connector) or connector_payload (to test before saving).",
-        });
+        throw new Error(
+          "Provide either connector_id (to test an existing connector) or connector_payload (to test before saving).",
+        );
       }
 
       const result = connector_id

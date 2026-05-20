@@ -12,9 +12,13 @@ export function registerCreateConnectorTool(server: McpServer, runtime: ProductR
       annotations: { title: "[TMS] Create Connector", destructiveHint: true },
       inputSchema: {
         connector: z
-          .record(z.unknown())
+          .object({
+            name: z.string().min(1),
+            type: z.string().min(1),
+          })
+          .passthrough()
           .describe(
-            'Connector payload object. Required for all connectors: name (string), type (string, e.g. "CONTENTFUL2"). ' +
+            'Connector payload. Required: name, type (e.g. "CONTENTFUL2"). ' +
               'Required for CONTENTFUL2: code (from tms_poll_connector_auth_code), redirectUri (from tms_initiate_connector_oauth), contentful2DataCenter ("EU"|"US"). ' +
               "Optional CONTENTFUL2 fields: defaultRemoteFolder, contentful2SpaceId, contentful2EnvironmentId, contentful2IncludeReferences, contentful2Tags, contentful2FollowAliases, contentful2IncludeAssets.",
           ),

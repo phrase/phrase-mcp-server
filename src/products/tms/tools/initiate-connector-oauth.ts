@@ -12,10 +12,11 @@ export function registerInitiateConnectorOAuthTool(
     {
       description:
         'Initiate the OAuth authorisation flow for a connector that requires browser-based authentication (e.g. CONTENTFUL2, HUBSPOT, GITHUB). Returns an OAuth URL the user must open in a browser, plus a session uid required by tms_poll_connector_auth_code. For CONTENTFUL2, ask the user their data centre: "EU" redirects to be.eu.contentful.com, "US" redirects to be.contentful.com. (POST /api2/v1/connectors/connectorAuthData + GET /api2/v1/connectorAuthPage/{type})',
-      annotations: { title: "[TMS] Initiate Connector OAuth", readOnlyHint: true },
+      annotations: { title: "[TMS] Initiate Connector OAuth", destructiveHint: true },
       inputSchema: {
         connector_type: z
           .string()
+          .min(1)
           .describe('Connector type identifier, e.g. "CONTENTFUL2", "HUBSPOT", "GITHUB".'),
         data_center: z
           .enum(["EU", "US"])
@@ -28,24 +29,20 @@ export function registerInitiateConnectorOAuthTool(
     async ({ connector_type, data_center }) => {
       const client = runtime.client;
 
-      // 1. Create a session uid used as the OAuth state parameter (API2 endpoint, accepts bearer token)
       const authData = (await client.postJson("/v1/connectors/connectorAuthData", {})) as {
         state: string;
       };
+      if (!authData.state) throw new Error("connectorAuthData response missing state");
       const uid = authData.state;
 
-      // 2. Get the OAuth URL template; only pass dataCenter for EU (omitting it gives be.contentful.com for US)
+      // Only pass dataCenter for EU; omitting it gives be.contentful.com (US) for CONTENTFUL2
       const query = data_center === "EU" ? { dataCenter: "EU" } : undefined;
       const authPage = (await client.get(`/v1/connectorAuthPage/${connector_type}`, query)) as {
         url: string;
       };
+      if (!authPage.url) throw new Error("connectorAuthPage response missing url");
 
-      // 3. Derive the redirect URI from the TMS base URL
-      // e.g. https://cloud.memsource.com/web/api2 → https://cloud.memsource.com/web/connector/receiveConnectorAuthCode
-      const webRoot = client.baseUrl.replace(/\/api2\/?$/, "");
-      const redirectUri = `${webRoot}/connector/receiveConnectorAuthCode`;
-
-      // 4. Substitute {state} and {redirectUri} placeholders in the URL template
+      const redirectUri = client.connectorOAuthRedirectUri;
       const oauthUrl = authPage.url
         .replace(/\{state\}/g, uid)
         .replace(/\{redirectUri\}/g, encodeURIComponent(redirectUri));
@@ -55,7 +52,7 @@ export function registerInitiateConnectorOAuthTool(
         uid,
         redirect_uri: redirectUri,
         instructions:
-          "Open oauth_url in a browser and complete the Contentful authorisation flow. Once redirected back to Phrase, call tms_poll_connector_auth_code with the uid to retrieve the authorisation code needed for tms_create_connector.",
+          "Open oauth_url in a browser and complete the OAuth authorisation flow. Once redirected back to Phrase, call tms_poll_connector_auth_code with the uid to retrieve the authorisation code needed for tms_create_connector.",
       });
     },
   );

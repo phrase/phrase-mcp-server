@@ -117,7 +117,7 @@ function defaultHasNext(response: unknown, context: PaginateContext): boolean {
 }
 
 export class TmsClient {
-  readonly baseUrl: string;
+  private readonly baseUrl: string;
   private readonly authHeader: string;
   private readonly authPrefix: string;
   private readonly userAgent: string;
@@ -145,12 +145,11 @@ export class TmsClient {
       body?: BodyInit;
       headers?: Record<string, string>;
     } = {},
-    baseUrlOverride?: string,
   ): Promise<unknown> {
     const token = await this.tokenProvider.getAccessToken();
     const authValue = this.authPrefix ? `${this.authPrefix} ${token}` : token;
 
-    return requestJson(baseUrlOverride ?? this.baseUrl, path, {
+    return requestJson(this.baseUrl, path, {
       method,
       query: options.query,
       json: options.json,
@@ -165,8 +164,11 @@ export class TmsClient {
   }
 
   private get rootUrl(): string {
-    // baseUrl is e.g. https://cloud.memsource.com/web/api2 — strip /api2 to reach /web/connector/... paths
     return this.baseUrl.replace(/\/api2\/?$/, "");
+  }
+
+  get connectorOAuthRedirectUri(): string {
+    return `${this.rootUrl}/connector/receiveConnectorAuthCode`;
   }
 
   async get(path: string, query?: Record<string, QueryValue>): Promise<unknown> {
@@ -179,14 +181,6 @@ export class TmsClient {
 
   async delJson(path: string, json: unknown, query?: Record<string, QueryValue>): Promise<unknown> {
     return this.request("DELETE", path, { query, json });
-  }
-
-  async getFromRoot(path: string, query?: Record<string, QueryValue>): Promise<unknown> {
-    return this.request("GET", path, { query }, this.rootUrl);
-  }
-
-  async postJsonFromRoot(path: string, json?: unknown): Promise<unknown> {
-    return this.request("POST", path, { json }, this.rootUrl);
   }
 
   async postJson(
