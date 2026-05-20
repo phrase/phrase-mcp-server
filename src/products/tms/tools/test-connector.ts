@@ -28,7 +28,8 @@ export function registerTestConnectorTool(server: McpServer, runtime: ProductRun
     async ({ connector_id, connector_payload }) => {
       if (!connector_id && !connector_payload) {
         return asTextContent({
-          error: "Provide either connector_id (to test an existing connector) or connector_payload (to test before saving).",
+          error:
+            "Provide either connector_id (to test an existing connector) or connector_payload (to test before saving).",
         });
       }
 

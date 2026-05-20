@@ -20,7 +20,9 @@ export function registerInitiateConnectorOAuthTool(
         data_center: z
           .enum(["EU", "US"])
           .optional()
-          .describe('Contentful data centre. "EU" → be.eu.contentful.com, "US" → be.contentful.com. Ask the user if unsure.'),
+          .describe(
+            'Contentful data centre. "EU" → be.eu.contentful.com, "US" → be.contentful.com. Ask the user if unsure.',
+          ),
       },
     },
     async ({ connector_type, data_center }) => {

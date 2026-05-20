@@ -14,12 +14,12 @@ export function registerPollConnectorAuthCodeTool(
         "Retrieve the OAuth authorisation code after the user has completed the browser authentication flow started by tms_initiate_connector_oauth. Call this once the user confirms they have authorised the connector in their browser. Pass the redirect_uri exactly as returned by tms_initiate_connector_oauth — it must be included in tms_create_connector. (GET /api2/v1/connectors/connectorAuthCode/{uid})",
       annotations: { title: "[TMS] Poll Connector Auth Code", readOnlyHint: true },
       inputSchema: {
-        uid: z
-          .string()
-          .describe("Session uid returned by tms_initiate_connector_oauth."),
+        uid: z.string().describe("Session uid returned by tms_initiate_connector_oauth."),
         redirect_uri: z
           .string()
-          .describe("The redirect_uri returned by tms_initiate_connector_oauth. Must be passed unchanged to tms_create_connector."),
+          .describe(
+            "The redirect_uri returned by tms_initiate_connector_oauth. Must be passed unchanged to tms_create_connector.",
+          ),
       },
     },
     async ({ uid, redirect_uri }) => {
