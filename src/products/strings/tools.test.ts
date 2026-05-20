@@ -97,6 +97,13 @@ const EXPECTED_METHOD_BY_TOOL: Record<string, string> = {
   strings_update_translation: "translationsApi.translationUpdate",
   strings_create_screenshot: "screenshotsApi.screenshotCreate",
   strings_create_screenshot_marker: "screenshotMarkersApi.screenshotMarkerCreate",
+  strings_list_repo_syncs: "repoSyncsApi.repoSyncList",
+  strings_get_repo_sync: "repoSyncsApi.repoSyncShow",
+  strings_create_repo_sync: "repoSyncsApi.repoSyncCreate",
+  strings_activate_repo_sync: "repoSyncsApi.repoSyncActivate",
+  strings_deactivate_repo_sync: "repoSyncsApi.repoSyncDeactivate",
+  strings_export_repo_sync: "repoSyncsApi.repoSyncExport",
+  strings_import_repo_sync: "repoSyncsApi.repoSyncImport",
 };
 
 function createRecordingServer(registrations: Map<string, RegisteredTool>): McpServer {

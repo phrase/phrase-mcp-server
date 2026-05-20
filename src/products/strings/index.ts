@@ -76,8 +76,15 @@ import { registerUpdateJobLocaleTool } from "#products/strings/tools/update_job_
 import { registerUnlockJobTool } from "#products/strings/tools/unlock_job";
 import { registerUpdateJobTool } from "#products/strings/tools/update_job";
 import { toStringsApiError } from "#products/strings/tools/error";
+import { registerActivateRepoSyncTool } from "#products/strings/tools/activate_repo_sync";
+import { registerCreateRepoSyncTool } from "#products/strings/tools/create_repo_sync";
 import { registerCreateScreenshotTool } from "#products/strings/tools/create_screenshot";
 import { registerCreateScreenshotMarkerTool } from "#products/strings/tools/create_screenshot_marker";
+import { registerDeactivateRepoSyncTool } from "#products/strings/tools/deactivate_repo_sync";
+import { registerExportRepoSyncTool } from "#products/strings/tools/export_repo_sync";
+import { registerGetRepoSyncTool } from "#products/strings/tools/get_repo_sync";
+import { registerImportRepoSyncTool } from "#products/strings/tools/import_repo_sync";
+import { registerListRepoSyncsTool } from "#products/strings/tools/list_repo_syncs";
 
 function withStringsErrorHandling(server: McpServer): McpServer {
   const registerTool = ((...args: unknown[]) => {
@@ -192,5 +199,12 @@ export const stringsModule: ProductModule<"strings"> = {
     registerGetJobCommentTool(wrappedServer, runtime);
     registerCreateScreenshotTool(wrappedServer, runtime);
     registerCreateScreenshotMarkerTool(wrappedServer, runtime);
+    registerListRepoSyncsTool(wrappedServer, runtime);
+    registerGetRepoSyncTool(wrappedServer, runtime);
+    registerCreateRepoSyncTool(wrappedServer, runtime);
+    registerActivateRepoSyncTool(wrappedServer, runtime);
+    registerDeactivateRepoSyncTool(wrappedServer, runtime);
+    registerExportRepoSyncTool(wrappedServer, runtime);
+    registerImportRepoSyncTool(wrappedServer, runtime);
   },
 };

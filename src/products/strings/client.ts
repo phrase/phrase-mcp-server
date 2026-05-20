@@ -15,6 +15,7 @@ import {
   LocalesApi,
   type Middleware,
   ProjectsApi,
+  RepoSyncsApi,
   ScreenshotMarkersApi,
   ScreenshotsApi,
   TranslationsApi,
@@ -41,6 +42,7 @@ export class StringsClient {
   readonly localeDownloadsApi: LocaleDownloadsApi;
   readonly uploadsApi: UploadsApi;
   readonly branchesApi: BranchesApi;
+  readonly repoSyncsApi: RepoSyncsApi;
   readonly screenshotsApi: ScreenshotsApi;
   readonly screenshotMarkersApi: ScreenshotMarkersApi;
 
@@ -101,6 +103,7 @@ export class StringsClient {
     this.localeDownloadsApi = new LocaleDownloadsApi(configuration);
     this.uploadsApi = new UploadsApi(configuration);
     this.branchesApi = new BranchesApi(configuration);
+    this.repoSyncsApi = new RepoSyncsApi(configuration);
     this.screenshotsApi = new ScreenshotsApi(configuration);
     this.screenshotMarkersApi = new ScreenshotMarkersApi(configuration);
   }
