@@ -21,7 +21,12 @@ export function registerCreateLocaleTool(server: McpServer, runtime: ProductRunt
         fallback_locale_id: z.string().optional(),
         unverify_new_translations: z.boolean().optional(),
         unverify_updated_translations: z.boolean().optional(),
-        autotranslate: z.boolean().optional(),
+        autotranslate: z
+          .boolean()
+          .optional()
+          .describe(
+            "Whether to automatically translate the locale after creation. This may incur additional costs.",
+          ),
       },
     },
     async ({

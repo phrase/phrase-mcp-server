@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.9.0...phrase-mcp-server-v0.10.0) (2026-05-26)
+
+
+### Features
+
+* **strings:** add Repo Sync tools ([#100](https://github.com/phrase/phrase-mcp-server/issues/100)) ([292c3ae](https://github.com/phrase/phrase-mcp-server/commit/292c3ae89cb28888140dbf731f9475404d563f60))
+
+
+### Bug Fixes
+
+* add missing Connectors token to manifest ([#96](https://github.com/phrase/phrase-mcp-server/issues/96)) ([bbe0837](https://github.com/phrase/phrase-mcp-server/commit/bbe0837acb655d4780b94ff409d68f773c6c5440))
+
 ## [0.9.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.8.0...phrase-mcp-server-v0.9.0) (2026-05-15)
 
 
