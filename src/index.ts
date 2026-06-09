@@ -59,7 +59,12 @@ if (process.env.TRANSPORT !== "http") {
   const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
   const rawOrigins = process.env.CORS_ALLOWED_ORIGINS ?? "https://claude.ai";
-  const allowedOrigins = new Set(rawOrigins.split(",").map((s) => s.trim()).filter(Boolean));
+  const allowedOrigins = new Set(
+    rawOrigins
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
 
   const httpServer = createServer(async (req, res) => {
     const origin = req.headers.origin ?? "";
