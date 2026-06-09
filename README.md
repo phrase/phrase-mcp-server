@@ -318,6 +318,18 @@ PHRASE_REGION = "eu"
 }
 ```
 
+### Docker (HTTP — for remote or shared deployments)
+
+```bash
+docker run -it -p 3000:3000 \
+  -e TRANSPORT=http \
+  -e PHRASE_TMS_TOKEN=your_token \
+  -e PHRASE_REGION=eu \
+  ghcr.io/phrase/phrase-mcp-server
+```
+
+Then point your MCP client at `http://localhost:3000/mcp`.
+
 Set at least one product token in your MCP client config:
 
 - Minimum Strings setup:
@@ -332,6 +344,12 @@ Set at least one product token in your MCP client config:
   - `PHRASE_REGION=eu`
 
 ## Configuration Reference
+
+### Server
+
+- `TRANSPORT`: set to `http` to enable HTTP server mode for remote/hosted deployments. Default is `stdio`.
+- `PORT`: HTTP port the server listens on (default: `3000`). Only used when `TRANSPORT=http`.
+- `CORS_ALLOWED_ORIGINS`: comma-separated list of origins allowed for cross-origin requests (default: `https://claude.ai`). Only used when `TRANSPORT=http`.
 
 ### Product selection
 
