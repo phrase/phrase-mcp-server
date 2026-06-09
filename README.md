@@ -321,7 +321,7 @@ PHRASE_REGION = "eu"
 ### Docker (HTTP — for remote or shared deployments)
 
 ```bash
-docker run -it -p 3000:3000 \
+docker run -d -p 3000:3000 \
   -e TRANSPORT=http \
   -e PHRASE_TMS_TOKEN=your_token \
   -e PHRASE_REGION=eu \

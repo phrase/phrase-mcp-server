@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { createServer } from "node:http";
+import { createServer, type ServerResponse } from "node:http";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -48,7 +48,7 @@ if (process.env.TRANSPORT !== "http") {
 } else {
   // The SDK requires a fresh transport per request in stateless mode to avoid
   // message ID collisions across concurrent clients.
-  async function createRequestTransport(): Promise<StreamableHTTPServerTransport> {
+  async function createMcpRequestHandler(): Promise<StreamableHTTPServerTransport> {
     const server = new McpServer({ name: APP_NAME, version: APP_VERSION });
     for (const runtime of runtimes) registerRuntime(server, runtime);
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
@@ -57,6 +57,7 @@ if (process.env.TRANSPORT !== "http") {
   }
 
   const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+  const MAX_BODY_BYTES = 4 * 1024 * 1024; // 4 MB
 
   const rawOrigins = process.env.CORS_ALLOWED_ORIGINS ?? "https://claude.ai";
   const allowedOrigins = new Set(
@@ -65,6 +66,13 @@ if (process.env.TRANSPORT !== "http") {
       .map((s) => s.trim())
       .filter(Boolean),
   );
+
+  function setCorsHeaders(res: ServerResponse, origin: string): void {
+    if (allowedOrigins.has(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    }
+  }
 
   const httpServer = createServer(async (req, res) => {
     const origin = req.headers.origin ?? "";
@@ -76,6 +84,7 @@ if (process.env.TRANSPORT !== "http") {
           "Access-Control-Allow-Methods": "POST, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type, Authorization, Mcp-Session-Id",
           "Access-Control-Max-Age": "86400",
+          Vary: "Origin",
         });
       } else {
         res.writeHead(204);
@@ -84,22 +93,43 @@ if (process.env.TRANSPORT !== "http") {
       return;
     }
 
-    if (allowedOrigins.has(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-    }
-
     if (req.method === "GET" && req.url === "/health") {
+      setCorsHeaders(res, origin);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ status: "ok" }));
       return;
     }
 
-    if (req.method === "POST" && req.url?.startsWith("/mcp")) {
+    if (req.method === "POST" && req.url === "/mcp") {
+      setCorsHeaders(res, origin);
+
+      // Pre-read the body to work around stream-consumption issues with
+      // @hono/node-server's Web Standard API adapter (observed on macOS Docker Desktop).
       const chunks: Buffer[] = [];
-      for await (const chunk of req) chunks.push(chunk as Buffer);
+      let totalBytes = 0;
+      for await (const chunk of req) {
+        totalBytes += (chunk as Buffer).byteLength;
+        if (totalBytes > MAX_BODY_BYTES) {
+          res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Request body too large" }));
+          return;
+        }
+        chunks.push(chunk as Buffer);
+      }
+
       const rawBody = Buffer.concat(chunks).toString();
-      const parsedBody = rawBody ? JSON.parse(rawBody) : undefined;
-      const transport = await createRequestTransport();
+      let parsedBody: unknown;
+      try {
+        parsedBody = rawBody ? JSON.parse(rawBody) : undefined;
+      } catch {
+        res
+          .writeHead(400, { "Content-Type": "application/json" })
+          .end(JSON.stringify({ error: "Invalid JSON" }));
+        return;
+      }
+
+      const transport = await createMcpRequestHandler();
       try {
         await transport.handleRequest(req, res, parsedBody);
       } catch (err) {
@@ -116,7 +146,9 @@ if (process.env.TRANSPORT !== "http") {
 
   function shutdown() {
     httpServer.close(() => process.exit(0));
-    setTimeout(() => process.exit(1), 10_000).unref();
+    // Force-exit after 10 s if connections don't drain; exit 0 so orchestrators
+    // (ECS, Kubernetes) don't treat a timeout shutdown as a crash.
+    setTimeout(() => process.exit(0), 10_000).unref();
   }
 
   process.on("SIGTERM", shutdown);
