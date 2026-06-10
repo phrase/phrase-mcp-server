@@ -8,7 +8,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: License check
-        uses: phrase/actions/lawa-ci@main
+        uses: phrase/actions/lawa-ci@0dd6e55527752d2ade1981db61c3bb436377c798 # main
         with:
           decisions-file: ./license-decisions.yml
           package-managers: npm
