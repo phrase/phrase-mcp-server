@@ -3,6 +3,7 @@ import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
+import { resolveSafeLocalPath } from "#lib/path";
 import {
   classifyGoogleDriveError,
   ensureStreamUploadRequest,
@@ -129,7 +130,7 @@ export function registerUploadRawTool(server: McpServer, runtime: ProductRuntime
         }),
       );
 
-      const fileBytes = await readFile(file_path);
+      const fileBytes = await readFile(resolveSafeLocalPath(file_path));
       const fileName = basename(file_path) || "upload";
       const size = fileBytes.byteLength;
 

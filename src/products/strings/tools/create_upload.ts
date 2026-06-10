@@ -3,6 +3,7 @@ import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
+import { resolveSafeLocalPath } from "#lib/path";
 import type { ProductRuntime } from "#products/types";
 
 function createUploadFile(data: Buffer, filename: string): Blob {
@@ -110,7 +111,7 @@ export function registerCreateUploadTool(server: McpServer, runtime: ProductRunt
         data = Buffer.from(file_content, "base64");
         resolvedFilename = file_name;
       } else {
-        data = await readFile(file_path!);
+        data = await readFile(resolveSafeLocalPath(file_path!));
         resolvedFilename = file_name ?? (basename(file_path!) || "upload");
       }
 

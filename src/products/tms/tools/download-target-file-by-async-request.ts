@@ -1,10 +1,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { HttpError } from "#lib/http";
 import type { BinaryResponse } from "#lib/http";
 import { asTextContent } from "#lib/mcp";
+import { resolveSafeLocalPath } from "#lib/path";
 import type { ProductRuntime } from "#products/types";
 import { tryDecodeFilename } from "#products/tms/tools/content-disposition";
 
@@ -55,7 +56,7 @@ export function registerDownloadTargetFileByAsyncRequestTool(
 
       let saved_to: string | null = null;
       if (output_path) {
-        const absoluteOutputPath = resolve(output_path);
+        const absoluteOutputPath = resolveSafeLocalPath(output_path);
         await mkdir(dirname(absoluteOutputPath), { recursive: true });
         await writeFile(absoluteOutputPath, Buffer.from(file.bytesBase64, "base64"));
         saved_to = absoluteOutputPath;

@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname } from "node:path";
 import { HttpError, type BinaryResponse } from "#lib/http";
+import { resolveSafeLocalPath } from "#lib/path";
 
 const SUPPORTED_CONNECTOR = "google-drive";
 const DEFAULT_LOCALE = "en";
@@ -340,7 +341,7 @@ export async function formatBinaryResult(
 ): Promise<Record<string, unknown>> {
   let saved_to: string | null = null;
   if (outputPath) {
-    const absoluteOutputPath = resolve(outputPath);
+    const absoluteOutputPath = resolveSafeLocalPath(outputPath);
     await mkdir(dirname(absoluteOutputPath), { recursive: true });
     await writeFile(absoluteOutputPath, Buffer.from(file.bytesBase64, "base64"));
     saved_to = absoluteOutputPath;

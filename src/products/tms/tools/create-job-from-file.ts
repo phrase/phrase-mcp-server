@@ -3,6 +3,7 @@ import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
+import { resolveSafeLocalPath } from "#lib/path";
 import { APP_VERSION, PHRASE_TMS_CLIENT_TYPE } from "#lib/runtime-info";
 import type { ProductRuntime } from "#products/types";
 const SAFE_FILENAME_PATTERN = /^[A-Za-z0-9._ -]+$/;
@@ -93,7 +94,7 @@ export function registerCreateJobFromFileTool(server: McpServer, runtime: Produc
         data = Buffer.from(file_content, "base64");
         resolvedFilename = sanitizeFilename(file_name);
       } else {
-        data = await readFile(file_path!);
+        data = await readFile(resolveSafeLocalPath(file_path!));
         resolvedFilename = sanitizeFilename(file_name ?? basename(file_path!));
       }
 

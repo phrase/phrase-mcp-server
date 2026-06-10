@@ -1,6 +1,5 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { z } from "zod";
@@ -222,7 +221,7 @@ describe("strings tools", () => {
   };
 
   beforeAll(async () => {
-    tempDir = await mkdtemp(join(tmpdir(), "strings-tools-test-"));
+    tempDir = await mkdtemp(join(process.cwd(), ".test-tmp-strings-"));
     uploadFilePath = join(tempDir, "upload.json");
     await writeFile(uploadFilePath, JSON.stringify({ hello: "world" }), "utf8");
   });

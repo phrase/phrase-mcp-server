@@ -1,8 +1,9 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { writeFile, mkdir } from "node:fs/promises";
-import { resolve, dirname } from "node:path";
+import { dirname } from "node:path";
 import { asTextContent } from "#lib/mcp";
+import { resolveSafeLocalPath } from "#lib/path";
 import type { ProductRuntime } from "#products/types";
 import { tryDecodeFilename } from "#products/tms/tools/content-disposition";
 
@@ -23,7 +24,7 @@ export function registerExportTransMemoryTool(server: McpServer, runtime: Produc
         `/v1/transMemories/${encodeURIComponent(tm_uid)}/export`,
       );
 
-      const absoluteOutputPath = resolve(output_path);
+      const absoluteOutputPath = resolveSafeLocalPath(output_path);
       await mkdir(dirname(absoluteOutputPath), { recursive: true });
       await writeFile(absoluteOutputPath, Buffer.from(file.bytesBase64, "base64"));
       const fileName = tryDecodeFilename(file.contentDisposition) ?? "tm-export.tmx";

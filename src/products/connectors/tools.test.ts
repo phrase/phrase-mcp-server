@@ -1,6 +1,5 @@
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { HttpError, type BinaryResponse } from "#lib/http";
@@ -110,7 +109,7 @@ describe("connectorsModule tools", () => {
   let emptyUploadFilePath = "";
 
   beforeAll(async () => {
-    tempDir = await mkdtemp(join(tmpdir(), "connectors-tools-test-"));
+    tempDir = await mkdtemp(join(process.cwd(), ".test-tmp-connectors-"));
     uploadFilePath = join(tempDir, "upload-source.txt");
     emptyUploadFilePath = join(tempDir, "empty-upload.txt");
     await writeFile(uploadFilePath, "hello world", "utf8");

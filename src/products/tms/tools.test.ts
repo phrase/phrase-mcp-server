@@ -1,6 +1,5 @@
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { tmpdir } from "node:os";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { HttpError, type BinaryResponse } from "#lib/http";
@@ -146,7 +145,7 @@ describe("tmsModule tools", () => {
   let uploadFilePath = "";
 
   beforeAll(async () => {
-    tempDir = await mkdtemp(join(tmpdir(), "tms-tools-test-"));
+    tempDir = await mkdtemp(join(process.cwd(), ".test-tmp-tms-"));
     uploadFilePath = join(tempDir, "upload-source.md");
     await writeFile(uploadFilePath, "# demo", "utf8");
   });

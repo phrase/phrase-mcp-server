@@ -3,6 +3,7 @@ import { basename } from "node:path";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
+import { resolveSafeLocalPath } from "#lib/path";
 import type { ProductRuntime } from "#products/types";
 
 function createScreenshotFile(data: Buffer, filename: string): Blob {
@@ -65,7 +66,7 @@ export function registerCreateScreenshotTool(
         const data = Buffer.from(file_content, "base64");
         filename = createScreenshotFile(data, file_name);
       } else if (file_path) {
-        const data = await readFile(file_path);
+        const data = await readFile(resolveSafeLocalPath(file_path));
         const resolvedName = file_name ?? (basename(file_path) || "screenshot");
         filename = createScreenshotFile(data, resolvedName);
       }
