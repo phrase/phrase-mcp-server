@@ -290,6 +290,64 @@ describe("loadProductRuntimes", () => {
     );
   });
 
+  it("uses PHRASE_TOKEN as fallback when no product-specific token is set", async () => {
+    process.env.PHRASE_TOKEN = "global-token";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrl: "https://example.com",
+          tokenEnvAliases: ["PHRASE_TOKEN"],
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    const runtimes = await loadProductRuntimes(modules);
+
+    expect(runtimes).toEqual([{ key: "strings", client }]);
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({ authToken: "global-token" }),
+    );
+  });
+
+  it("prefers product-specific token over PHRASE_TOKEN", async () => {
+    process.env.PHRASE_TOKEN = "global-token";
+    process.env.PHRASE_STRINGS_TOKEN = "product-token";
+    process.env.PHRASE_ENABLED_PRODUCTS = "strings";
+
+    const client = {} as StringsClient;
+    const createClient = vi.fn(
+      async (_options: ProductClientFactoryOptions): Promise<StringsClient> => client,
+    );
+
+    const modules: ProductModule<"strings">[] = [
+      {
+        key: "strings",
+        client: {
+          defaultBaseUrl: "https://example.com",
+          tokenEnvAliases: ["PHRASE_TOKEN"],
+          createClient,
+        },
+        register: vi.fn(),
+      },
+    ];
+
+    await loadProductRuntimes(modules);
+
+    expect(createClient).toHaveBeenCalledWith(
+      expect.objectContaining({ authToken: "product-token" }),
+    );
+  });
+
   it("uses the connectors region-based base URL and ignores base-url overrides", async () => {
     process.env.PHRASE_CONNECTORS_TOKEN = "token";
     process.env.PHRASE_ENABLED_PRODUCTS = "connectors";
