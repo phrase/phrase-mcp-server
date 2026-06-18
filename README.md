@@ -346,10 +346,69 @@ Set at least one product token in your MCP client config:
 
 ### Authentication
 
-The server uses [Phrase Platform API tokens](https://developers.phrase.com/en/api/platform/authentication). You need to create API tokens in your Phrase account and provide them as environment variables to the MCP server.
+#### Platform token
 
-- Per product (`STRINGS`, `TMS`, etc.):
-  - `PHRASE_<PRODUCT>_TOKEN`
+All products support **Phrase Platform API tokens**. The server exchanges the token for a short-lived access token via the Phrase IDM service automatically.
+
+Supply a single shared token for all products:
+
+- `PHRASE_TOKEN` — used by all products if no product-specific token is set
+
+Or override per product:
+
+- `PHRASE_STRINGS_TOKEN`
+- `PHRASE_TMS_TOKEN`
+- `PHRASE_BQE_TOKEN`
+- `PHRASE_CONNECTORS_TOKEN`
+
+Per-product variables take precedence over `PHRASE_TOKEN`.
+
+#### Strings API key
+
+Phrase Strings also supports the classic **Strings API key** (generated in Phrase Strings → Settings → API). This key is sent directly and must **not** go through token exchange. To use it, set `PHRASE_STRINGS_AUTH_PREFIX=token`:
+
+```
+PHRASE_STRINGS_TOKEN=<your_strings_api_key>
+PHRASE_STRINGS_AUTH_PREFIX=token
+```
+
+If `PHRASE_STRINGS_AUTH_PREFIX` is omitted (default is `Bearer`), the server assumes a platform token and performs token exchange. Passing a Strings API key without setting the auth prefix will cause the exchange to fail.
+
+#### Example: all products with a platform token
+
+```json
+{
+  "mcpServers": {
+    "phrase": {
+      "command": "npx",
+      "args": ["-y", "@phrase/phrase-mcp-server"],
+      "env": {
+        "PHRASE_TOKEN": "<your_platform_api_token>",
+        "PHRASE_REGION": "eu"
+      }
+    }
+  }
+}
+```
+
+#### Example: Strings only with a Strings API key
+
+```json
+{
+  "mcpServers": {
+    "phrase": {
+      "command": "npx",
+      "args": ["-y", "@phrase/phrase-mcp-server"],
+      "env": {
+        "PHRASE_STRINGS_TOKEN": "<your_strings_api_key>",
+        "PHRASE_STRINGS_AUTH_PREFIX": "token",
+        "PHRASE_ENABLED_PRODUCTS": "strings",
+        "PHRASE_REGION": "eu"
+      }
+    }
+  }
+}
+```
 
 ### Connectors notes
 
