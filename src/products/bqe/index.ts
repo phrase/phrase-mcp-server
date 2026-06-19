@@ -22,6 +22,7 @@ export const bqeModule: ProductModule<"bqe"> = {
       us: "https://us.phrase.com/quality-evaluator",
     },
     defaultAuthPrefix: "Bearer",
+    tokenEnvAliases: ["PHRASE_TOKEN"],
     createClient: (options) => new BqeClient(options),
   },
   register(server, runtime) {

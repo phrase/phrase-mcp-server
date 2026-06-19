@@ -119,6 +119,7 @@ export const stringsModule: ProductModule<"strings"> = {
     },
     defaultAuthPrefix: "Bearer",
     baseUrlEnvAliases: ["PHRASE_BASE_URL"],
+    tokenEnvAliases: ["PHRASE_TOKEN"],
     createClient: (options) => new StringsClient(options),
   },
   register(server, runtime) {

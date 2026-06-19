@@ -14,7 +14,7 @@ export const connectorsModule: ProductModule<"connectors"> = {
     },
     defaultAuthPrefix: "Bearer",
     allowBaseUrlOverride: false,
-    tokenEnvAliases: ["PHRASE_BIFROST_TOKEN"],
+    tokenEnvAliases: ["PHRASE_BIFROST_TOKEN", "PHRASE_TOKEN"],
     createClient: (options) => new ConnectorsClient(options),
   },
   register(server, runtime) {
