@@ -3,7 +3,10 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 
-export function registerEvaluateQualityAsyncTool(server: McpServer, runtime: ProductRuntime<"tms">) {
+export function registerEvaluateQualityAsyncTool(
+  server: McpServer,
+  runtime: ProductRuntime<"tms">,
+) {
   server.registerTool(
     "tms_evaluate_quality_async",
     {
@@ -20,9 +23,7 @@ export function registerEvaluateQualityAsyncTool(server: McpServer, runtime: Pro
         lockSegments: z
           .boolean()
           .optional()
-          .describe(
-            "Lock segments that pass all AI checks after evaluation. Defaults to true.",
-          ),
+          .describe("Lock segments that pass all AI checks after evaluation. Defaults to true."),
         confirmSegments: z
           .boolean()
           .optional()

@@ -3,10 +3,7 @@ import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
 
-export function registerGetQualityProfileV3Tool(
-  server: McpServer,
-  runtime: ProductRuntime<"bqe">,
-) {
+export function registerGetQualityProfileV3Tool(server: McpServer, runtime: ProductRuntime<"bqe">) {
   server.registerTool(
     "bqe_get_quality_profile_v3",
     {

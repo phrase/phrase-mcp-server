@@ -15,7 +15,10 @@ export function registerLinkProjectContentGroupTool(
       annotations: { title: "[TMS] Link Project Content Group", destructiveHint: true },
       inputSchema: {
         projectUid: z.string().min(1).describe("UID of the project to link."),
-        contentGroupId: z.string().min(1).describe("ID of the Content Group to link to the project."),
+        contentGroupId: z
+          .string()
+          .min(1)
+          .describe("ID of the Content Group to link to the project."),
       },
     },
     async ({ projectUid, contentGroupId }) => {
