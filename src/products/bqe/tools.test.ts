@@ -70,6 +70,8 @@ const EXPECTED_TOOL_NAMES = [
   "bqe_update_quality_profile",
   "bqe_delete_quality_profile",
   "bqe_evaluate_segments",
+  "bqe_evaluate_segments_v3",
+  "bqe_get_quality_profile_v3",
   "bqe_get_analytics",
 ];
 
