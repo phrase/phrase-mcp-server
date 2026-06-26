@@ -8,8 +8,8 @@ export function registerDeleteAiCheckTool(server: McpServer, runtime: ProductRun
     "bqe_delete_ai_check",
     {
       description:
-        "Delete an AI Check from Phrase Quality Evaluator. Also removes it from any Quality Profiles that reference it. (DELETE /v1/aiChecks/{uid})",
-      annotations: { title: "[BQE] Delete AI Check", destructiveHint: true },
+        "[LEGACY] Delete an AI Check from Phrase Quality Evaluator. Also removes it from any Quality Profiles that reference it. Only available for early-access program users — in V3, rules are configured via Content Groups in the Phrase platform UI and cannot be managed through the API. (DELETE /v1/aiChecks/{uid})",
+      annotations: { title: "[BQE] Delete AI Check (Legacy)", destructiveHint: true },
       inputSchema: {
         uid: z.string().min(1).describe("AI Check UID."),
       },

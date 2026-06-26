@@ -5,9 +5,11 @@ import { registerCreateQualityProfileTool } from "#products/bqe/tools/create-qua
 import { registerDeleteAiCheckTool } from "#products/bqe/tools/delete-ai-check";
 import { registerDeleteQualityProfileTool } from "#products/bqe/tools/delete-quality-profile";
 import { registerEvaluateSegmentsTool } from "#products/bqe/tools/evaluate-segments";
+import { registerEvaluateSegmentsV3Tool } from "#products/bqe/tools/evaluate-segments-v3";
 import { registerGetAiCheckTool } from "#products/bqe/tools/get-ai-check";
 import { registerGetAnalyticsTool } from "#products/bqe/tools/get-analytics";
 import { registerGetQualityProfileTool } from "#products/bqe/tools/get-quality-profile";
+import { registerGetQualityProfileV3Tool } from "#products/bqe/tools/get-quality-profile-v3";
 import { registerListAiChecksTool } from "#products/bqe/tools/list-ai-checks";
 import { registerListQualityProfilesTool } from "#products/bqe/tools/list-quality-profiles";
 import { registerUpdateAiCheckTool } from "#products/bqe/tools/update-ai-check";
@@ -37,6 +39,8 @@ export const bqeModule: ProductModule<"bqe"> = {
     registerUpdateQualityProfileTool(server, runtime);
     registerDeleteQualityProfileTool(server, runtime);
     registerEvaluateSegmentsTool(server, runtime);
+    registerEvaluateSegmentsV3Tool(server, runtime);
+    registerGetQualityProfileV3Tool(server, runtime);
     registerGetAnalyticsTool(server, runtime);
   },
 };

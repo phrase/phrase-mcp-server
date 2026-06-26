@@ -11,8 +11,8 @@ export function registerDeleteQualityProfileTool(
     "bqe_delete_quality_profile",
     {
       description:
-        "Delete a Quality Profile in Phrase Quality Evaluator. AI Checks referenced by this profile are not deleted. (DELETE /v1/qualityProfiles/{uid})",
-      annotations: { title: "[BQE] Delete Quality Profile", destructiveHint: true },
+        "[LEGACY] Delete a Quality Profile in Phrase Quality Evaluator. AI Checks referenced by this profile are not deleted. Only available for early-access program users — in V3, quality configuration is managed via Content Groups in the Phrase platform UI and there is no API write path for profiles. (DELETE /v1/qualityProfiles/{uid})",
+      annotations: { title: "[BQE] Delete Quality Profile (Legacy)", destructiveHint: true },
       inputSchema: {
         uid: z.string().min(1).describe("Quality Profile UID."),
       },

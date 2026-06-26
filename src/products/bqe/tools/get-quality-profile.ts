@@ -8,8 +8,8 @@ export function registerGetQualityProfileTool(server: McpServer, runtime: Produc
     "bqe_get_quality_profile",
     {
       description:
-        "Fetch a single Quality Profile by its UID, including the AI Checks it contains. (GET /v1/qualityProfiles/{uid})",
-      annotations: { title: "[BQE] Get Quality Profile", readOnlyHint: true },
+        "[LEGACY] Fetch a single Quality Profile by its UID, including the AI Checks it contains. Only available for early-access program users — in V3, quality configuration is managed via Content Groups in the Phrase platform UI. Use bqe_get_quality_profile_v3 to read V3 profiles. (GET /v1/qualityProfiles/{uid})",
+      annotations: { title: "[BQE] Get Quality Profile (Legacy)", readOnlyHint: true },
       inputSchema: {
         uid: z
           .string()

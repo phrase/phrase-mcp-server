@@ -15,6 +15,10 @@ import { registerGetAsyncRequestTool } from "#products/tms/tools/get-async-reque
 import { registerCreateJobFromFileTool } from "#products/tms/tools/create-job-from-file.js";
 import { registerCreateProjectTool } from "#products/tms/tools/create-project.js";
 import { registerEvaluateQualityProfileTool } from "#products/tms/tools/evaluate-quality-profile.js";
+import { registerEvaluateQualityAsyncTool } from "#products/tms/tools/evaluate-quality-async.js";
+import { registerGetProjectContentGroupTool } from "#products/tms/tools/get-project-content-group.js";
+import { registerLinkProjectContentGroupTool } from "#products/tms/tools/link-project-content-group.js";
+import { registerUnlinkProjectContentGroupTool } from "#products/tms/tools/unlink-project-content-group.js";
 import { registerDownloadTargetFileAsyncTool } from "#products/tms/tools/download-target-file-async.js";
 import { registerDownloadTargetFileByAsyncRequestTool } from "#products/tms/tools/download-target-file-by-async-request.js";
 import { registerCreateProjectFromTemplateShorthandTool } from "#products/tms/tools/create-project-from-template-shorthand.js";
@@ -90,6 +94,10 @@ export const tmsModule: ProductModule<"tms"> = {
     registerUploadTermbaseTool(server, runtime);
     registerGetAsyncLimitsTool(server, runtime);
     registerEvaluateQualityProfileTool(server, runtime);
+    registerEvaluateQualityAsyncTool(server, runtime);
+    registerGetProjectContentGroupTool(server, runtime);
+    registerLinkProjectContentGroupTool(server, runtime);
+    registerUnlinkProjectContentGroupTool(server, runtime);
     registerCreateQuoteTool(server, runtime);
     registerGetQuoteTool(server, runtime);
     registerDeleteQuoteTool(server, runtime);

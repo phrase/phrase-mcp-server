@@ -11,8 +11,8 @@ export function registerEvaluateQualityProfileTool(
     "tms_evaluate_quality_profile",
     {
       description:
-        "Trigger an asynchronous quality evaluation against a Quality Profile for the selected TMS job parts. Job parts must be in the same project. Returns an async action descriptor; poll its status with tms_get_async_request. (POST /api2/v1/qualityProfiles/evaluate)",
-      annotations: { title: "[TMS] Evaluate Quality Profile", destructiveHint: true },
+        "[LEGACY] Trigger an asynchronous quality evaluation against a Quality Profile for the selected TMS job parts. Job parts must be in the same project. Returns an async action descriptor; poll its status with tms_get_async_request. Only available for early-access program users — new users should use tms_evaluate_quality_async which auto-selects the correct flow based on the project's Content Group configuration. (POST /api2/v1/qualityProfiles/evaluate)",
+      annotations: { title: "[TMS] Evaluate Quality Profile (Legacy)", destructiveHint: true },
       inputSchema: {
         qualityProfileUid: z
           .string()

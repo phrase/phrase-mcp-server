@@ -11,8 +11,8 @@ export function registerUpdateQualityProfileTool(
     "bqe_update_quality_profile",
     {
       description:
-        "Update an existing Quality Profile in Phrase Quality Evaluator. Replaces both name and the list of AI Check UIDs. (PUT /v1/qualityProfiles/{uid})",
-      annotations: { title: "[BQE] Update Quality Profile", destructiveHint: true },
+        "[LEGACY] Update an existing Quality Profile in Phrase Quality Evaluator. Replaces both name and the list of AI Check UIDs. Only available for early-access program users — in V3, quality configuration is managed via Content Groups in the Phrase platform UI and there is no API write path for profiles. (PUT /v1/qualityProfiles/{uid})",
+      annotations: { title: "[BQE] Update Quality Profile (Legacy)", destructiveHint: true },
       inputSchema: {
         uid: z.string().min(1).describe("Quality Profile UID."),
         name: z.string().min(1).describe("Display name for the Quality Profile."),

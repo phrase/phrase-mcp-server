@@ -14,8 +14,8 @@ export function registerEvaluateSegmentsTool(server: McpServer, runtime: Product
     "bqe_evaluate_segments",
     {
       description:
-        "Evaluate the quality of translation segments using Phrase Quality Evaluator. Provide either qualityProfileUid OR aiCheckUids (not both). Requires ADMIN or OWNER IDM role. (POST /v2/evaluation)",
-      annotations: { title: "[BQE] Evaluate Segments", destructiveHint: true },
+        "[LEGACY] Evaluate the quality of translation segments using Phrase Quality Evaluator. Provide either qualityProfileUid OR aiCheckUids (not both). Requires ADMIN or OWNER IDM role. Only available for early-access program users — new users should use bqe_evaluate_segments_v3 with a contentGroupId instead. (POST /v2/evaluation)",
+      annotations: { title: "[BQE] Evaluate Segments (Legacy)", destructiveHint: true },
       inputSchema: {
         qualityProfileUid: z
           .string()
