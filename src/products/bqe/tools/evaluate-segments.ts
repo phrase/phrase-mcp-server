@@ -2,12 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
-
-const segmentSchema = z.object({
-  id: z.string().optional().describe("Optional identifier for the segment."),
-  source: z.string().describe("Source text that was translated."),
-  target: z.string().describe("Translated text to evaluate."),
-});
+import { segmentSchema } from "#products/bqe/tools/segment-schema";
 
 export function registerEvaluateSegmentsTool(server: McpServer, runtime: ProductRuntime<"bqe">) {
   server.registerTool(

@@ -12,7 +12,7 @@ export function registerUnlinkProjectContentGroupTool(
     {
       description:
         "Unlink a TMS project from its Content Group. Idempotent — returns 204 No Content even if no Content Group is currently linked. (DELETE /api2/v1/projects/{projectUid}/contentGroup)",
-      annotations: { title: "[TMS] Unlink Project Content Group", destructiveHint: true },
+      annotations: { title: "[TMS] Unlink Project Content Group", destructiveHint: false },
       inputSchema: {
         projectUid: z.string().min(1).describe("UID of the project to unlink."),
       },
