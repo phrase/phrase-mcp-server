@@ -11,8 +11,8 @@ export function registerCreateQualityProfileTool(
     "bqe_create_quality_profile",
     {
       description:
-        "Create a new Quality Profile in Phrase Quality Evaluator containing up to 3 AI Checks. Requires ADMIN or OWNER IDM role. (POST /v1/qualityProfiles)",
-      annotations: { title: "[BQE] Create Quality Profile", destructiveHint: true },
+        "[LEGACY] Create a new Quality Profile in Phrase Quality Evaluator containing up to 3 AI Checks. Requires ADMIN or OWNER IDM role. Only available for early-access program users — in V3, quality configuration is managed via Content Groups in the Phrase platform UI and there is no API write path for profiles. (POST /v1/qualityProfiles)",
+      annotations: { title: "[BQE] Create Quality Profile (Legacy)", destructiveHint: true },
       inputSchema: {
         name: z.string().min(1).describe("Display name for the Quality Profile."),
         aiCheckUids: z

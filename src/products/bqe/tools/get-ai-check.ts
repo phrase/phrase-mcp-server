@@ -8,8 +8,8 @@ export function registerGetAiCheckTool(server: McpServer, runtime: ProductRuntim
     "bqe_get_ai_check",
     {
       description:
-        "Fetch a single AI Check by its UID from Phrase Quality Evaluator. Returns name and qualityRequirements. (GET /v1/aiChecks/{uid})",
-      annotations: { title: "[BQE] Get AI Check", readOnlyHint: true },
+        "[LEGACY] Fetch a single AI Check by its UID from Phrase Quality Evaluator. Returns name and qualityRequirements. Only available for early-access program users — in V3, rules are configured via Content Groups in the Phrase platform UI and cannot be managed through the API. (GET /v1/aiChecks/{uid})",
+      annotations: { title: "[BQE] Get AI Check (Legacy)", readOnlyHint: true },
       inputSchema: {
         uid: z.string().min(1).describe("AI Check UID. Obtain from bqe_list_ai_checks."),
       },

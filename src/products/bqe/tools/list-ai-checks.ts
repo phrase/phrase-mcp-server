@@ -8,8 +8,8 @@ export function registerListAiChecksTool(server: McpServer, runtime: ProductRunt
     "bqe_list_ai_checks",
     {
       description:
-        "List all AI Checks for the authenticated organization in Phrase Quality Evaluator. AI Checks are reusable quality requirements written in natural language. (GET /v1/aiChecks)",
-      annotations: { title: "[BQE] List AI Checks", readOnlyHint: true },
+        "[LEGACY] List all AI Checks for the authenticated organization in Phrase Quality Evaluator. AI Checks are reusable quality requirements written in natural language. Only available for early-access program users — in V3, rules are configured via Content Groups in the Phrase platform UI and cannot be managed through the API. (GET /v1/aiChecks)",
+      annotations: { title: "[BQE] List AI Checks (Legacy)", readOnlyHint: true },
       inputSchema: {
         sort: z.enum(["uid", "name"]).optional().describe("Field to sort by. Defaults to name."),
         order: z.enum(["asc", "desc"]).optional().describe("Sort order. Defaults to asc."),

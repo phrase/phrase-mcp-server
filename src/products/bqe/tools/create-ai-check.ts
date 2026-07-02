@@ -8,8 +8,8 @@ export function registerCreateAiCheckTool(server: McpServer, runtime: ProductRun
     "bqe_create_ai_check",
     {
       description:
-        "Create a new AI Check in Phrase Quality Evaluator. Requires ADMIN or OWNER IDM role. (POST /v1/aiChecks)",
-      annotations: { title: "[BQE] Create AI Check", destructiveHint: true },
+        "[LEGACY] Create a new AI Check in Phrase Quality Evaluator. Requires ADMIN or OWNER IDM role. Only available for early-access program users — in V3, rules are configured via Content Groups in the Phrase platform UI and cannot be managed through the API. (POST /v1/aiChecks)",
+      annotations: { title: "[BQE] Create AI Check (Legacy)", destructiveHint: true },
       inputSchema: {
         name: z.string().min(1).describe("Display name for the AI Check."),
         qualityRequirements: z

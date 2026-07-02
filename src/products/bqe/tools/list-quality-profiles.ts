@@ -8,8 +8,8 @@ export function registerListQualityProfilesTool(server: McpServer, runtime: Prod
     "bqe_list_quality_profiles",
     {
       description:
-        "List Quality Profiles for the authenticated organization in Phrase Quality Evaluator. A Quality Profile groups up to 3 AI Checks for reuse during evaluation. (GET /v1/qualityProfiles)",
-      annotations: { title: "[BQE] List Quality Profiles", readOnlyHint: true },
+        "[LEGACY] List Quality Profiles for the authenticated organization in Phrase Quality Evaluator. A Quality Profile groups up to 3 AI Checks for reuse during evaluation. Only available for early-access program users — in V3, quality configuration is managed via Content Groups in the Phrase platform UI. Use bqe_get_quality_profile_v3 to read V3 profiles. (GET /v1/qualityProfiles)",
+      annotations: { title: "[BQE] List Quality Profiles (Legacy)", readOnlyHint: true },
       inputSchema: {
         sort: z
           .enum(["name", "uid", "createdDate", "lastModifiedDate", "createdByUid"])

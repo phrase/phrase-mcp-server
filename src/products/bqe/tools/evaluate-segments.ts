@@ -2,20 +2,15 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { asTextContent } from "#lib/mcp";
 import type { ProductRuntime } from "#products/types";
-
-const segmentSchema = z.object({
-  id: z.string().optional().describe("Optional identifier for the segment."),
-  source: z.string().describe("Source text that was translated."),
-  target: z.string().describe("Translated text to evaluate."),
-});
+import { segmentSchema } from "#products/bqe/tools/segment-schema";
 
 export function registerEvaluateSegmentsTool(server: McpServer, runtime: ProductRuntime<"bqe">) {
   server.registerTool(
     "bqe_evaluate_segments",
     {
       description:
-        "Evaluate the quality of translation segments using Phrase Quality Evaluator. Provide either qualityProfileUid OR aiCheckUids (not both). Requires ADMIN or OWNER IDM role. (POST /v2/evaluation)",
-      annotations: { title: "[BQE] Evaluate Segments", destructiveHint: true },
+        "[LEGACY] Evaluate the quality of translation segments using Phrase Quality Evaluator. Provide either qualityProfileUid OR aiCheckUids (not both). Requires ADMIN or OWNER IDM role. Only available for early-access program users — new users should use bqe_evaluate_segments_v3 with a contentGroupId instead. (POST /v2/evaluation)",
+      annotations: { title: "[BQE] Evaluate Segments (Legacy)", destructiveHint: true },
       inputSchema: {
         qualityProfileUid: z
           .string()
