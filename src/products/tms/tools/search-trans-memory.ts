@@ -13,13 +13,13 @@ export function registerSearchTransMemoryTool(server: McpServer, runtime: Produc
       inputSchema: z.object({
         tm_uid: z.string().min(1).describe("The UID of the translation memory."),
         query: z.string().min(1).describe("The term/segment to search for."),
-        lang: z.string().optional().describe("Language code."),
+        sourceLang: z.string().optional().describe("Source language code."),
       }),
     },
-    async ({ tm_uid, query, lang }) => {
+    async ({ tm_uid, query, sourceLang }) => {
       const response = await runtime.client.postJson(
         `/v1/transMemories/${encodeURIComponent(tm_uid)}/search`,
-        { query, lang },
+        { query, sourceLang },
       );
       return asTextContent(response);
     },

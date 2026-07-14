@@ -289,11 +289,11 @@ describe("tmsModule tools", () => {
     await invokeTool(registrations, "tms_search_trans_memory", {
       tm_uid: "tm/1",
       query: "hello",
-      lang: "en",
+      sourceLang: "en",
     });
     expect(client.postJson).toHaveBeenCalledWith("/v1/transMemories/tm%2F1/search", {
       query: "hello",
-      lang: "en",
+      sourceLang: "en",
     });
 
     await invokeTool(registrations, "tms_import_trans_memory", {
@@ -318,11 +318,13 @@ describe("tmsModule tools", () => {
     await invokeTool(registrations, "tms_search_termbase_terms", {
       termbase_uid: "tb/1",
       query: "term",
-      lang: "de",
+      sourceLang: "de",
+      targetLangs: ["en"],
     });
     expect(client.postJson).toHaveBeenCalledWith("/v1/termBases/tb%2F1/search", {
       query: "term",
-      lang: "de",
+      sourceLang: "de",
+      targetLangs: ["en"],
     });
 
     await invokeTool(registrations, "tms_search_job_termbases", {

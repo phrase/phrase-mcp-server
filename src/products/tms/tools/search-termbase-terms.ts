@@ -13,15 +13,20 @@ export function registerSearchTermbaseTermsTool(server: McpServer, runtime: Prod
       inputSchema: z.object({
         termbase_uid: z.string().min(1).describe("The UID of the termbase."),
         query: z.string().min(1).describe("The term to search for."),
-        lang: z.string().optional().describe("Language code (e.g., en, de)."),
+        sourceLang: z.string().optional().describe("Source language code (e.g., en, de)."),
+        targetLangs: z
+          .array(z.string())
+          .optional()
+          .describe('Target language codes (e.g., ["de", "fr"]).'),
       }),
     },
-    async ({ termbase_uid, query, lang }) => {
+    async ({ termbase_uid, query, sourceLang, targetLangs }) => {
       const response = await runtime.client.postJson(
         `/v1/termBases/${encodeURIComponent(termbase_uid)}/search`,
         {
           query,
-          lang,
+          sourceLang,
+          targetLangs,
         },
       );
       return asTextContent(response);
