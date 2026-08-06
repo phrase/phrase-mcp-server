@@ -1,8 +1,8 @@
 # Phrase MCP Server
 
-> ⚠️ **Deprecated: use the remote Phrase MCP server instead**
-> This local server is no longer maintained. No new features or fixes are planned.
-> Switch over: [developers.phrase.com/en/mcp-server](https://developers.phrase.com/en/mcp-server)
+> ⚠️ **Deprecated: use the remote Phrase MCP server instead**  
+> This local server is no longer maintained. No new features or fixes are planned.  
+> Switch over: [developers.phrase.com/en/mcp-server](https://developers.phrase.com/en/mcp-server)  
 > Questions? [Open an issue](https://github.com/phrase/phrase-mcp-server/issues) or [contact support](https://support.phrase.com/hc/requests/new).
 
 Use Phrase APIs from any MCP client (Claude, Cursor, etc.) with ready-to-use tools for Phrase Strings, Phrase TMS, and Connectors.
