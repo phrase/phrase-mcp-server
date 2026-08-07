@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.10.0...phrase-mcp-server-v0.11.0) (2026-08-07)
+
+
+### Features
+
+* AQUA-225 Content Group in TMS Project + latest quality evaluator changes ([#115](https://github.com/phrase/phrase-mcp-server/issues/115)) ([c3d8a25](https://github.com/phrase/phrase-mcp-server/commit/c3d8a252ff7c0bfa167fe58562664c52f0e901aa))
+
+
+### Bug Fixes
+
+* add PHRASE_TOKEN global alias and clarify Strings vs platform token auth ([#110](https://github.com/phrase/phrase-mcp-server/issues/110)) ([a892c2b](https://github.com/phrase/phrase-mcp-server/commit/a892c2bb827a0ff5fbbe451a1abe517f4c2d3aad))
+
 ## [0.10.0](https://github.com/phrase/phrase-mcp-server/compare/phrase-mcp-server-v0.9.0...phrase-mcp-server-v0.10.0) (2026-05-26)
 
 
