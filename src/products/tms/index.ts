@@ -50,6 +50,11 @@ import { registerListAnalysisLanguagePartJobsTool } from "#products/tms/tools/li
 import { registerDownloadAnalysisTool } from "#products/tms/tools/download-analysis.js";
 import { registerGetJobAnalysisTool } from "#products/tms/tools/get-job-analysis.js";
 import { registerSetAnalysisNetRateSchemeTool } from "#products/tms/tools/set-analysis-net-rate-scheme.js";
+import { registerListEnabledConnectorTypesTool } from "#products/tms/tools/list-enabled-connector-types.js";
+import { registerInitiateConnectorOAuthTool } from "#products/tms/tools/initiate-connector-oauth.js";
+import { registerPollConnectorAuthCodeTool } from "#products/tms/tools/poll-connector-auth-code.js";
+import { registerCreateConnectorTool } from "#products/tms/tools/create-connector.js";
+import { registerTestConnectorTool } from "#products/tms/tools/test-connector.js";
 
 export const tmsModule: ProductModule<"tms"> = {
   key: "tms",
@@ -113,5 +118,10 @@ export const tmsModule: ProductModule<"tms"> = {
     registerDownloadAnalysisTool(server, runtime);
     registerGetJobAnalysisTool(server, runtime);
     registerSetAnalysisNetRateSchemeTool(server, runtime);
+    registerListEnabledConnectorTypesTool(server, runtime);
+    registerInitiateConnectorOAuthTool(server, runtime);
+    registerPollConnectorAuthCodeTool(server, runtime);
+    registerCreateConnectorTool(server, runtime);
+    registerTestConnectorTool(server, runtime);
   },
 };

@@ -141,6 +141,11 @@ const EXPECTED_TOOL_NAMES = [
   "tms_download_analysis",
   "tms_get_job_analysis",
   "tms_set_analysis_net_rate_scheme",
+  "tms_list_enabled_connector_types",
+  "tms_initiate_connector_oauth",
+  "tms_poll_connector_auth_code",
+  "tms_create_connector",
+  "tms_test_connector",
 ];
 
 describe("tmsModule tools", () => {

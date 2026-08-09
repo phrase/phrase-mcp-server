@@ -163,6 +163,14 @@ export class TmsClient {
     });
   }
 
+  private get rootUrl(): string {
+    return this.baseUrl.replace(/\/api2\/?$/, "");
+  }
+
+  get connectorOAuthRedirectUri(): string {
+    return `${this.rootUrl}/connector/receiveConnectorAuthCode`;
+  }
+
   async get(path: string, query?: Record<string, QueryValue>): Promise<unknown> {
     return this.request("GET", path, { query });
   }
