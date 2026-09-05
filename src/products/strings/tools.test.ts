@@ -305,6 +305,34 @@ describe("strings tools", () => {
     });
   }
 
+  it("strings_create_locale leaves autotranslate unset when not provided", async () => {
+    const tool = registrations.get("strings_create_locale");
+    expect(tool).toBeDefined();
+    if (!tool) return;
+
+    const parsed = z.object(tool.inputSchema).parse({
+      project_id: "proj-1",
+      name: "English",
+      code: "en",
+    });
+
+    await tool.handler(parsed as Record<string, unknown>);
+
+    expect(calls).toHaveLength(1);
+    const args = calls[0]?.args[0] as { localeCreateParameters: { autotranslate?: boolean } };
+    expect(args.localeCreateParameters.autotranslate).toBeUndefined();
+  });
+
+  it("strings_create_locale describes autotranslate as opt-in and cost-incurring", () => {
+    const tool = registrations.get("strings_create_locale");
+    expect(tool).toBeDefined();
+    if (!tool) return;
+
+    const description = tool.inputSchema.autotranslate?.description ?? "";
+    expect(description).toMatch(/pre-translate/i);
+    expect(description).toMatch(/cost/i);
+  });
+
   for (const toolName of Object.keys(EXPECTED_METHOD_BY_TOOL).sort()) {
     it(`${toolName} formats API response errors`, async () => {
       calls = [];
